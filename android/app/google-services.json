@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "304287097472",
+    "firebase_url": "https://a-rush.firebaseio.com",
+    "project_id": "a-rush",
+    "storage_bucket": "a-rush.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304287097472:android:5422860dd2e8e5c119fc65",
+        "android_client_info": {
+          "package_name": "com.niones.arush"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "304287097472-dg759aeg50iu8aesmvqr4jno5m48vk15.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.niones.arush",
+            "certificate_hash": "a3702728c29e52e1d289dac784450740d221b124"
+          }
+        },
+        {
+          "client_id": "304287097472-gpm1daord420ad72oj0ddi4rae2qi7af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4c-EHjXANs0w93LZ41PP7EjSYrXu5JRI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "304287097472-gpm1daord420ad72oj0ddi4rae2qi7af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
