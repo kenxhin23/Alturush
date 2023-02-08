@@ -16,11 +16,11 @@ import 'profile/addNewAddress.dart';
 import 'create_account_signin.dart';
 
 class PlaceOrderDelivery extends StatefulWidget {
-  final List cartItems;
+
   final paymentMethod;
   final productID;
 
-  const PlaceOrderDelivery({Key key, this.cartItems, this.paymentMethod, this.productID}) : super(key: key);
+  const PlaceOrderDelivery({Key key, this.paymentMethod, this.productID}) : super(key: key);
   @override
   _PlaceOrderDelivery createState() => _PlaceOrderDelivery();
 }
@@ -897,7 +897,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                           Flexible(
                                                             child: Padding(
                                                               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                                              child: RichText(overflow: TextOverflow.ellipsis, text: TextSpan(
+                                                              child: RichText(overflow: TextOverflow.ellipsis, maxLines: 2, text: TextSpan(
                                                                 style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
                                                                 text: '${loadCartData[index]['main_item']['product_name']}'),
                                                               ),
@@ -974,6 +974,10 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                                     //Add isDense true and zero Padding.
                                                                     //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                                                                     isDense: true,
+                                                                    focusedBorder: OutlineInputBorder(
+                                                                        borderRadius: BorderRadius.circular(5),
+                                                                        borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                                                                    ),
                                                                     contentPadding: const EdgeInsets.only(
                                                                         left: 5, right: 0
                                                                     ),

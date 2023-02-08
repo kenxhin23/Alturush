@@ -55,8 +55,10 @@ class _GlobalCat extends State<GlobalCat>{
   bool showCB;
   bool showMedplus;
 
-  String tenantId;
-  String categoryId;
+  String tenantIdXmas;
+  String tenantIdValentines;
+  String categoryIdXmas;
+  String categoryIdValentines;
 
   String image;
 //   Future loadTenant() async {
@@ -152,18 +154,24 @@ class _GlobalCat extends State<GlobalCat>{
     ///live
     if (widget.buCode =='1'){
       image = "assets/jpg/icm.jpg";
-      tenantId = '42';
-      categoryId = '495';
+      tenantIdXmas = '42';
+      tenantIdValentines = '47';
+      categoryIdXmas = '495';
+      categoryIdValentines = '508';
     } else if (widget.buCode =='2'){
       image = "assets/jpg/alturas.jpeg";
-      tenantId = '44';
-      categoryId = '496';
+      tenantIdXmas = '44';
+      tenantIdValentines = '48';
+      categoryIdXmas = '497';
+      categoryIdValentines = '509';
     } else if (widget.buCode =='3'){
       image = "assets/jpg/alta-citta.png";
     } else if (widget.buCode =='4'){
       image = "assets/jpg/marcela.jpeg";
-      tenantId = '45';
-      categoryId = '498';
+      tenantIdXmas = '45';
+      tenantIdValentines = '49';
+      categoryIdXmas = '498';
+      categoryIdValentines = '510';
     } else if (widget.buCode == '5') {
       image = "assets/jpg/alturas_talibon.jpeg";
     }
@@ -499,77 +507,118 @@ class _GlobalCat extends State<GlobalCat>{
                         thickness: 1,
                       ),
 
-                      // Visibility(
-                      //   visible: showCB,
-                      //   child:
-                      //   Padding(
-                      //     padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
-                      //     child: GestureDetector(
-                      //       onTap: () async {
-                      //
-                      //
-                      //         if (widget.buCode != '3') {
-                      //           await Navigator.of(context).push(_loadStore(
-                      //             'All items',
-                      //             '496',
-                      //             widget.buCode,
-                      //             widget.buAcroname,
-                      //             'https://apanel.alturush.com/images/tenants/tenant_1669001154.jpg',
-                      //             tenantId,
-                      //             'CHRISTMAS BASKET',
-                      //             widget.groupCode)
-                      //           );
-                      //         }
-                      //       },
-                      //       child: Container(
-                      //         decoration: BoxDecoration(
-                      //           border: Border.all(color: Colors.grey)
-                      //         ),
-                      //         child: Image.asset(
-                      //           'assets/png/Christmas_basket_all.png',
-                      //           fit: BoxFit.contain,
-                      //           height: 200,
-                      //         ),
-                      //       )
-                      //     ),
-                      //   ),
-                      // ),
-                      //
-                      // Visibility(
-                      //   visible: showMedplus,
-                      //   child:
-                      //   Padding(
-                      //     padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 30),
-                      //     child: GestureDetector(
-                      //       onTap: () async {
-                      //         if (widget.buCode == '1') {
-                      //           await Navigator.of(context).push(_loadStore(
-                      //             'Promotional Items',
-                      //             '500',
-                      //             '1',
-                      //             'ICM',
-                      //             'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
-                      //             '39',
-                      //             'MEDICINE PLUS',
-                      //             '4')
-                      //           );
-                      //         } else {
-                      //           print('way labot');
-                      //         }
-                      //       },
-                      //       child: Container(
-                      //         decoration: BoxDecoration(
-                      //           border: Border.all(color: Colors.grey),
-                      //         ),
-                      //         child: Image.asset(
-                      //           'assets/png/medplus_promo.png',
-                      //           fit: BoxFit.contain,
-                      //           height: 200,
-                      //         ),
-                      //       )
-                      //     ),
-                      //   ),
-                      // ),
+
+                      ///christmas banner
+                      Visibility(
+                        visible: showCB,
+                        child:
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
+                          child: GestureDetector(
+                            onTap: () async {
+
+
+                              if (widget.buCode != '3') {
+                                await Navigator.of(context).push(_loadStore(
+                                  'All items',
+                                  categoryIdXmas,
+                                  widget.buCode,
+                                  widget.buAcroname,
+                                  'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
+                                  tenantIdXmas,
+                                  'CHRISTMAS BASKETS',
+                                  widget.groupCode)
+                                );
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey)
+                              ),
+                              child: Image.asset(
+                                'assets/png/Christmas_basket_all.png',
+                                fit: BoxFit.contain,
+                                height: 200,
+                              ),
+                            )
+                          ),
+                        ),
+                      ),
+
+
+                      ///medicine plus banner
+                      Visibility(
+                        visible: showMedplus,
+                        child:
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (widget.buCode == '1') {
+                                await Navigator.of(context).push(_loadStore(
+                                  'Promotional Items',
+                                  '500',
+                                  '1',
+                                  'ICM',
+                                  'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
+                                  '39',
+                                  'MEDICINE PLUS',
+                                  '4')
+                                );
+                              } else {
+                                print('way labot');
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                              ),
+                              child: Image.asset(
+                                'assets/png/medplus_promo.png',
+                                fit: BoxFit.contain,
+                                height: 200,
+                              ),
+                            )
+                          ),
+                        ),
+                      ),
+
+                      ///Valentines banner
+                      Visibility(
+                        visible: showCB,
+                        child:
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 30),
+                          child: GestureDetector(
+                              onTap: () async {
+
+
+                                if (widget.buCode != '3') {
+                                  await Navigator.of(context).push(_loadStore(
+                                      'All items',
+                                      categoryIdValentines,
+                                      widget.buCode,
+                                      widget.buAcroname,
+                                      'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
+                                      tenantIdValentines,
+                                      'VALENTINE BOUQUETS',
+                                      widget.groupCode)
+                                  );
+                                }
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.grey)
+                                ),
+                                child: Image.asset(
+                                  'assets/png/valentines_2023_2.png',
+                                  fit: BoxFit.contain,
+                                  height: 200,
+                                ),
+                              )
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

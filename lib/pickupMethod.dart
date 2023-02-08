@@ -692,7 +692,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                                 text: TextSpan(
                                                                     style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
                                                                     text: '${loadCartData[index]['main_item']['product_name']}'),
-                                                                overflow: TextOverflow.ellipsis,
+                                                                overflow: TextOverflow.ellipsis, maxLines: 2,
                                                               ),
                                                             ),
                                                           ),
@@ -768,6 +768,10 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                                     //Add isDense true and zero Padding.
                                                                     //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                                                                     isDense: true,
+                                                                    focusedBorder: OutlineInputBorder(
+                                                                        borderRadius: BorderRadius.circular(5),
+                                                                        borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                                                                    ),
                                                                     contentPadding: const EdgeInsets.only(
                                                                         left: 5, right: 0
                                                                     ),

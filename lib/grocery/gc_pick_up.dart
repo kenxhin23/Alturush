@@ -489,6 +489,10 @@ class _GcPickUp extends State<GcPickUp> {
                                                                 //Add isDense true and zero Padding.
                                                                 //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                                                                 isDense: true,
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderRadius: BorderRadius.circular(5),
+                                                                    borderSide: BorderSide(color: Colors.green.withOpacity(0.8), width: 1)
+                                                                ),
                                                                 contentPadding: const EdgeInsets.only(
                                                                     left: 5, right: 0
                                                                 ),

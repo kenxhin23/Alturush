@@ -247,13 +247,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                   TextButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                side: BorderSide(color: Colors.deepOrangeAccent)
-                            )
-                        )
+                      backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20.0),
+                          side: BorderSide(color: Colors.deepOrangeAccent)
+                        ),
+                      ),
                     ),
                     child: Text(
                       'Clear',

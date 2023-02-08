@@ -708,6 +708,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                     style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 15.0),
                                   ),
                                 ),
+
                                 Padding(
                                   padding: EdgeInsets.only(right: 15, bottom: 3),
                                   child: SizedBox(width: 20, height: 20,
@@ -736,7 +737,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                         }
                                       },
                                       elevation: 1.0,
-                                      child: Icon(Icons.timer, color: Colors.deepOrangeAccent),
+                                      child: Icon(Icons.timer_outlined, color: Colors.deepOrangeAccent),
                                       shape: CircleBorder(),
                                     )
                                   ),

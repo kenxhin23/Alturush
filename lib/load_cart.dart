@@ -849,7 +849,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             }
                           });
                           Navigator.pop(context);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderDelivery(cartItems : loadIMainItems, paymentMethod : _selectOption, productID : productID)),).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderDelivery(paymentMethod : _selectOption, productID : productID)),).then((val)=>{onRefresh()});
                           // Navigator.of(context).push(_placeOrderDelivery(loadIMainItems, _selectOption));
                         }
                       },
@@ -1249,7 +1249,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                                 if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
                                                   side1[q] = false;
-                                                  productID.remove(loadCartData[q]['main_item']['id']);
+                                                  productID.remove(loadCartData[q]['main_item']['temp_id']);
                                                 }
                                               }
 
@@ -1261,7 +1261,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                                   if (getBu[index0]['d_tenant_id'] == loadIMainItems[q]['main_item']['tenant_id']){
                                                     side1[q] = true;
-                                                    productID.add(loadCartData[q]['main_item']['id']);
+                                                    productID.add(loadCartData[q]['main_item']['temp_id']);
                                                   }
                                                 }
                                               } else {
@@ -1272,7 +1272,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                                   if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
                                                     side1[q] = false;
-                                                    productID.remove(loadCartData[q]['main_item']['id']);
+                                                    productID.remove(loadCartData[q]['main_item']['temp_id']);
                                                   }
                                                 }
                                               }
@@ -1313,6 +1313,14 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                 shrinkWrap: true,
                                 itemCount: loadCartData == null ? 0 : loadCartData.length,
                                 itemBuilder: (BuildContext context, int index) {
+                                 String unit;
+
+                                 if (loadCartData[index]['main_item']['unit_measure'] != null) {
+                                   unit = "- ${loadCartData[index]['main_item']['unit_measure']}";
+                                 } else {
+                                   unit ="";
+                                 }
+
                                   side1.add(false);
                                 return InkWell(
 
@@ -1377,13 +1385,13 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                           if (value1) {
                                                             loadMethods();
 
-                                                            productID.add(loadCartData[index]['main_item']['id']);
+                                                            productID.add(loadCartData[index]['main_item']['temp_id']);
 
                                                           } else {
                                                             side[index0] = false;
                                                             loadMethods();
 
-                                                            productID.remove(loadCartData[index]['main_item']['id']);
+                                                            productID.remove(loadCartData[index]['main_item']['temp_id']);
                                                           }
                                                           print(productID);
                                                         });
@@ -1452,18 +1460,26 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                       Row(
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: <Widget>[
-                                                          Flexible(
-                                                            child: Padding(
-                                                              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                                              child: RichText(
-                                                                overflow: TextOverflow.ellipsis,
-                                                                text: TextSpan(
-                                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                  text: '${loadCartData[index]['main_item']['product_name']}',
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
+                                                         Flexible(
+                                                           child: Row(
+                                                             children: [
+                                                               Flexible(
+                                                                 child: Padding(
+                                                                   padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                                                   child: RichText(
+                                                                     overflow: TextOverflow.ellipsis,
+                                                                     maxLines: 2,
+                                                                     text: TextSpan(
+                                                                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
+                                                                       text: '${loadCartData[index]['main_item']['product_name']} $unit ',
+                                                                     ),
+                                                                   ),
+                                                                 ),
+                                                               ),
+
+                                                             ],
+                                                           ),
+                                                         ),
 
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 2, 15, 0),
@@ -1767,12 +1783,16 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             //Add isDense true and zero Padding.
                             //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                             isDense: true,
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                            ),
                             contentPadding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 5,
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(5),
                             ),
                             //Add more decoration as you want here
                             //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
@@ -1962,7 +1982,7 @@ Route _placeOrderPickUp(paymentMethod) {
 
 Route _placeOrderDelivery(List loadIMainItems, paymentMethod) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => PlaceOrderDelivery(cartItems: loadIMainItems, paymentMethod: paymentMethod),
+    pageBuilder: (context, animation, secondaryAnimation) => PlaceOrderDelivery(paymentMethod: paymentMethod),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

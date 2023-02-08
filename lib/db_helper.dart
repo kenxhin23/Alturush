@@ -20,8 +20,8 @@ class RapidA {
     return _instance;
   }
 
-  // String server = "https://app1.alturush.com/";
-  String server = "http://172.16.43.147/rapida";
+  String server = "https://app1.alturush.com/";
+  // String server = "http://172.16.43.147/rapida";
   // String server = "http://10.233.1.58/rapida/";
   // String server = "http://172.16.46.130/rapida";
   // String server = "http://192.168.1.2:3333/rapida";
@@ -1734,7 +1734,7 @@ class RapidA {
     client.close();
   }
 
-  Future addToCartNew(prodId,uomId,_counter,uomPrice,
+  Future addToCartNew(prodId,uomId,_counter,uomPrice,measurement,
       choiceUomIdDrinks,choiceIdDrinks,choicePriceDrinks,
       choiceUomIdFries,choiceIdFries,choicePriceFries,
       choiceUomIdSides,choiceIdSides,choicePriceSides,
@@ -1754,101 +1754,112 @@ class RapidA {
       suggestionIdTomb, productSuggestionIdTomb, suggestionPriceTomb,
       suggestionIdCosv, productSuggestionIdCosv, suggestionPriceCosv,
       suggestionIdTop, productSuggestionIdTop, suggestionPriceTop,
+      suggestionIdTocw, productSuggestionIdTocw, suggestionPriceTocw,
+      suggestionIdNameless, productSuggestionIdNameless, suggestionPriceNameless,
       selectedSideOnPrice,selectedSideItems ,selectedSideItemsUom,
       selectedSideSides, selectedSideDessert, selectedSideDrinks) async{
     var client = http.Client();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userID = prefs.getString('s_customerId');
     final response = await client.post(Uri.parse("$server/addToCartNew_r"),body:{
-      'userID'                   : encrypt(userID),
-      'prodId'                   : encrypt(prodId),
-      'uomId'                    : encrypt(uomId.toString()),
-      '_counter'                 : encrypt(_counter.toString()),
-      'uomPrice'                 : encrypt(uomPrice.toString()),
+      'userID'                        : encrypt(userID),
+      'prodId'                        : encrypt(prodId),
+      'uomId'                         : encrypt(uomId.toString()),
+      '_counter'                      : encrypt(_counter.toString()),
+      'uomPrice'                      : encrypt(uomPrice.toString()),
+      'measurement'                   : encrypt(measurement.toString()),
 
-      'choiceUomIdDrinks'        : encrypt(choiceUomIdDrinks.toString()),
-      'choiceIdDrinks'           : encrypt(choiceIdDrinks.toString()),
-      'choicePriceDrinks'        : encrypt(choicePriceDrinks.toString()),
+      'choiceUomIdDrinks'             : encrypt(choiceUomIdDrinks.toString()),
+      'choiceIdDrinks'                : encrypt(choiceIdDrinks.toString()),
+      'choicePriceDrinks'             : encrypt(choicePriceDrinks.toString()),
 
-      'choiceUomIdFries'         : encrypt(choiceUomIdFries.toString()),
-      'choiceIdFries'            : encrypt(choiceIdFries.toString()),
-      'choicePriceFries'         : encrypt(choicePriceFries.toString()),
+      'choiceUomIdFries'              : encrypt(choiceUomIdFries.toString()),
+      'choiceIdFries'                 : encrypt(choiceIdFries.toString()),
+      'choicePriceFries'              : encrypt(choicePriceFries.toString()),
 
-      'choiceUomIdSides'         : encrypt(choiceUomIdSides.toString()),
-      'choiceIdSides'            : encrypt(choiceIdSides.toString()),
-      'choicePriceSides'         : encrypt(choicePriceSides.toString()),
+      'choiceUomIdSides'              : encrypt(choiceUomIdSides.toString()),
+      'choiceIdSides'                 : encrypt(choiceIdSides.toString()),
+      'choicePriceSides'              : encrypt(choicePriceSides.toString()),
 
-      'suggestionIdFlavor'       : encrypt(suggestionIdFlavor.toString()),
-      'productSuggestionIdFlavor': encrypt(productSuggestionIdFlavor.toString()),
-      'suggestionPriceFlavor'    : encrypt(suggestionPriceFlavor.toString()),
+      'suggestionIdFlavor'            : encrypt(suggestionIdFlavor.toString()),
+      'productSuggestionIdFlavor'     : encrypt(productSuggestionIdFlavor.toString()),
+      'suggestionPriceFlavor'         : encrypt(suggestionPriceFlavor.toString()),
 
-      'suggestionIdWoc'          : encrypt(suggestionIdWoc.toString()),
-      'productSuggestionIdWoc'   : encrypt(productSuggestionIdWoc.toString()),
-      'suggestionPriceWoc'       : encrypt(suggestionPriceWoc.toString()),
+      'suggestionIdWoc'               : encrypt(suggestionIdWoc.toString()),
+      'productSuggestionIdWoc'        : encrypt(productSuggestionIdWoc.toString()),
+      'suggestionPriceWoc'            : encrypt(suggestionPriceWoc.toString()),
 
-      'suggestionIdTos'          : encrypt(suggestionIdTos.toString()),
-      'productSuggestionIdTos'   : encrypt(productSuggestionIdTos.toString()),
-      'suggestionPriceTos'       : encrypt(suggestionPriceTos.toString()),
+      'suggestionIdTos'               : encrypt(suggestionIdTos.toString()),
+      'productSuggestionIdTos'        : encrypt(productSuggestionIdTos.toString()),
+      'suggestionPriceTos'            : encrypt(suggestionPriceTos.toString()),
 
-      'suggestionIdTon'          : encrypt(suggestionIdTon.toString()),
-      'productSuggestionIdTon'   : encrypt(productSuggestionIdTon.toString()),
-      'suggestionPriceTon'       : encrypt(suggestionPriceTon.toString()),
+      'suggestionIdTon'               : encrypt(suggestionIdTon.toString()),
+      'productSuggestionIdTon'        : encrypt(productSuggestionIdTon.toString()),
+      'suggestionPriceTon'            : encrypt(suggestionPriceTon.toString()),
 
-      'suggestionIdTops'         : encrypt(suggestionIdTops.toString()),
-      'productSuggestionIdTops'  : encrypt(productSuggestionIdTops.toString()),
-      'suggestionPriceTops'      : encrypt(suggestionPriceTops.toString()),
+      'suggestionIdTops'              : encrypt(suggestionIdTops.toString()),
+      'productSuggestionIdTops'       : encrypt(productSuggestionIdTops.toString()),
+      'suggestionPriceTops'           : encrypt(suggestionPriceTops.toString()),
 
-      'suggestionIdCoi'          : encrypt(suggestionIdCoi.toString()),
-      'productSuggestionIdCoi'   : encrypt(productSuggestionIdCoi.toString()),
-      'suggestionPriceCoi'       : encrypt(suggestionPriceCoi.toString()),
+      'suggestionIdCoi'               : encrypt(suggestionIdCoi.toString()),
+      'productSuggestionIdCoi'        : encrypt(productSuggestionIdCoi.toString()),
+      'suggestionPriceCoi'            : encrypt(suggestionPriceCoi.toString()),
 
-      'suggestionIdCoslfm'       : encrypt(suggestionIdCoslfm.toString()),
-      'productSuggestionIdCoslfm': encrypt(productSuggestionIdCoslfm.toString()),
-      'suggestionPriceCoslfm'    : encrypt(suggestionPriceCoslfm.toString()),
+      'suggestionIdCoslfm'            : encrypt(suggestionIdCoslfm.toString()),
+      'productSuggestionIdCoslfm'     : encrypt(productSuggestionIdCoslfm.toString()),
+      'suggestionPriceCoslfm'         : encrypt(suggestionPriceCoslfm.toString()),
 
-      'suggestionIdSink'         : encrypt(suggestionIdSink.toString()),
-      'productSuggestionIdSink'  : encrypt(productSuggestionIdSink.toString()),
-      'suggestionPriceSink'      : encrypt(suggestionPriceSink.toString()),
+      'suggestionIdSink'              : encrypt(suggestionIdSink.toString()),
+      'productSuggestionIdSink'       : encrypt(productSuggestionIdSink.toString()),
+      'suggestionPriceSink'           : encrypt(suggestionPriceSink.toString()),
 
-      'suggestionIdBcf'          : encrypt(suggestionIdBcf.toString()),
-      'productSuggestionIdBcf'   : encrypt(productSuggestionIdBcf.toString()),
-      'suggestionPriceBcf'       : encrypt(suggestionPriceBcf.toString()),
+      'suggestionIdBcf'               : encrypt(suggestionIdBcf.toString()),
+      'productSuggestionIdBcf'        : encrypt(productSuggestionIdBcf.toString()),
+      'suggestionPriceBcf'            : encrypt(suggestionPriceBcf.toString()),
 
-      'suggestionIdCc'           : encrypt(suggestionIdCc.toString()),
-      'productSuggestionIdCc'    : encrypt(productSuggestionIdCc.toString()),
-      'suggestionPriceCc'        : encrypt(suggestionPriceCc.toString()),
+      'suggestionIdCc'                : encrypt(suggestionIdCc.toString()),
+      'productSuggestionIdCc'         : encrypt(productSuggestionIdCc.toString()),
+      'suggestionPriceCc'             : encrypt(suggestionPriceCc.toString()),
 
-      'suggestionIdCom'          : encrypt(suggestionIdCom.toString()),
-      'productSuggestionIdCom'   : encrypt(productSuggestionIdCom.toString()),
-      'suggestionPriceCom'       : encrypt(suggestionPriceCom.toString()),
+      'suggestionIdCom'               : encrypt(suggestionIdCom.toString()),
+      'productSuggestionIdCom'        : encrypt(productSuggestionIdCom.toString()),
+      'suggestionPriceCom'            : encrypt(suggestionPriceCom.toString()),
 
-      'suggestionIdCoft'         : encrypt(suggestionIdCoft.toString()),
-      'productSuggestionIdCoft'  : encrypt(productSuggestionIdCoft.toString()),
-      'suggestionPriceCoft'      : encrypt(suggestionPriceCoft.toString()),
+      'suggestionIdCoft'              : encrypt(suggestionIdCoft.toString()),
+      'productSuggestionIdCoft'       : encrypt(productSuggestionIdCoft.toString()),
+      'suggestionPriceCoft'           : encrypt(suggestionPriceCoft.toString()),
 
-      'suggestionIdCymf'         : encrypt(suggestionIdCymf.toString()),
-      'productSuggestionIdCymf'  : encrypt(productSuggestionIdCymf.toString()),
-      'suggestionPriceCymf'      : encrypt(suggestionPriceCymf.toString()),
+      'suggestionIdCymf'              : encrypt(suggestionIdCymf.toString()),
+      'productSuggestionIdCymf'       : encrypt(productSuggestionIdCymf.toString()),
+      'suggestionPriceCymf'           : encrypt(suggestionPriceCymf.toString()),
 
-      'suggestionIdTomb'         : encrypt(suggestionIdTomb.toString()),
-      'productSuggestionIdTomb'  : encrypt(productSuggestionIdTomb.toString()),
-      'suggestionPriceTomb'      : encrypt(suggestionPriceTomb.toString()),
+      'suggestionIdTomb'              : encrypt(suggestionIdTomb.toString()),
+      'productSuggestionIdTomb'       : encrypt(productSuggestionIdTomb.toString()),
+      'suggestionPriceTomb'           : encrypt(suggestionPriceTomb.toString()),
 
-      'suggestionIdCosv'         : encrypt(suggestionIdCosv.toString()),
-      'productSuggestionIdCosv'  : encrypt(productSuggestionIdCosv.toString()),
-      'suggestionPriceCosv'      : encrypt(suggestionPriceCosv.toString()),
+      'suggestionIdCosv'              : encrypt(suggestionIdCosv.toString()),
+      'productSuggestionIdCosv'       : encrypt(productSuggestionIdCosv.toString()),
+      'suggestionPriceCosv'           : encrypt(suggestionPriceCosv.toString()),
 
-      'suggestionIdTop'          : encrypt(suggestionIdTop.toString()),
-      'productSuggestionIdTop'   : encrypt(productSuggestionIdTop.toString()),
-      'suggestionPriceTop'       : encrypt(suggestionPriceTop.toString()),
+      'suggestionIdTop'               : encrypt(suggestionIdTop.toString()),
+      'productSuggestionIdTop'        : encrypt(productSuggestionIdTop.toString()),
+      'suggestionPriceTop'            : encrypt(suggestionPriceTop.toString()),
 
-      'selectedSideOnPrice'      : encrypt(selectedSideOnPrice.toString()),
-      'selectedSideItems'        : encrypt(selectedSideItems.toString()),
-      'selectedSideItemsUom'     : encrypt(selectedSideItemsUom.toString()),
+      'suggestionIdTocw'              : encrypt(suggestionIdTocw.toString()),
+      'productSuggestionIdTocw'       : encrypt(productSuggestionIdTocw.toString()),
+      'suggestionPriceTocw'           : encrypt(suggestionPriceTocw.toString()),
 
-      'selectedSideSides'        : encrypt(selectedSideSides.toString()),
-      'selectedSideDessert'      : encrypt(selectedSideDessert.toString()),
-      'selectedSideDrinks'       : encrypt(selectedSideDrinks.toString()),
+      'suggestionIdNameless'          : encrypt(suggestionIdNameless.toString()),
+      'productSuggestionIdNameless'   : encrypt(productSuggestionIdNameless.toString()),
+      'suggestionPriceNameless'       : encrypt(suggestionPriceNameless.toString()),
+
+      'selectedSideOnPrice'           : encrypt(selectedSideOnPrice.toString()),
+      'selectedSideItems'             : encrypt(selectedSideItems.toString()),
+      'selectedSideItemsUom'          : encrypt(selectedSideItemsUom.toString()),
+
+      'selectedSideSides'             : encrypt(selectedSideSides.toString()),
+      'selectedSideDessert'           : encrypt(selectedSideDessert.toString()),
+      'selectedSideDrinks'            : encrypt(selectedSideDrinks.toString()),
     });
     client.close();
     return response.body;

@@ -268,18 +268,22 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                   //Add isDense true and zero Padding.
                   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                   isDense: true,
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                  ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 10,
                     vertical: 5,
                   ),
-                  // enabledBorder: const OutlineInputBorder(
-                  //   // width: 0.0 produces a thin "hairline" border
-                  //   borderSide: const BorderSide(color: Colors.deepOrangeAccent, width: 0.5),
-                  // ),
+                  enabledBorder: const OutlineInputBorder(
+                    // width: 0.0 produces a thin "hairline" border
+                    borderSide: const BorderSide(color: Colors.black54, width: 1),
+                  ),
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: const BorderSide(color: Colors.green, width: 0.0),
-                    // borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 2.0)
+                    borderRadius: BorderRadius.circular(5),
+                    // borderSide: const BorderSide(color: Colors.green, width: 0.0),
+                    borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
                   ),
                   //Add more decoration as you want here
                   //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
