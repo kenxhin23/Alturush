@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:simple_connection_checker/simple_connection_checker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:async';
+import 'db_helper.dart';
 import 'splashScreen.dart';
 
 void main(){
@@ -29,6 +30,9 @@ class MyApp extends StatefulWidget {
 
 class _MyApp extends State<MyApp>{
 
+  final db = RapidA();
+  List getVersion;
+  String currentVersion;
   Timer _timerSession;
   void handleUserInteraction([_]) {
     _initializeTimer();
@@ -59,10 +63,20 @@ class _MyApp extends State<MyApp>{
     // print(_timerSession);
   }
 
+  Future checkVersion() async {
+    var res = await db.checkVersion('alturush');
+    if(!mounted) return;
+    setState(() {
+      getVersion = res['user_details'];
+    });
+  }
+
   @override
   void initState(){
     // _logOutUser();
     _initializeTimer();
+    currentVersion = '1.0.3';
+    checkVersion();
     // print(_timerSession);
     // print('timer on');
     super.initState();

@@ -20,8 +20,8 @@ class RapidA {
     return _instance;
   }
 
-  String server = "https://app1.alturush.com/";
-  // String server = "http://172.16.43.147/rapida";
+  // String server = "https://app1.alturush.com/";
+  String server = "http://172.16.43.147/rapida";
   // String server = "http://10.233.1.58/rapida/";
   // String server = "http://172.16.46.130/rapida";
   // String server = "http://192.168.1.2:3333/rapida";
@@ -419,12 +419,25 @@ class RapidA {
     return dataUser;
   }
 
-  Future getTicketNo() async{
+  Future getTicketNoOnFoods() async{
     var client = http.Client();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userID =  prefs.getString('s_customerId');
     Map dataUser;
-    final response = await client.post(Uri.parse("$server/getTicketNo_r"),body:{
+    final response = await client.post(Uri.parse("$server/getTicketNoOnFoods_r"),body:{
+      'cusId' : encrypt(userID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future getTicketNoOnGoods() async{
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID =  prefs.getString('s_customerId');
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/getTicketNoOnGoods_r"),body:{
       'cusId' : encrypt(userID),
     });
     dataUser = jsonDecode(response.body);
@@ -2141,6 +2154,17 @@ class RapidA {
     client.close();
   }
 
+  Future checkVersion(appName) async {
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/check_version_r"),body:{
+      'appName' : encrypt(appName),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   Future loadProfile() async{
     var client = http.Client();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -2148,6 +2172,32 @@ class RapidA {
     Map dataUser;
     final response = await client.post(Uri.parse("$server/loadProfile_r"),body:{
       'cusId' : encrypt(userID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future getStatus(tenantID) async {
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/get_status_r"),body:{
+      'tenantID' : encrypt(tenantID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future getStatus2(bunitCode) async {
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/get_status_r2"),body:{
+      'bunitCode' : encrypt(bunitCode),
     });
     dataUser = jsonDecode(response.body);
     client.close();

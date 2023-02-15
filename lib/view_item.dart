@@ -234,8 +234,8 @@ class _ViewItem extends State<ViewItem>{
       suggestionTombData      = loadItemData[21]['suggestion_tomb_data'];
       suggestionCosvData      = loadItemData[22]['suggestion_cosv_data'];
       suggestionTopData       = loadItemData[23]['suggestion_top_data'];
-      suggestionTocwData      = loadItemData[23]['suggestion_top_data'];
-      suggestionNamelessData  = loadItemData[23]['suggestion_top_data'];
+      suggestionTocwData      = loadItemData[24]['suggestion_tocw_data'];
+      suggestionNamelessData  = loadItemData[25]['suggestion_nameless_data'];
 
       apg = oCcy.parse(loadItemData[0]['price_per_gram']);
       print(apg);
@@ -560,7 +560,7 @@ class _ViewItem extends State<ViewItem>{
             suggestionIdTocw = suggestionTocwData[q]['suggestion_id'];
             productSuggestionIdTocw = suggestionTocwData[q]['prod_suggestion_id'];
             suggestionPriceTocw = suggestionTocwData[q]['price'];
-            // print('ang Woc id kay $suggestionBcfDataGroupValue');
+            print('ang Woc id kay $suggestionTocwDataGroupValue');
             break;
           }
         }
@@ -575,7 +575,7 @@ class _ViewItem extends State<ViewItem>{
             suggestionIdNameless = suggestionNamelessData[q]['suggestion_id'];
             productSuggestionIdNameless = suggestionNamelessData[q]['prod_suggestion_id'];
             suggestionPriceNameless = suggestionNamelessData[q]['price'];
-            // print('ang Woc id kay $suggestionBcfDataGroupValue');
+            print('ang Woc id kay $suggestionNamelessDataGroupValue');
             break;
           }
         }

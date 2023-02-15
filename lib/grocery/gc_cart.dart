@@ -35,6 +35,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   List getAddress = [];
   List<String> _options = ['Pay via Cash/COD']; //
   List<bool> subTotalStore = [];
+  List<String> tempID = [];
 
   double totalAmount = 0.00;
   double amountPT = 0.00;
@@ -560,7 +561,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
             ),
           ],
         ),
-        body: isLoading
+        body : isLoading
           ? Center(
            child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
@@ -579,6 +580,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                     child: ListView.builder(
                       itemCount: getTotalAmount == null ? 0 : getTotalAmount.length,
                       itemBuilder: (BuildContext context, int index) {
+                        side.add(false);
                         return Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -590,8 +592,58 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
 
                                     Padding(
                                       padding: EdgeInsets.only(left: 10),
+                                      child: SizedBox(width: 20, height: 20,
+                                        child: Checkbox(
+                                            activeColor: Colors.green,
+                                            value: side[index],
+                                            onChanged: (value) {
+                                              setState(() {
+                                                side[index] = value;
+
+                                                for (int q=0;q<loadCartData.length;q++) {
+
+                                                  if (getTotalAmount[index]['buCode'] == loadCartData[q]['buCode']){
+                                                    side1[q] = false;
+                                                    tempID.remove(loadCartData[q]['cart_id']);
+                                                  }
+                                                }
+
+                                                if (value){
+                                                  print(value);
+                                                  // loadMethods();
+
+                                                  for (int q=0;q<loadCartData.length;q++) {
+
+                                                    if (getTotalAmount[index]['buCode'] == loadCartData[q]['buCode']){
+                                                      side1[q] = true;
+                                                      tempID.add(loadCartData[q]['cart_id']);
+                                                    }
+                                                  }
+                                                } else {
+                                                  print(value);
+                                                  // loadMethods();
+
+                                                  for (int q=0;q<loadCartData.length;q++) {
+
+                                                    if (getTotalAmount[index]['buCode'] == loadCartData[q]['buCode']){
+                                                      side1[q] = false;
+                                                      tempID.remove(loadCartData[q]['cart_id']);
+                                                    }
+                                                  }
+                                                }
+                                                print(tempID);
+                                              });
+                                            }
+                                        ),
+                                      ),
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
                                       child: Text('${getTotalAmount[index]['buName']}', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 15.0),),
                                     )
+
+
                                   ],
                                 ),
                               ),
@@ -620,6 +672,15 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                 shrinkWrap: true,
                                 itemCount: loadCartData == null ? 0 : loadCartData.length,
                                 itemBuilder: (BuildContext context, int index0) {
+
+                                  String uom;
+
+                                  if (loadCartData[index0]['product_uom'] == null) {
+                                   uom = '';
+                                  } else {
+                                    uom = "- ${loadCartData[index0]['product_uom']}";
+                                  }
+                                  side1.add(false);
                                   return InkWell(
                                       child:
                                       Visibility(
@@ -631,6 +692,34 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                               children: [
                                                 Row(
                                                   children: <Widget>[
+
+                                                    Padding(
+                                                      padding: EdgeInsets.only(left: 8, right: 10),
+                                                      child: SizedBox(width: 20, height: 20,
+                                                        child: Checkbox(
+                                                            activeColor: Colors.green,
+                                                            value: side1[index0],
+                                                            onChanged: (bool value1) {
+                                                              setState(() {
+                                                                side1[index0] = value1;
+
+                                                                if (value1) {
+                                                                  // loadMethods();
+
+                                                                  tempID.add(loadCartData[index0]['cart_id']);
+
+                                                                } else {
+                                                                  side[index0] = false;
+                                                                  // loadMethods();
+
+                                                                  tempID.remove(loadCartData[index0]['cart_id']);
+                                                                }
+                                                                print(tempID);
+                                                              });
+                                                            }
+                                                        ),
+                                                      ),
+                                                    ),
                                                     Padding(
                                                       padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
                                                       child: Column(
@@ -667,10 +756,10 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                 child: Padding(
                                                                   padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
                                                                   child: RichText(
-                                                                    overflow: TextOverflow.ellipsis,
+                                                                    overflow: TextOverflow.ellipsis, maxLines: 2,
                                                                     text: TextSpan(
                                                                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                      text: ('${loadCartData[index0]['product_name']}'),
+                                                                      text: ('${loadCartData[index0]['product_name']} $uom'),
                                                                     ),
                                                                   ),
                                                                 ),

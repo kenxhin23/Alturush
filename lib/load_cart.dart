@@ -49,7 +49,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
   ///select all
   List<String> orderID =[];
-  List<String> productID = [];
+  List<String> tempID = [];
   List<String> uomID = [];
   List<String> quantity = [];
   List<String> price = [];
@@ -137,7 +137,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
     getTotal2();
 
     orderID.clear();
-    productID.clear();
+    tempID.clear();
     uomID.clear();
     quantity.clear();
     price.clear();
@@ -164,7 +164,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   Future addTempCartPickup() async {
     await db.addTempCartPickup(
       orderID,
-      productID,
+      tempID,
       uomID,
       quantity,
       price,
@@ -177,7 +177,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   Future addTempCartDelivery() async {
     await db.addTempCartDelivery(
       orderID,
-      productID,
+      tempID,
       uomID,
       quantity,
       price,
@@ -201,7 +201,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   Future loadCart2() async {
-    var res = await db.loadCartData2(productID);
+    var res = await db.loadCartData2(tempID);
     if (!mounted) return;
     setState(() {
       loadCartData2 = res['user_details'];
@@ -255,7 +255,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   Future getBuSegregate2() async {
-    var res = await db.getBuSegregate2(productID);
+    var res = await db.getBuSegregate2(tempID);
     if (!mounted) return;
     setState(() {
       getBu2 = res['user_details'];
@@ -280,7 +280,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   Future getTotal2() async {
-    var res = await db.getAmountPerTenant2(productID);
+    var res = await db.getAmountPerTenant2(tempID);
     if (!mounted) return;
     setState(() {
       subTotalTenant.clear();
@@ -323,7 +323,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   Future loadTotal2() async {
-    var res = await db.loadSubTotal2(productID);
+    var res = await db.loadSubTotal2(tempID);
     if (!mounted) return;
     setState(() {
       loadTotalData2 = res['user_details'];
@@ -547,7 +547,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   void displayBottomSheet(BuildContext context) async {
-    var res = await db.getAmountPerTenant2(productID);
+    var res = await db.getAmountPerTenant2(tempID);
     if (!mounted) return;
     setState(() {
       lGetAmountPerTenant = res['user_details'];
@@ -849,7 +849,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             }
                           });
                           Navigator.pop(context);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderDelivery(paymentMethod : _selectOption, productID : productID)),).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderDelivery(paymentMethod : _selectOption, productID : tempID)),).then((val)=>{onRefresh()});
                           // Navigator.of(context).push(_placeOrderDelivery(loadIMainItems, _selectOption));
                         }
                       },
@@ -920,7 +920,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             }
                           });
                           Navigator.pop(context);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderPickUp(paymentMethod : _selectOption, productID : productID)),).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderPickUp(paymentMethod : _selectOption, productID : tempID)),).then((val)=>{onRefresh()});
                         }
                       },
                       child: Container(
@@ -1159,7 +1159,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddressMasterFile())).then((val)=>{onRefresh()});
               },
-              icon: Icon(Icons.edit_location_alt_rounded, color: Colors.deepOrangeAccent,),
+              icon: Icon(Icons.edit_location_outlined, color: Colors.deepOrangeAccent,),
             ),
           ],
         ),
@@ -1249,7 +1249,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                                 if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
                                                   side1[q] = false;
-                                                  productID.remove(loadCartData[q]['main_item']['temp_id']);
+                                                  tempID.remove(loadCartData[q]['main_item']['temp_id']);
                                                 }
                                               }
 
@@ -1261,7 +1261,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                                   if (getBu[index0]['d_tenant_id'] == loadIMainItems[q]['main_item']['tenant_id']){
                                                     side1[q] = true;
-                                                    productID.add(loadCartData[q]['main_item']['temp_id']);
+                                                    tempID.add(loadCartData[q]['main_item']['temp_id']);
                                                   }
                                                 }
                                               } else {
@@ -1272,11 +1272,11 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                                   if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
                                                     side1[q] = false;
-                                                    productID.remove(loadCartData[q]['main_item']['temp_id']);
+                                                    tempID.remove(loadCartData[q]['main_item']['temp_id']);
                                                   }
                                                 }
                                               }
-                                              print(productID);
+                                              print(tempID);
                                             });
                                           }
                                         ),
@@ -1385,15 +1385,15 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                           if (value1) {
                                                             loadMethods();
 
-                                                            productID.add(loadCartData[index]['main_item']['temp_id']);
+                                                            tempID.add(loadCartData[index]['main_item']['temp_id']);
 
                                                           } else {
                                                             side[index0] = false;
                                                             loadMethods();
 
-                                                            productID.remove(loadCartData[index]['main_item']['temp_id']);
+                                                            tempID.remove(loadCartData[index]['main_item']['temp_id']);
                                                           }
-                                                          print(productID);
+                                                          print(tempID);
                                                         });
                                                       }
                                                     ),
@@ -1904,7 +1904,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                     false) {
                                   checkIfBf();
                                 }
-                                else if (productID.isEmpty){
+                                else if (tempID.isEmpty){
                                   Fluttertoast.showToast(
                                       msg: "Please select item(s) for checkout. ",
                                       toastLength: Toast.LENGTH_SHORT,

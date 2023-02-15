@@ -1,15 +1,18 @@
 import 'package:arush/homePage.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'electronicsAppliances.dart';
 import 'grocery/groceryMain.dart';
 import 'load_bu.dart';
 import 'package:root_check/root_check.dart';
 import 'package:flutter/services.dart';
 import 'db_helper.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Splash extends StatefulWidget {
   @override
@@ -20,11 +23,17 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
   final db = RapidA();
   List globalCat;
   List loadProfileData;
+  List getVersion;
   String firstName="";
   var isLoading = true;
   var isVisible = true;
   var locationString;
   String profilePhoto;
+  String currentVersion;
+  String dbVersion;
+  String changelog;
+
+
 
   // void selectType(BuildContext context ,width ,height) async{
   //   getGlobalCat();
@@ -140,7 +149,14 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
   //   });
   // }
 
-  Future loadProfile() async{
+  Future getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+
+    print("ang version kay $version");
+  }
+
+  Future loadProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var status  = prefs.getString('s_status');
     if(status != null) {
@@ -162,11 +178,61 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
     }
   }
 
+  Future checkVersion() async {
+    var res = await db.checkVersion('alturush');
+    if(!mounted) return;
+    setState(() {
+      getVersion = res['user_details'];
+      dbVersion = getVersion[0]['version_code'];
+      changelog = getVersion[0]['changelog'];
+      print('ang db app version kay $dbVersion');
+      print('Changelog: $changelog');
+      isLoading = false;
+
+      if (res != null) {
+        if (dbVersion != currentVersion) {
+          print('need update');
+          CoolAlert.show(
+              context: context,
+              type: CoolAlertType.info,
+              text: "New update: ver.$dbVersion \nChangelog: $changelog" ,
+              confirmBtnColor: Colors.deepOrangeAccent,
+              backgroundColor: Colors.deepOrangeAccent,
+              barrierDismissible: false,
+              showCancelBtn: true,
+              confirmBtnText: "Update",
+              onConfirmBtnTap: () async {
+                Navigator.of(context).pop();
+                print('go to update');
+                _launchURL();
+              },
+              onCancelBtnTap: () async {
+                print('no update');
+                Navigator.of(context).pop();
+              }
+          );
+        }
+      }
+    });
+  }
+
+  _launchURL() async {
+    const url = 'https://alturush.com/apk/alturush.apk';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
   @override
   void initState() {
     // getGlobalCat();
     loadProfile();
     initPlatformState();
+    currentVersion = '1.0.4';
+    checkVersion();
+    getAppVersion();
     super.initState();
   }
   @override
@@ -186,7 +252,11 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
       //   backgroundColor: Colors.white,
       //   elevation: 0.1,
       // ),
-      body: Container(
+      body:isLoading ?
+      Center(
+        child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange)),
+      ) : Container(
         decoration: BoxDecoration(
           color: Colors.white,
           image: DecorationImage(

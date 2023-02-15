@@ -130,6 +130,8 @@ class _ToDeliver extends State<ToDeliverGood> {
   }
   var delCharge;
   var grandTotal;
+
+
   Future getTotal() async{
     var res = await db.getTotal(widget.ticketNo);
     if (!mounted) return;
@@ -170,6 +172,7 @@ class _ToDeliver extends State<ToDeliverGood> {
     setState(() {
       isLoading = false;
       loadItems = res['user_details'];
+      print(loadItems);
 //      tPrice = loadItems[0]['d_tot_price'];
 //      deliveryCharge = loadItems[0]['d_delivery_charge'];
 //      granTotal = double.parse(deliveryCharge)+tPrice;
@@ -193,7 +196,7 @@ class _ToDeliver extends State<ToDeliverGood> {
   @override
   void initState() {
     super.initState();
-    // lookItemsGood();
+    lookItemsGood();
     // getTotal();
     checkIfOnGoing();
   }
@@ -240,140 +243,134 @@ class _ToDeliver extends State<ToDeliverGood> {
                 onRefresh: lookItemsGood,
                 child: Scrollbar(
                   child: ListView.builder(
-                      itemCount:loadItems == null ? 0 : loadItems.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return GestureDetector(
-                          onTap: () {
+                    itemCount:loadItems == null ? 0 : loadItems.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
 
-                          },
-                          child: Container(
-                            height: 130.0,
-                            width: 30.0,
-                            child: Card(
-                              color: Colors.transparent,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                children: [
-                                  Row(
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                                        child: Container(
-                                            width: 80.0,
-                                            height: 100.0,
-                                            decoration: new BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: new DecorationImage(
-                                                image: new NetworkImage(loadItems[index]['prod_image']),
-                                                fit: BoxFit.scaleDown,
-                                              ),
-                                            )),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          child:Column(
-                                            crossAxisAlignment:CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: EdgeInsets.fromLTRB(15, 0, 5, 5),
-                                                child:Text(loadItems[index]['prod_name'],textAlign: TextAlign.justify, maxLines: 2, overflow: TextOverflow.ellipsis,
-                                                  style: GoogleFonts.openSans(
-                                                      fontStyle:
-                                                      FontStyle.normal,
-                                                      fontSize: 15.0),
-                                                ),
-                                              ),
-                                              // Padding(
-                                              //   padding: EdgeInsets.fromLTRB(15, 0, 5, 5),
-                                              //   child: new Text('From: ${loadItems[index]['bu_name']}', overflow: TextOverflow.clip,
-                                              //     style: GoogleFonts.openSans(
-                                              //         fontStyle:
-                                              //         FontStyle.normal,
-                                              //         fontSize: 15.0),
-                                              //   ),
-                                              // ),
-                                              Row(
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
-                                                    child: new Text(
-                                                      "Price: ₱ ${oCcy.format(double.parse(loadItems[index]['total_price']))} ",
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                        FontWeight.bold,
-                                                        fontSize: 15.0,
-                                                        color: Colors.green,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                children: [
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                                    child: new Text('Quantity: ${loadItems[index]['d_qty']}',
-                                                      style: TextStyle(
-                                                        //                                                        fontWeight: FontWeight.bold,
-                                                        fontSize: 15.0,
-                                                        //                                                        color: Colors.deepOrange,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  loadItems[index]['canceled_status'] == '1'?
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
-                                                    child: OutlinedButton(
-                                                      style: TextButton.styleFrom(
-                                                        primary: Colors.black, // foreground
-                                                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                                                      ),
-                                                      onPressed: null,
-                                                      child: Text("Cancelled"),
-                                                    ),
-                                                  ):
-                                                  loadItems[index]['ifexists'] == 'true'?
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
-                                                    child: OutlinedButton(
-                                                      style: TextButton.styleFrom(
-                                                        primary: Colors.black, // foreground
-                                                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                                                      ),
-                                                      onPressed: null,
-                                                      child: Text("Rider is tagged"),
-                                                    ),
-                                                  ):Padding(
-                                                    padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
-                                                    child: OutlinedButton(
-                                                      style: TextButton.styleFrom(
-                                                        primary: Colors.black, // foreground
-                                                        shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
-                                                      ),
-                                                      onPressed: (){
-                                                        // cancelOrder(loadItems[index]['gc_final_id']);
-                                                      },
-                                                      child:Text("Cancel this item"),
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                            ],
+                        },
+                        child: Container(
+                          height: 130.0,
+                          width: 30.0,
+                          child: Card(
+                            color: Colors.transparent,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
+                                      child: Container(
+                                        width: 80.0,
+                                        height: 100.0,
+                                        decoration: new BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          image: new DecorationImage(
+                                            image: new NetworkImage(loadItems[index]['prod_image']),
+                                            fit: BoxFit.scaleDown,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              elevation: 0,
-                              margin: EdgeInsets.all(3),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child:Column(
+                                          crossAxisAlignment:CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: EdgeInsets.fromLTRB(15, 0, 5, 5),
+                                              child:Text(loadItems[index]['prod_name'],textAlign: TextAlign.justify, maxLines: 2, overflow: TextOverflow.ellipsis,
+                                                style: GoogleFonts.openSans(
+                                                  fontStyle: FontStyle.normal,
+                                                  fontSize: 15.0,
+                                                ),
+                                              ),
+                                            ),
+
+                                            Row(
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                                                  child: new Text(
+                                                    "Price: ₱ ${oCcy.format(double.parse(loadItems[index]['total_price']))} ",
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                      FontWeight.bold,
+                                                      fontSize: 15.0,
+                                                      color: Colors.green,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                              children: [
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                                  child: new Text('Quantity: ${loadItems[index]['d_qty']}',
+                                                    style: TextStyle(
+                                                      //                                                        fontWeight: FontWeight.bold,
+                                                      fontSize: 15.0,
+                                                      //                                                        color: Colors.deepOrange,
+                                                    ),
+                                                  ),
+                                                ),
+                                                loadItems[index]['canceled_status'] == '1'?
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(5.0, 0.0, 5.0, 0.0),
+                                                  child: OutlinedButton(
+                                                    style: TextButton.styleFrom(
+                                                      primary: Colors.black, // foreground
+                                                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                                                    ),
+                                                    onPressed: null,
+                                                    child: Text("Cancelled"),
+                                                  ),
+                                                ):
+                                                loadItems[index]['ifexists'] == 'true'?
+                                                Padding(
+                                                  padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                                                  child: OutlinedButton(
+                                                    style: TextButton.styleFrom(
+                                                      primary: Colors.black, // foreground
+                                                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                                                    ),
+                                                    onPressed: null,
+                                                    child: Text("Rider is tagged"),
+                                                  ),
+                                                ):Padding(
+                                                  padding: EdgeInsets.fromLTRB(15, 0, 5, 0),
+                                                  child: OutlinedButton(
+                                                    style: TextButton.styleFrom(
+                                                      primary: Colors.black, // foreground
+                                                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(20.0)),
+                                                    ),
+                                                    onPressed: (){
+                                                      // cancelOrder(loadItems[index]['gc_final_id']);
+                                                    },
+                                                    child:Text("Cancel this item"),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
+                            elevation: 0,
+                            margin: EdgeInsets.all(3),
                           ),
-                        );
-                      }),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),

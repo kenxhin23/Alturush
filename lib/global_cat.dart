@@ -6,6 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,6 +42,8 @@ class _GlobalCat extends State<GlobalCat>{
   List listCounter;
   List globalCat;
   List buData;
+  List tenantStatus;
+  List tenantStatus2;
 
   var isLoading = true;
   var cartLoading = true;
@@ -54,11 +57,17 @@ class _GlobalCat extends State<GlobalCat>{
   bool showBadge;
   bool showCB;
   bool showMedplus;
+  bool showValentines;
 
   String tenantIdXmas;
+  String tenantIdMedPlus;
   String tenantIdValentines;
   String categoryIdXmas;
   String categoryIdValentines;
+  String getTenantStatus;
+  String getTenantStatusXmas;
+  String getTenantStatusMedPlus;
+  String getTenantStatusValentines;
 
   String image;
 //   Future loadTenant() async {
@@ -72,26 +81,36 @@ class _GlobalCat extends State<GlobalCat>{
 //   }
 
   showCb() async {
-    if (widget.buCode != '3') {
+    if (widget.buCode != '3' && getTenantStatusXmas == '1') {
       showCB = true;
     } else {
       showCB = false;
     }
+
   }
 
   showMp() async {
-    if (widget.buCode == '1') {
+    if (widget.buCode == '1'&& getTenantStatusMedPlus == '1') {
       showMedplus = true;
     } else {
       showMedplus = false;
     }
+
+  }
+
+  showVb() async {
+    if (widget.buCode != '3' && getTenantStatusValentines == '1') {
+      showValentines = true;
+    } else {
+      showValentines = false;
+    }
+
   }
 
   Future getGlobalCat() async{
     var res = await db.getGlobalCat();
     if (!mounted) return;
     setState(() {
-      isLoading = false;
       globalCat = res['user_details'];
       print(globalCat);
     });
@@ -108,7 +127,44 @@ class _GlobalCat extends State<GlobalCat>{
         profilePicture = listProfile[0]['d_photo'];
         profileLoading = false;
       });
+
     }
+  }
+
+
+  Future getStatus() async {
+    var res = await db.getStatus2(widget.buCode);
+    if (!mounted) return;
+    setState(() {
+      tenantStatus2 = res['user_details'];
+      for (int i=0; i<tenantStatus2.length;i++) {
+
+        if (tenantIdXmas == tenantStatus2[i]['tenant_id']) {
+          getTenantStatusXmas = tenantStatus2[i]['active'];
+
+        }
+
+        if ('39' == tenantStatus2[i]['tenant_id']) {
+          getTenantStatusMedPlus = tenantStatus2[i]['active'];
+
+        }
+
+        if (tenantIdValentines == tenantStatus2[i]['tenant_id']) {
+          getTenantStatusValentines = tenantStatus2[i]['active'];
+
+        }
+        isLoading = false;
+      }
+      print("ang status sa xmas $getTenantStatusXmas");
+
+      print("ang status sa medplus $getTenantStatusMedPlus");
+
+      print("ang status sa valentines $getTenantStatusValentines");
+      showCb();
+      showMp();
+      showVb();
+    });
+
   }
 
   Future getCounter() async {
@@ -149,7 +205,6 @@ class _GlobalCat extends State<GlobalCat>{
     getGlobalCat();
     getCounter();
     print(widget.buCode);
-
 
     ///live
     if (widget.buCode =='1'){
@@ -194,11 +249,12 @@ class _GlobalCat extends State<GlobalCat>{
 //     } else if (widget.buCode == '5') {
 //       image = "assets/jpg/alturas_talibon.jpeg";
 //     }
+    getStatus();
 
     loadProfile();
     loadProfilePic();
-    showCb();
-    showMp();
+
+
   }
 
   @override
@@ -449,19 +505,19 @@ class _GlobalCat extends State<GlobalCat>{
                                 ));
                               } else {
                                 print(widget.buCode);
-                                if (widget.buCode == '5') {
+                                if (widget.buCode == '3' || widget.buCode == '4' || widget.buCode == '5') {
 
                                   print('dili pa pwde');
                                 } else {
-                                  // print('unya naka');
-                                  // Navigator.of(context).push(_loadGC(
-                                  //     widget.buLogo,
-                                  //     globalCat[index]['category'],
-                                  //     globalCat[index]['id'],
-                                  //     widget.buName,
-                                  //     widget.buCode,
-                                  //     widget.groupCode
-                                  // ));
+                                  print('unya naka');
+                                  Navigator.of(context).push(_loadGC(
+                                      widget.buLogo,
+                                      globalCat[index]['category'],
+                                      globalCat[index]['id'],
+                                      widget.buName,
+                                      widget.buCode,
+                                      widget.groupCode
+                                  ));
                                 }
                               }
                               // selectCategory(context,widget.buCode,loadTenants[index]['logo'], loadTenants[index]['tenant_id'], loadTenants[index]['d_tenant_name']);
@@ -517,18 +573,25 @@ class _GlobalCat extends State<GlobalCat>{
                           child: GestureDetector(
                             onTap: () async {
 
-
                               if (widget.buCode != '3') {
-                                await Navigator.of(context).push(_loadStore(
-                                  'All items',
-                                  categoryIdXmas,
-                                  widget.buCode,
-                                  widget.buAcroname,
-                                  'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
-                                  tenantIdXmas,
-                                  'CHRISTMAS BASKETS',
-                                  widget.groupCode)
-                                );
+                                Future.delayed(const Duration(milliseconds: 500), () async {
+                                  if (getTenantStatusXmas == '1') {
+                                    print('pwede');
+                                    await Navigator.of(context).push(_loadStore(
+                                        'All items',
+                                        categoryIdXmas,
+                                        widget.buCode,
+                                        widget.buAcroname,
+                                        'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
+                                        tenantIdXmas,
+                                        'CHRISTMAS BASKETS',
+                                        widget.groupCode)
+                                    );
+                                  }
+                                  // else {
+                                  //   print('wala');
+                                  // }
+                                });
                               }
                             },
                             child: Container(
@@ -555,18 +618,34 @@ class _GlobalCat extends State<GlobalCat>{
                           child: GestureDetector(
                             onTap: () async {
                               if (widget.buCode == '1') {
-                                await Navigator.of(context).push(_loadStore(
-                                  'Promotional Items',
-                                  '500',
-                                  '1',
-                                  'ICM',
-                                  'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
-                                  '39',
-                                  'MEDICINE PLUS',
-                                  '4')
-                                );
-                              } else {
-                                print('way labot');
+                              setState(() {
+                                Future.delayed(const Duration(milliseconds: 500), () async {
+                                  if (getTenantStatusMedPlus == '1') {
+                                    print('pwede');
+                                    await Navigator.of(context).push(_loadStore(
+                                        'Promotional Items',
+                                        '500',
+                                        '1',
+                                        'ICM',
+                                        'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
+                                        '39',
+                                        'MEDICINE PLUS',
+                                        '4')
+                                    );
+                                  }
+                                  // else {
+                                  //   Fluttertoast.showToast(
+                                  //     msg: "This promo is currently unavailable",
+                                  //     toastLength: Toast.LENGTH_SHORT,
+                                  //     gravity: ToastGravity.BOTTOM,
+                                  //     timeInSecForIosWeb: 2,
+                                  //     backgroundColor: Colors.black.withOpacity(0.7),
+                                  //     textColor: Colors.white,
+                                  //     fontSize: 16.0
+                                  //   );
+                                  // }
+                                });
+                              });
                               }
                             },
                             child: Container(
@@ -585,25 +664,41 @@ class _GlobalCat extends State<GlobalCat>{
 
                       ///Valentines banner
                       Visibility(
-                        visible: showCB,
+                        visible: showValentines,
                         child:
                         Padding(
                           padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 30),
                           child: GestureDetector(
                               onTap: () async {
-
-
                                 if (widget.buCode != '3') {
-                                  await Navigator.of(context).push(_loadStore(
-                                      'All items',
-                                      categoryIdValentines,
-                                      widget.buCode,
-                                      widget.buAcroname,
-                                      'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
-                                      tenantIdValentines,
-                                      'VALENTINE BOUQUETS',
-                                      widget.groupCode)
-                                  );
+                                  setState(() {
+                                    Future.delayed(const Duration(milliseconds: 500), () async {
+                                      if (getTenantStatusValentines == '1') {
+                                        print('pwede');
+                                        await Navigator.of(context).push(_loadStore(
+                                          'All items',
+                                          categoryIdValentines,
+                                          widget.buCode,
+                                          widget.buAcroname,
+                                          'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
+                                          tenantIdValentines,
+                                          'VALENTINE BOUQUETS',
+                                          widget.groupCode)
+                                        );
+                                      }
+                                      // else {
+                                      //   Fluttertoast.showToast(
+                                      //       msg: "This promo is currently unavailable",
+                                      //       toastLength: Toast.LENGTH_SHORT,
+                                      //       gravity: ToastGravity.BOTTOM,
+                                      //       timeInSecForIosWeb: 2,
+                                      //       backgroundColor: Colors.black.withOpacity(0.7),
+                                      //       textColor: Colors.white,
+                                      //       fontSize: 16.0
+                                      //   );
+                                      // }
+                                    });
+                                  });
                                 }
                               },
                               child: Container(

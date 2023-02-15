@@ -1117,6 +1117,7 @@ class _ProfileSettings extends State<ProfileSettings>
         child: TabBarView(
           controller: _tabController,
           children: [
+
             //Profile Tabview
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

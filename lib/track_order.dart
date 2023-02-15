@@ -27,8 +27,10 @@ class TrackOrder extends StatefulWidget {
 class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
 
   final db = RapidA();
+  TabController _tabController;
 
-  List listGetTicket = []; //pending list
+  List listGetTicketOnFoods = []; //pending list
+  List listGetTicketOnGoods = [];
   List listGetTicketOnTransit = [];
   List listGetTicketOnDelivered = [];
   List listGetTicketOnCancelled = [];
@@ -76,12 +78,25 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
   Timer timer;
 
 
-  Future getTicketNo() async{
-    var res = await db.getTicketNo();
+  Future getTicketNoOnFoods() async{
+    var res = await db.getTicketNoOnFoods();
     if (!mounted) return;
     setState(() {
-      listGetTicket = res['user_details'];
-      pendingCounter = listGetTicket.length.toString();
+      listGetTicketOnFoods = res['user_details'];
+      pendingCounter = listGetTicketOnFoods.length.toString();
+      // print(listGetTicket);
+    });
+    // print(listGetTicket);
+  }
+
+  Future getTicketNoOnGoods() async{
+    var res = await db.getTicketNoOnGoods();
+    if (!mounted) return;
+    setState(() {
+      listGetTicketOnGoods = res['user_details'];
+      print(res);
+      print('sa goods ni');
+
       // print(listGetTicket);
     });
     // print(listGetTicket);
@@ -136,7 +151,8 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
   Future toRefresh() async {
     print('refresh na');
     loadProfile(); //load profile picture
-    getTicketNo(); //pending request
+    getTicketNoOnFoods(); //p
+    getTicketNoOnGoods();// ending request
     // getTicketNoFoodOnTransit(); //on transit request
     // getTicketNoFoodOnDelivered(); // delivered
     getTicketCancelled(); // cancelled
@@ -181,8 +197,10 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
   void initState() {
     // getCounter();
     // listenCartCount();
+    _tabController = TabController(vsync: this, length: 2);
     getUserName();
-    getTicketNo();
+    getTicketNoOnFoods();
+    getTicketNoOnGoods();
     toRefresh();
     // print(months);
     // getOrderTicketIfExist();
@@ -216,6 +234,27 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
           leading: IconButton(
             icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
             onPressed: () => Navigator.of(context).pop(),
+          ),
+          bottom: TabBar(
+            controller: _tabController,
+            labelColor: Colors.black,
+            indicatorColor: Colors.deepOrange,
+            tabs: [
+              Tab(
+                child: Text(
+                  "Foods, etc.",
+                  style: GoogleFonts.openSans(
+                      fontStyle: FontStyle.normal,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15.0),
+                ),
+              ),
+              Tab(
+                child: Text("Goods",
+                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 15.0),
+                ),
+              ),
+            ],
           ),
           // actions: [
           //   cartLoading ?
@@ -257,199 +296,399 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
           child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
           ),
-        ) : Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
+        ) : TabBarView(
+          controller: _tabController,
+          children: [
 
-            Padding(
-              padding: EdgeInsets.only(left: 10, right: 10, bottom: 5),
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
-                  //Add isDense true and zero Padding.
-                  //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                  isDense: true,
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    // width: 0.0 produces a thin "hairline" border
-                    borderSide: const BorderSide(color: Colors.black54, width: 1),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    // borderSide: const BorderSide(color: Colors.green, width: 0.0),
-                    borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
-                  ),
-                  //Add more decoration as you want here
-                  //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                ),
-                isExpanded: true,
-                hint: const Text(
-                  '-- Select Month --',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-                ),
-                icon: const Icon(
-                  Icons.arrow_drop_down,
-                  color: Colors.black45,
-                ),
-                iconSize: 30,
-                items: months
-                    .map((item) =>
-                    DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black),
+            ///Foods & etc.
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+
+                Padding(
+                  padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5),
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      //Add isDense true and zero Padding.
+                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                      isDense: true,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
                       ),
-                    ))
-                    .toList(),
-                // ignore: missing_return
-                validator: (value) {
-                  if (value == null) {
-                    return 'Please select option';
-                  }
-                },
-                onChanged: (value) {
-                  setState(() {
-                    selectedMonth = value;
-                    monthNo = months.indexOf(value);
-                    // print(selectedMonth);
-                  });
-                  //Do something when changing the item if you want.
-                },
-                onSaved: (value) {
-                  selectedMonth = value.toString();
-                },
-              ),
-            ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        // width: 0.0 produces a thin "hairline" border
+                        borderSide: const BorderSide(color: Colors.black54, width: 1),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          // borderSide: const BorderSide(color: Colors.green, width: 0.0),
+                          borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
+                      ),
+                      //Add more decoration as you want here
+                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                    ),
+                    isExpanded: true,
+                    hint: const Text(
+                      '-- Select Month --',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                    ),
+                    icon: const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black45,
+                    ),
+                    iconSize: 30,
+                    items: months
+                        .map((item) =>
+                        DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black),
+                          ),
+                        ))
+                        .toList(),
+                    // ignore: missing_return
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select option';
+                      }
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMonth = value;
+                        monthNo = months.indexOf(value);
+                        // print(selectedMonth);
+                      });
+                      //Do something when changing the item if you want.
+                    },
+                    onSaved: (value) {
+                      selectedMonth = value.toString();
+                    },
+                  ),
+                ),
 
-            Expanded(
-              child: RefreshIndicator(
-                color: Colors.deepOrangeAccent,
-                onRefresh: toRefresh,
-                child: Scrollbar(
-                  child: ListView(
-                    children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    color: Colors.deepOrangeAccent,
+                    onRefresh: toRefresh,
+                    child: Scrollbar(
+                      child: ListView(
+                        children: [
 
-                      Padding(
-                        padding:EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
-                        child:ListView.builder(
-                          shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          itemCount: listGetTicket == null ? 0 : listGetTicket.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            String status;
-                            if (double.parse(listGetTicket[index]['total']) == 0) {
-                              status ='(Cancelled)';
-                            } else {
-                              status ='';
-                            }
-                            String ticket = listGetTicket[index]['d_ticket'];
-                            String ticketId = listGetTicket[index]['d_ticket_id'];
-                            String mop = listGetTicket[index]['d_mop'];
-                            String type = listGetTicket[index]['order_type_stat'];
-                            // if (listGetTicket[index]['cancel_status'] == '1') {
-                            //   status ='(Cancelled)';
-                            // } else {
-                            //   status ='';
-                            // }
-                            if (selectedMonth == null) {
-                              var now = DateTime.now();
-                              selectedMonth = DateFormat().add_MMMM().format(now);
-                            }
+                          Padding(
+                            padding:EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                            child:ListView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: listGetTicketOnFoods == null ? 0 : listGetTicketOnFoods.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String status;
+                                if (double.parse(listGetTicketOnFoods[index]['total']) == 0) {
+                                  status ='(Cancelled)';
+                                } else {
+                                  status ='';
+                                }
+                                String ticket = listGetTicketOnFoods[index]['d_ticket'];
+                                String ticketId = listGetTicketOnFoods[index]['d_ticket_id'];
+                                String mop = listGetTicketOnFoods[index]['d_mop'];
+                                String type = listGetTicketOnFoods[index]['order_type_stat'];
+                                // if (listGetTicket[index]['cancel_status'] == '1') {
+                                //   status ='(Cancelled)';
+                                // } else {
+                                //   status ='';
+                                // }
+                                if (selectedMonth == null) {
+                                  var now = DateTime.now();
+                                  selectedMonth = DateFormat().add_MMMM().format(now);
+                                }
 
-                            dateMonth = listGetTicket[index]['date'];
-                            DateTime date = DateFormat('yyyy-MM-dd').parse(dateMonth);
-                            month = DateFormat().add_MMMM().format(date);
+                                dateMonth = listGetTicketOnFoods[index]['date'];
+                                DateTime date = DateFormat('yyyy-MM-dd').parse(dateMonth);
+                                month = DateFormat().add_MMMM().format(date);
 
-                            return Padding(
-                              padding:EdgeInsets.symmetric(horizontal: 2.0, vertical: 0.0),
-                              child: InkWell(
-                                onTap:(){
-                                  getOrderTicketIfExist(ticketId);
-                                  Navigator.of(context).push(viewUpComingFood(
-                                    1,
-                                    ticket,
-                                    ticketId,
-                                    mop,
-                                    type,
-                                  ));
-                                  // Future.delayed(const Duration(milliseconds: 100), () {
-                                  //   setState(() {
-                                  //     if (orderTicket == 'true') {
-                                  //       // print('dayon kol');
-                                  //       Navigator.of(context).push(viewUpComingFood(1,
-                                  //           ticket,
-                                  //           ticketId,
-                                  //           mop,
-                                  //           type));
-                                  //     } else if (orderTicket =='false') {
-                                  //       print('ayaw kol');
-                                  //       // Navigator.of(context).push(viewUpComingGood('20734'));
-                                  //     }
-                                  //   });
-                                  // });
-                                },
-                                child: Visibility(
-                                  visible: month == selectedMonth,
-                                  child: Container(
-                                    height: 65.0,
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                      ),
-                                      elevation: 0.0,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
+                                return Padding(
+                                  padding:EdgeInsets.symmetric(horizontal: 2.0, vertical: 0.0),
+                                  child: InkWell(
+                                    onTap:(){
+                                      getOrderTicketIfExist(ticketId);
+                                      Navigator.of(context).push(viewUpComingFood(
+                                        1,
+                                        ticket,
+                                        ticketId,
+                                        mop,
+                                        type,
+                                      ));
+                                      // Future.delayed(const Duration(milliseconds: 100), () {
+                                      //   setState(() {
+                                      //     if (orderTicket == 'true') {
+                                      //       // print('dayon kol');
+                                      //       Navigator.of(context).push(viewUpComingFood(1,
+                                      //           ticket,
+                                      //           ticketId,
+                                      //           mop,
+                                      //           type));
+                                      //     } else if (orderTicket =='false') {
+                                      //       print('ayaw kol');
+                                      //       // Navigator.of(context).push(viewUpComingGood('20734'));
+                                      //     }
+                                      //   });
+                                      // });
+                                    },
+                                    child: Visibility(
+                                      visible: month == selectedMonth,
+                                      child: Container(
+                                        height: 65.0,
+                                        child: Card(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                          ),
+                                          elevation: 0.0,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: <Widget>[
 
-                                          Padding(
-                                            padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 5.0),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children:<Widget>[
+                                              Padding(
+                                                padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 5.0),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children:<Widget>[
 
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: <Widget>[
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: <Widget>[
 
-                                                    Text(' ${listGetTicket[index]['d_mop']}',style: TextStyle(color: Colors.black),),
+                                                        Text(' ${listGetTicketOnFoods[index]['d_mop']}',style: TextStyle(color: Colors.black),),
 
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      children: [
-                                                        Text(' Ticket # ${listGetTicket[index]['d_ticket']}',style: TextStyle(fontSize: 16.0,color: Colors.black, fontWeight: FontWeight.bold)),
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text(' Ticket # ${listGetTicketOnFoods[index]['d_ticket']}',style: TextStyle(fontSize: 16.0,color: Colors.black, fontWeight: FontWeight.bold)),
+                                                          ],
+                                                        )
                                                       ],
-                                                    )
+                                                    ),
+
+                                                    Padding(
+                                                      padding: EdgeInsets.only(top: 15),
+                                                      child: Text(' $status', style: TextStyle(fontSize: 16.0,color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                                                    ),
                                                   ],
                                                 ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            ///Goods
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+
+                Padding(
+                  padding: EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 5),
+                  child: DropdownButtonFormField(
+                    decoration: InputDecoration(
+                      //Add isDense true and zero Padding.
+                      //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                      isDense: true,
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 5,
+                      ),
+                      enabledBorder: const OutlineInputBorder(
+                        // width: 0.0 produces a thin "hairline" border
+                        borderSide: const BorderSide(color: Colors.black54, width: 1),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          // borderSide: const BorderSide(color: Colors.green, width: 0.0),
+                          borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
+                      ),
+                      //Add more decoration as you want here
+                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                    ),
+                    isExpanded: true,
+                    hint: const Text(
+                      '-- Select Month --',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                    ),
+                    icon: const Icon(
+                      Icons.arrow_drop_down,
+                      color: Colors.black45,
+                    ),
+                    iconSize: 30,
+                    items: months
+                        .map((item) =>
+                        DropdownMenuItem<String>(
+                          value: item,
+                          child: Text(
+                            item,
+                            style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black),
+                          ),
+                        ))
+                        .toList(),
+                    // ignore: missing_return
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select option';
+                      }
+                    },
+                    onChanged: (value) {
+                      setState(() {
+                        selectedMonth = value;
+                        monthNo = months.indexOf(value);
+                        // print(selectedMonth);
+                      });
+                      //Do something when changing the item if you want.
+                    },
+                    onSaved: (value) {
+                      selectedMonth = value.toString();
+                    },
+                  ),
+                ),
+
+                Expanded(
+                  child: RefreshIndicator(
+                    color: Colors.deepOrangeAccent,
+                    onRefresh: toRefresh,
+                    child: Scrollbar(
+                      child: ListView(
+                        children: [
+
+                          Padding(
+                            padding:EdgeInsets.symmetric(horizontal: 0.0, vertical: 0.0),
+                            child:ListView.builder(
+                              shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemCount: listGetTicketOnGoods == null ? 0 : listGetTicketOnGoods.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                String status;
+                                // if (double.parse(listGetTicketOnGoods[index]['total']) == 0) {
+                                //   status ='(Cancelled)';
+                                // } else {
+                                //   status ='';
+                                // }
+                                String ticket = listGetTicketOnGoods[index]['d_ticket'];
+                                String ticketId = listGetTicketOnGoods[index]['d_ticket_id'];
+                                String mop = listGetTicketOnGoods[index]['d_mop'];
+                                String type = listGetTicketOnGoods[index]['order_type_stat'];
+                                // if (listGetTicket[index]['cancel_status'] == '1') {
+                                //   status ='(Cancelled)';
+                                // } else {
+                                //   status ='';
+                                // }
+                                if (selectedMonth == null) {
+                                  var now = DateTime.now();
+                                  selectedMonth = DateFormat().add_MMMM().format(now);
+                                }
+
+                                dateMonth = listGetTicketOnGoods[index]['date'];
+                                DateTime date = DateFormat('yyyy-MM-dd').parse(dateMonth);
+                                month = DateFormat().add_MMMM().format(date);
+
+                                return Padding(
+                                  padding:EdgeInsets.symmetric(horizontal: 2.0, vertical: 0.0),
+                                  child: InkWell(
+                                      onTap:(){
+                                        getOrderTicketIfExist(ticketId);
+
+                                        print(ticket);
+                                        // Future.delayed(const Duration(milliseconds: 100), () {
+                                        //   setState(() {
+                                        //     if (orderTicket == 'true') {
+                                        //       // print('dayon kol');
+                                        //       Navigator.of(context).push(viewUpComingFood(1,
+                                        //           ticket,
+                                        //           ticketId,
+                                        //           mop,
+                                        //           type));
+                                        //     } else if (orderTicket =='false') {
+                                        //       print('ayaw kol');
+                                              Navigator.of(context).push(viewUpComingGood(ticketId));
+                                        //     }
+                                        //   });
+                                        // });
+                                      },
+                                      child: Visibility(
+                                        visible: month == selectedMonth,
+                                        child: Container(
+                                          height: 65.0,
+                                          child: Card(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                            ),
+                                            elevation: 0.0,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: <Widget>[
 
                                                 Padding(
-                                                  padding: EdgeInsets.only(top: 15),
-                                                  child: Text(' $status', style: TextStyle(fontSize: 16.0,color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                                                  padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 5.0),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children:<Widget>[
+
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: <Widget>[
+
+                                                          Text(' ${listGetTicketOnGoods[index]['d_mop']}',style: TextStyle(color: Colors.black),),
+
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(' Ticket # ${listGetTicketOnGoods[index]['d_ticket']}',style: TextStyle(fontSize: 16.0,color: Colors.black, fontWeight: FontWeight.bold)),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
+
+                                                      // Padding(
+                                                      //   padding: EdgeInsets.only(top: 15),
+                                                      //   child: Text(' $status', style: TextStyle(fontSize: 16.0,color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                                                      // ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
+                                        ),
+                                      )
                                   ),
-                                )
-                              ),
-                            );
-                          }
-                        ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ],
         ),
