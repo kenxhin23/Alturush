@@ -3,6 +3,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import '../db_helper.dart';
@@ -26,11 +27,13 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   List loadCartData = [];
+  List loadCartData2 = [];
   List loadSubtotal = [];
   List loadPriceGroup = [];
   List listProfile = [];
   List getBu = [];
   List getTotalAmount = [];
+  List getTotalAmount2 = [];
   List getGcItemsList,getBillList,getConFeeList,getBuName;
   List getAddress = [];
   List<String> _options = ['Pay via Cash/COD']; //
@@ -51,13 +54,13 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   var isLoading1 = true;
   var totalLoading = true;
   var subTotal = 0.00;
-  var stores;
-  var items;
+  var stores = 0;
+  var items = 0;
   var bill = 0.0;
-  var pickupFee = 0.0;
+  var pickupFee = 0.00;
   var pickingFee = 0.0;
-  var grandTotal = 0.0;
-  var minimumAmount = 0.0;
+  var grandTotal = 0.00;
+  var minimumAmount = 0.00;
   var lt = 0;
 
   AnimationController controller;
@@ -73,14 +76,32 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   }
 
   Future onRefresh() async {
-    print('re refresh na');
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    print('ni refresh na');
 
         gcLoadPriceGroup();
-        gcLoadBu();
-        loadCart();
+        // gcLoadBu();
+        // loadCart();
         getTotal();
-        loadGcSubTotal();
+        // loadGcSubTotal();
+        loadCart2();
+        loadGcSubTotal2();
+        gcLoadBu2();
 
+        tempID.clear();
+
+    setState(() {
+      for (int i=0;i<side.length;i++){
+        side[i] = false;
+        for(int j=0;j<side1.length;j++){
+          side1[j] = false;
+        }
+      }
+    });
   }
 
   Future loadProfilePic() async {
@@ -107,9 +128,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
       for(int q=0;q<getTotalAmount.length;q++){
         bool result = oCcy.parse(getTotalAmount[q]['total']) > minimumAmount;
         subTotalStore.add(result);
-        print(subTotalStore);
       }
-      print(getTotalAmount);
       isLoading = false;
     });
   }
@@ -119,9 +138,19 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     if (!mounted) return;
     setState(() {
       getBu = res['user_details'];
+      // stores = getBu.length;
+      // lt = getBu.length;
+      isLoading = false;
+    });
+  }
+
+  Future gcLoadBu2() async {
+    var res = await db.gcLoadBu2(tempID);
+    if (!mounted) return;
+    setState(() {
+      getBu = res['user_details'];
       stores = getBu.length;
       lt = getBu.length;
-      // print(getBu);
       isLoading = false;
     });
   }
@@ -149,6 +178,13 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     });
   }
 
+  Future loadMethods() async {
+    loadCart2();
+    loadGcSubTotal2();
+    gcLoadBu2();
+  }
+
+
   Future getMin(subTotal) async {
     var res = await db.getConFee();
     isLoading = false;
@@ -159,32 +195,36 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
       minimumAmount = double.parse(getConFeeList[0]['minimum_order_amount']);
       pickingFee = pickupFee * lt;
       grandTotal = subTotal + pickingFee;
-
-      // print(conFee);
     });
   }
 
-  Future getMin2() async {
-    var res = await db.getConFee();
-    isLoading = false;
-    if (!mounted) return;
-    setState(() {
-      getConFeeList = res['user_details'];
-      pickupFee = double.parse(getConFeeList[0]['pickup_charge']);
-      minimumAmount = double.parse(getConFeeList[0]['minimum_order_amount']);
-      pickingFee = pickupFee * lt;
-      grandTotal = subTotal + pickingFee;
-      // print(conFee);
-    });
-  }
+  // Future getMin2() async {
+  //   var res = await db.getConFee();
+  //   isLoading = false;
+  //   if (!mounted) return;
+  //   setState(() {
+  //     getConFeeList = res['user_details'];
+  //     pickupFee = double.parse(getConFeeList[0]['pickup_charge']);
+  //     pickingFee = pickupFee * lt;
+  //   });
+  // }
 
   Future loadCart() async {
     var res = await db.gcLoadCartData();
     if (!mounted) return;
     setState(() {
       loadCartData = res['user_details'];
-      items = loadCartData.length;
-      // print(loadCartData);
+      // items = loadCartData.length;
+      isLoading = false;
+    });
+  }
+
+  Future loadCart2() async {
+    var res = await db.gcLoadCartData2(tempID);
+    if (!mounted) return;
+    setState(() {
+      loadCartData2 = res['user_details'];
+      items = loadCartData2.length;
       isLoading = false;
     });
   }
@@ -195,13 +235,26 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     setState(() {
       loadSubtotal = res['user_details'];
       if(loadSubtotal[0]['d_subtotal']==null){
-        subTotal = 0;
+        subTotal = 0.00;
+      }else{
+        // subTotal = oCcy.parse(loadSubtotal[0]['d_subtotal']);
+      }
+      isLoading  = false;
+    });
+  }
+
+  Future loadGcSubTotal2() async{
+    var res = await db.loadGcSubTotal2(tempID);
+    if (!mounted) return;
+    setState(() {
+      loadSubtotal = res['user_details'];
+      if(loadSubtotal[0]['d_subtotal']==null){
+        subTotal = 0.00;
       }else{
         subTotal = oCcy.parse(loadSubtotal[0]['d_subtotal']);
       }
       getMin(subTotal);
       isLoading  = false;
-      print(loadSubtotal);
     });
   }
 
@@ -254,6 +307,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
+
                     GestureDetector(
                       onTap: (){
                         if (subTotalStore.contains(false)) {
@@ -285,15 +339,35 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                             onCancelBtnTap: () async {}
                           );
                           } else {
+                          setState(() {
+
+                            for (int i=0;i<side.length;i++){
+                              side[i] = false;
+                              for(int j=0;j<side1.length;j++){
+                                side1[j] = false;
+                              }
+                            }
+                          });
+
                           Navigator.pop(context);
-                          Navigator.of(context).push(_pickUp(
-                              stores,
-                              items,
-                              subTotal,
-                              pickingFee,
-                              grandTotal,
-                              priceGroup,
-                          ));
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcPickUp(
+                            stores : stores,
+                            items : items,
+                            subTotal : subTotal,
+                            pickingFee : pickingFee,
+                            grandTotal : grandTotal,
+                            priceGroup : priceGroup,
+                            tempID : tempID,
+                            )
+                          )).then((val)=>{onRefresh()});
+                          // Navigator.of(context).push(_pickUp(
+                          //     stores,
+                          //     items,
+                          //     subTotal,
+                          //     pickingFee,
+                          //     grandTotal,
+                          //     priceGroup,
+                          // ));
                         }
 
                       },
@@ -322,11 +396,10 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   }
 
   void displayBottomSheet(BuildContext context) async {
-    var res = await db.getAmountPerStore();
+    var res = await db.getAmountPerStore2(tempID);
     if (!mounted) return;
     setState(() {
-      getTotalAmount = res['user_details'];
-      print(getTotalAmount);
+      getTotalAmount2 = res['user_details'];
       isLoading = false;
     });
     showModalBottomSheet(
@@ -361,9 +434,9 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                         ListView.builder(
                           physics: BouncingScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: getTotalAmount == null ? 0 : getTotalAmount.length,
+                          itemCount: getTotalAmount2 == null ? 0 : getTotalAmount2.length,
                           itemBuilder: (BuildContext context, int index) {
-                            amountPT = oCcy.parse(getTotalAmount[index]['total']);
+                            amountPT = oCcy.parse(getTotalAmount2[index]['total']);
                             return Container(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,7 +446,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text('${getTotalAmount[index]['buName']}',
+                                        Text('${getTotalAmount2[index]['buName']}',
                                             style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)
                                         ),
                                       ],
@@ -392,7 +465,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                 fontSize: 13.0,
                                                 fontWeight: FontWeight.normal)
                                         ),
-                                        Text('${getTotalAmount[index]['count']}',
+                                        Text('${getTotalAmount2[index]['count']}',
                                           style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
                                         ),
                                       ],
@@ -409,7 +482,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                         Text('Subtotal Amount:',
                                           style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
                                         ),
-                                        Text('₱${getTotalAmount[index]['total']}',
+                                        Text('₱${getTotalAmount2[index]['total']}',
                                           style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
                                         ),
                                       ],
@@ -481,21 +554,20 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
 //    _event.add(0);
     super.initState();
     onRefresh();
-    getMin2();
+    // getMin2();
     loadProfilePic();
     initController();
     gcGetAddress();
     loadGcSubTotal();
     gcLoadBu();
-    // getTotal();
-    // loadCart();
-//    trapTenantLimit();
-//    loadSubTotal();
 
+    gcLoadPriceGroup();
 
-  double num = double.parse('1234.50');
-  oCcy.format(num);
-  print(oCcy.format(num));
+    getTotal();
+
+    loadCart2();
+    loadGcSubTotal2();
+    gcLoadBu2();
   }
 
   @override
@@ -557,7 +629,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
               onPressed: () {
                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddressMasterFile())).then((val)=>{onRefresh()});
               },
-              icon: Icon(Icons.edit_location_alt_rounded, color: Colors.green,),
+              icon: Icon(Icons.edit_location_outlined, color: Colors.green,),
             ),
           ],
         ),
@@ -609,8 +681,8 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                 }
 
                                                 if (value){
-                                                  print(value);
-                                                  // loadMethods();
+
+                                                  loadMethods();
 
                                                   for (int q=0;q<loadCartData.length;q++) {
 
@@ -620,8 +692,8 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                     }
                                                   }
                                                 } else {
-                                                  print(value);
-                                                  // loadMethods();
+
+                                                  loadMethods();
 
                                                   for (int q=0;q<loadCartData.length;q++) {
 
@@ -631,7 +703,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                     }
                                                   }
                                                 }
-                                                print(tempID);
                                               });
                                             }
                                         ),
@@ -704,17 +775,16 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                 side1[index0] = value1;
 
                                                                 if (value1) {
-                                                                  // loadMethods();
+                                                                  loadMethods();
 
                                                                   tempID.add(loadCartData[index0]['cart_id']);
 
                                                                 } else {
-                                                                  side[index0] = false;
-                                                                  // loadMethods();
+                                                                  side[index] = false;
+                                                                  loadMethods();
 
                                                                   tempID.remove(loadCartData[index0]['cart_id']);
                                                                 }
-                                                                print(tempID);
                                                               });
                                                             }
                                                         ),
@@ -805,7 +875,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                                 loadGcSubTotal();
                                                                                 gcLoadBu();
                                                                                 getTotal();
-                                                                                getMin(subTotal);
+
                                                                               });
                                                                             });
                                                                           });
@@ -843,7 +913,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                                 loadGcSubTotal();
                                                                                 gcLoadBu();
                                                                                 getTotal();
-                                                                                getMin(subTotal);
                                                                               });
                                                                             });
                                                                           });
@@ -1079,7 +1148,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                             setState(() {
                               _selectOption = value;
                               option = _options.indexOf(value);
-                              print(_selectOption);
                             });
                             //Do something when changing the item if you want.
                           },
@@ -1148,7 +1216,17 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                               Navigator.of(context).push(_signIn());
                             }else{
                               // Navigator.of(context).push(_pickUp());
-                              if (_formKey.currentState.validate()) {
+                            if (tempID.isEmpty){
+                              Fluttertoast.showToast(
+                              msg: "Please select item(s) for checkout. ",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.black.withOpacity(0.7),
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                              );
+                            } else if (_formKey.currentState.validate()) {
                                 selectType(context);
                               }
                             }

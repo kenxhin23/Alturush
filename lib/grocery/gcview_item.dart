@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,10 +116,18 @@ class _ViewItem extends State<ViewItem>  {
     });
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+  }
 
 
   @override
   void initState(){
+    onRefresh();
     isLoading = false;
     imageLoading = false;
     getUom();
@@ -185,19 +194,53 @@ class _ViewItem extends State<ViewItem>  {
                         itemCount: 1,
                         itemBuilder: (BuildContext context, int index){
                           return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children:[
-                              imageLoading
-                                  ? Padding(
-                                    padding:EdgeInsets.fromLTRB(0.0, 60.0, 0.0, 60.0),
-                                    child: Center(
-                                child: CircularProgressIndicator(
-                                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-                                   ),
+
+
+
+                              Padding(
+                                padding: EdgeInsets.only(top: 10, bottom: 5),
+                                child: CachedNetworkImage(
+                                  imageUrl: widget.image,
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    height: 190,
+                                    width: 190,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.white,
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                                   ),
-                                ) : Center(
-                                child: Image.network(widget.image,height: 250.0,scale:1.8),
+                                  placeholder: (context, url) => const CircularProgressIndicator(color: Colors.green,),
+                                  errorWidget: (context, url, error) => Container(
+                                    height: 190,
+                                    width: 190,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.white,
+                                      image: DecorationImage(
+                                        image: AssetImage("assets/png/No_image_available.png"),
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              // imageLoading
+                              //     ? Padding(
+                              //       padding:EdgeInsets.fromLTRB(0.0, 60.0, 0.0, 60.0),
+                              //       child: Center(
+                              //   child: CircularProgressIndicator(
+                              //       valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+                              //      ),
+                              //     ),
+                              //   ) : Center(
+                              //   child: Image.network(widget.image,height: 250.0,scale:1.8),
+                              // ),
                               // Padding(
                               //   padding:EdgeInsets.fromLTRB(20.0, 10.0, 5.0, 5.0),
                               //   child: Row(

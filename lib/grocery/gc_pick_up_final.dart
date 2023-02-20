@@ -30,6 +30,7 @@ class GcPickUpFinal extends StatefulWidget {
   final pickingFee;
   final grandTotal;
   final priceGroup;
+  final tempID;
 
   GcPickUpFinal({Key key, @required
     this.groupValue,
@@ -47,7 +48,8 @@ class GcPickUpFinal extends StatefulWidget {
     this.subTotal,
     this.pickingFee,
     this.grandTotal,
-    this.priceGroup}) : super(key: key);
+    this.priceGroup,
+    this.tempID}) : super(key: key);
   @override
   _GcPickUpFinal createState() => _GcPickUpFinal();
 }
@@ -155,6 +157,11 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
   }
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     print('na refresh na');
 
     getBuSegregate();
@@ -248,17 +255,18 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
     });
   }
 
-  submitOrder() async{
-    await db.submitOrder(
+  submitOrder2() async{
+    await db.submitOrder2(
       widget.groupValue,
       widget.deliveryDateData,
       widget.deliveryTimeData,
       widget.buData,
-      widget.totalData,
-      widget.convenienceData,
+      widget.grandTotal,
+      widget.pickingFee,
       widget.placeRemarksData,
       widget.pickUpOrDelivery,
       widget.priceGroup,
+      widget.tempID
     );
     getSuccessMessage();
   }
@@ -424,9 +432,19 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
     super.initState();
     gcLoadPriceGroup();
     onRefresh();
+    getBuSegregate();
+    getPlaceOrderData();
     initController();
-    print(widget.priceGroup);
+    print(widget.groupValue);
+    print(widget.deliveryDateData);
+    print(widget.deliveryTimeData);
+    print(widget.buData);
+    print(widget.totalData);
+    print(widget.convenienceData);
     print(widget.placeRemarksData);
+    print( widget.pickUpOrDelivery);
+    print(widget.priceGroup);
+    print(widget.tempID);
     // getBill();
     // getConFee();
     BackButtonInterceptor.add(myInterceptor);
@@ -813,7 +831,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                           print(widget.pickingFee);
                           print(widget.placeRemarksData);
                           print(widget.pickUpOrDelivery);
-                          submitOrder();
+                          submitOrder2();
 
                         }
                       },

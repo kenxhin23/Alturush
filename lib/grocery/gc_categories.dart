@@ -1,4 +1,5 @@
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -123,8 +124,23 @@ class _GcCategory extends State<GcCategory>{
     });
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadStore();
+    loadProfilePic();
+    // loadGcSubTotal();
+    loadProfile();
+    getGcCounter();
+    getGcCategory();
+  }
+
   @override
   void initState() {
+    onRefresh();
     loadStore();
     loadProfilePic();
     // loadGcSubTotal();
@@ -208,11 +224,36 @@ class _GcCategory extends State<GcCategory>{
                   width: 50.0,
                   height: 50.0,
                   child: Padding(
-                    padding:EdgeInsets.all(5.0),
+                    padding:EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                     child: profileLoading ? CircularProgressIndicator(
                       valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
-                    ) : CircleAvatar(
-                      backgroundImage: NetworkImage(profilePicture),
+                    ) : CachedNetworkImage(
+                      imageUrl: profilePicture,
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.deepOrangeAccent,),
+                      errorWidget: (context, url, error) => Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: AssetImage("assets/jpg/no_photo.jpg"),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -340,7 +381,7 @@ class _GcCategory extends State<GcCategory>{
             Expanded(
               child: RefreshIndicator(
                 color: Colors.green,
-                onRefresh: getGcCategory,
+                onRefresh: onRefresh,
                 child: Scrollbar(
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),

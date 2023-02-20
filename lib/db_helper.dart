@@ -327,6 +327,20 @@ class RapidA {
     return dataUser;
   }
 
+  Future gcLoadBu2(tempID) async{
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID =  prefs.getString('s_customerId');
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/gcLoadBu2_r"),body:{
+      'cusId' : encrypt(userID),
+      'tempID' : encrypt(tempID.toString()),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   Future getBuSegregate() async{
     var client = http.Client();
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -546,6 +560,17 @@ class RapidA {
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/lookItems_segregate_r"),body:{
+      'ticketNo' : encrypt(ticketNo)
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future lookItemsSegregate2(ticketNo) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/lookItems_segregate2_r"),body:{
       'ticketNo' : encrypt(ticketNo)
     });
     dataUser = jsonDecode(response.body);
@@ -1273,6 +1298,20 @@ class RapidA {
     return dataUser;
   }
 
+  Future getAmountPerStore2(tempID) async{
+    var client = http.Client();
+    Map dataUser;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    final response =  await client.post(Uri.parse("$server/getStore2_r"),body:{
+      'userID' : encrypt(userID),
+      'tempID' : encrypt(tempID.toString())
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   Future gcLoadCartData() async{
     var client = http.Client();
     Map dataUser;
@@ -1280,6 +1319,20 @@ class RapidA {
     var userID = prefs.getString('s_customerId');
     final response =  await client.post(Uri.parse("$server/gc_cart_r"),body:{
       'userID' : encrypt(userID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future gcLoadCartData2(tempID) async{
+    var client = http.Client();
+    Map dataUser;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    final response =  await client.post(Uri.parse("$server/gc_cart2_r"),body:{
+      'userID' : encrypt(userID),
+      'tempID' : encrypt(tempID.toString())
     });
     dataUser = jsonDecode(response.body);
     client.close();
@@ -1303,6 +1356,21 @@ class RapidA {
     print(userID);
     final response = await client.post(Uri.parse("$server/loadGcSubTotal_r"),body:{
       'customerId' : encrypt(userID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future loadGcSubTotal2(tempID) async{
+    var client = http.Client();
+    Map dataUser;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    print(userID);
+    final response = await client.post(Uri.parse("$server/loadGcSubTotal2_r"),body:{
+      'customerId' : encrypt(userID),
+      'tempID' : encrypt(tempID.toString())
     });
     dataUser = jsonDecode(response.body);
     client.close();
@@ -1387,6 +1455,21 @@ class RapidA {
     client.close();
     return dataUser;
   }
+
+  Future gcGroupByBu2(priceGroup, tempID) async{
+    var client = http.Client();
+    Map dataUser;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    final response = await client.post(Uri.parse("$server/gcgroupbyBu2_r"),body:{
+      'customerId' : encrypt(userID),
+      'priceGroup' : encrypt(priceGroup),
+      'tempID'     : encrypt(tempID.toString())
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
   
   Future getConFee() async{
     var client = http.Client();
@@ -1422,6 +1505,36 @@ class RapidA {
       'placeRemarks'     : encrypt(placeRemarks.toString()),
       'pickUpOrDelivery' : encrypt(pickUpOrDelivery.toString()),
       'priceGroup'       : encrypt(priceGroup),
+    });
+    client.close();
+  }
+
+  Future submitOrder2(
+      groupValue,
+      deliveryDateData,
+      deliveryTimeData,
+      buData,
+      totalAmount,
+      pickingCharge,
+      placeRemarks,
+      pickUpOrDelivery,
+      priceGroup,
+      tempID) async{
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    await client.post(Uri.parse("$server/gc_submitOrder2_r"),body:{
+      'customerId'       : encrypt(userID),
+      'groupValue'       : encrypt(groupValue.toString()),
+      'deliveryDateData' : encrypt(deliveryDateData.toString()),
+      'deliveryTimeData' : encrypt(deliveryTimeData.toString()),
+      'buData'           : encrypt(buData.toString()),
+      'totalAmount'      : encrypt(totalAmount.toString()),
+      'pickingCharge'    : encrypt(pickingCharge.toString()),
+      'placeRemarks'     : encrypt(placeRemarks.toString()),
+      'pickUpOrDelivery' : encrypt(pickUpOrDelivery.toString()),
+      'priceGroup'       : encrypt(priceGroup),
+      'tempID'           : encrypt(tempID.toString())
     });
     client.close();
   }

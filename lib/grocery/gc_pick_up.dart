@@ -19,8 +19,9 @@ class GcPickUp extends StatefulWidget {
   final pickingFee;
   final grandTotal;
   final priceGroup;
+  final tempID;
 
-  const GcPickUp({Key key, this.stores, this.items, this.subTotal, this.pickingFee, this.grandTotal, this.priceGroup}) : super(key: key);
+  const GcPickUp({Key key, this.stores, this.items, this.subTotal, this.pickingFee, this.grandTotal, this.priceGroup, this.tempID}) : super(key: key);
 
   @override
   _GcPickUp createState() => _GcPickUp();
@@ -92,7 +93,7 @@ class _GcPickUp extends State<GcPickUp> {
       getConFeeList = res['user_details'];
       conFee = double.parse(getConFeeList[0]['pickup_charge']);
       minimumAmount = double.parse(getConFeeList[0]['minimum_order_amount']);
-      // print(getConFeeList[0]['pickup_charge']);
+
     });
 
     var res1 = await db.getBill(priceGroup);
@@ -102,7 +103,6 @@ class _GcPickUp extends State<GcPickUp> {
       getBillList = res1['user_details'];
       bill = double.parse(getBillList[0]['d_subtotal']);
       grandTotal = bill+(conFee*lt);
-      print(getBillList);
       totalLoading = false;
     });
   }
@@ -152,9 +152,15 @@ class _GcPickUp extends State<GcPickUp> {
   }
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     print('ni refresh na');
     gcLoadPriceGroup();
     getTrueTime();
+    loadCart2();
   }
 
   Future gcLoadPriceGroup() async {
@@ -166,11 +172,8 @@ class _GcPickUp extends State<GcPickUp> {
 
       }
       priceGroup = loadPriceGroup[0]['price_group'];
-      print(priceGroup);
-
       getBill(priceGroup);
-      gcGroupByBu(priceGroup);
-      loadCart();
+
       isLoading = false;
     });
   }
@@ -181,13 +184,40 @@ class _GcPickUp extends State<GcPickUp> {
     setState(() {
       loadCartData = res['user_details'];
       items = loadCartData.length;
-      // print(loadCartData);
+
       isLoading = false;
     });
   }
 
-  Future gcGroupByBu(priceGroup) async{
-    var res = await db.gcGroupByBu(priceGroup);
+  Future loadCart2() async {
+    var res = await db.gcLoadCartData2(widget.tempID);
+    if (!mounted) return;
+    setState(() {
+      loadCartData = res['user_details'];
+      items = loadCartData.length;
+
+      isLoading = false;
+    });
+  }
+
+  // Future gcGroupByBu() async{
+  //   var res = await db.gcGroupByBu(widget.priceGroup);
+  //   if (!mounted) return;
+  //   setState((){
+  //     getBuName = res['user_details'];
+  //     lt=getBuName.length;
+  //     for(int q=0;q<lt;q++){
+  //       billPerBu.add(getBuName[q]['total']);
+  //       buData.add(getBuName[q]['buId']);
+  //       buNameData.add(getBuName[q]['buName']);
+  //       totalData.add(getBuName[q]['total']);
+  //       convenienceData.add(conFee.toString());
+  //     }
+  //   });
+  // }
+
+  Future gcGroupByBu2() async{
+    var res = await db.gcGroupByBu2(widget.priceGroup, widget.tempID);
     if (!mounted) return;
     setState((){
       getBuName = res['user_details'];
@@ -199,8 +229,8 @@ class _GcPickUp extends State<GcPickUp> {
         totalData.add(getBuName[q]['total']);
         convenienceData.add(conFee.toString());
       }
-      print(getBuName);
     });
+    print(lt);
   }
 
   Future countDiscount() async{
@@ -303,13 +333,24 @@ class _GcPickUp extends State<GcPickUp> {
   void initState(){
     super.initState();
     onRefresh();
+    gcLoadPriceGroup();
+    getTrueTime();
+    gcGroupByBu2();
+    loadCart2();
     // getConFee();
     // getTrueTime();
     // gcGroupByBu();
     // getBill();
     // gcLoadPriceGroup();
     stock = 0;
+
+    print(widget.stores);
+    print(widget.items);
+    print(widget.subTotal);
+    print(widget.pickingFee);
     print(widget.grandTotal);
+    print(widget.priceGroup);
+    print(widget.tempID);
    ;
   }
 
@@ -528,7 +569,7 @@ class _GcPickUp extends State<GcPickUp> {
                                                                   selectedValue = value;
                                                                   stock  = _option.indexOf(value);
 
-                                                                  print(stock);
+
                                                                 });
                                                                 //Do something when changing the item if you want.
                                                               },
@@ -536,7 +577,7 @@ class _GcPickUp extends State<GcPickUp> {
                                                               },
                                                               onSaved: (value) {
                                                                 selectedValue = value.toString();
-                                                                print(selectedValue);
+
                                                               },
                                                             ),
                                                           ),
@@ -943,13 +984,6 @@ class _GcPickUp extends State<GcPickUp> {
                       placeRemarksData.clear();
 
                       if (_key.currentState.validate()) {
-                        // print(groupValue);
-                        // print(deliveryDateData);
-                        // print(deliveryTimeData);
-                        // print(buData);
-                        // print(totalData);
-                        // print(convenienceData);
-                        // print(placeRemarksData);
                         // Navigator.of(context).push(_gcPickUpFinal(groupValue,_deliveryTime,_deliveryDate,_modeOfPayment,placeRemarks));
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
@@ -971,18 +1005,17 @@ class _GcPickUp extends State<GcPickUp> {
                             widget.subTotal,
                             widget.pickingFee,
                             widget.grandTotal,
-                            widget.priceGroup)
+                            widget.priceGroup,
+                            widget.tempID)
                           );
                         }
                       }
-                      print(getBuName.length);
 
                       for (int i=0; i<getBuName.length; i++){
                         while(specialInstruction.length > getBuName.length-1){
                           specialInstruction.removeAt(i);
                         }
-                        specialInstruction.insert(i, _specialInstruction[i].text);
-                        print(specialInstruction);
+                        specialInstruction.insert(i, "'${_specialInstruction[i].text}'");
                       }
 
                       // for(int q=0;q<billPerBu.length;q++){
@@ -1057,24 +1090,28 @@ Route _gcPickUpFinal(
     subTotal,
     pickingFee,
     grandTotal,
-    priceGroup
+    priceGroup,
+    tempID
 ){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcPickUpFinal(
-      pickUpOrDelivery:'1',
-      groupValue:groupValue,
-      deliveryDateData:deliveryDateData,
-      deliveryTimeData:deliveryTimeData,
-      buNameData:buNameData,buData:buData,
-      totalData:totalData,convenienceData:convenienceData,
-      placeRemarksData:placeRemarksData,
-      modeOfPayment:_modeOfPayment,
-      stores:stores,
-      items:items,
-      subTotal:subTotal,
-      pickingFee:pickingFee,
-      grandTotal:grandTotal,
-      priceGroup : priceGroup
+      pickUpOrDelivery  : '1',
+      groupValue        : groupValue,
+      deliveryDateData  : deliveryDateData,
+      deliveryTimeData  : deliveryTimeData,
+      buNameData        : buNameData,
+      buData            : buData,
+      totalData         : totalData,
+      convenienceData   : convenienceData,
+      placeRemarksData  : placeRemarksData,
+      modeOfPayment     : _modeOfPayment,
+      stores            : stores,
+      items             : items,
+      subTotal          : subTotal,
+      pickingFee        : pickingFee,
+      grandTotal        : grandTotal,
+      priceGroup        : priceGroup,
+      tempID            : tempID
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);

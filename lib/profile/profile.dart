@@ -184,8 +184,19 @@ class _ProfileSettings extends State<ProfileSettings>
     await db.updateDefaultNumber(id,customerId);
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    getMobileNumber();
+    getAppUsers();
+  }
+
   @override
   void initState() {
+    onRefresh();
     getMobileNumber();
     getAppUsers();
     super.initState();
@@ -1126,7 +1137,7 @@ class _ProfileSettings extends State<ProfileSettings>
                 Expanded(
                   child: RefreshIndicator(
                     color: Colors.deepOrangeAccent,
-                    onRefresh: getAppUsers,
+                    onRefresh: onRefresh,
                     child:Scrollbar(
                       child: ListView(
                         shrinkWrap: true,

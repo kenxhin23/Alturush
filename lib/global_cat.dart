@@ -199,11 +199,26 @@ class _GlobalCat extends State<GlobalCat>{
     status  = prefs.getString('s_status');
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    getGlobalCat();
+    getCounter();
+  }
+
   @override
   void initState() {
     super.initState();
+    onRefresh();
     getGlobalCat();
     getCounter();
+    getStatus();
+    loadProfile();
+    loadProfilePic();
+
     print(widget.buCode);
 
     ///live
@@ -249,11 +264,6 @@ class _GlobalCat extends State<GlobalCat>{
 //     } else if (widget.buCode == '5') {
 //       image = "assets/jpg/alturas_talibon.jpeg";
 //     }
-    getStatus();
-
-    loadProfile();
-    loadProfilePic();
-
 
   }
 
@@ -416,7 +426,7 @@ class _GlobalCat extends State<GlobalCat>{
             Expanded(
               child: RefreshIndicator(
                 color: Colors.deepOrangeAccent,
-                onRefresh: getGlobalCat,
+                onRefresh: onRefresh,
                 child: Scrollbar(
                   child: ListView(
                     physics: AlwaysScrollableScrollPhysics(),
@@ -494,15 +504,15 @@ class _GlobalCat extends State<GlobalCat>{
                           return InkWell(
                             onTap: () async{
                               if (globalCat[index]['id'] != '2'){
-                                await Navigator.of(context).push(_gotoTenants(
-                                    widget.buLogo,
-                                    widget.buName,
-                                    widget.buAcroname,
-                                    widget.buCode,
-                                    globalCat[index]['cat_picture'],
-                                    globalCat[index]['category'],
-                                    globalCat[index]['id']
-                                ));
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadTenants(
+                                    buLogo: widget.buLogo,
+                                    buName: widget.buName,
+                                    buAcroname: widget.buAcroname,
+                                    buCode: widget.buCode,
+                                    globalPic: globalCat[index]['cat_picture'],
+                                    globalCat:globalCat[index]['category'],
+                                    globalID:globalCat[index]['id']
+                                )),).then((val)=>{onRefresh()});
                               } else {
                                 print(widget.buCode);
                                 if (widget.buCode == '3' || widget.buCode == '4' || widget.buCode == '5') {
@@ -510,14 +520,15 @@ class _GlobalCat extends State<GlobalCat>{
                                   print('dili pa pwde');
                                 } else {
                                   print('unya naka');
-                                  Navigator.of(context).push(_loadGC(
-                                      widget.buLogo,
-                                      globalCat[index]['category'],
-                                      globalCat[index]['id'],
-                                      widget.buName,
-                                      widget.buCode,
-                                      widget.groupCode
-                                  ));
+
+                                  Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcCategory(
+                                      logo:widget.buLogo,
+                                      categoryName : globalCat[index]['category'],
+                                      categoryNo   : globalCat[index]['id'],
+                                      businessUnit : widget.buName,
+                                      bUnitCode    : widget.buCode,
+                                      groupCode    : widget.groupCode
+                                  )),).then((val)=>{onRefresh()});
                                 }
                               }
                               // selectCategory(context,widget.buCode,loadTenants[index]['logo'], loadTenants[index]['tenant_id'], loadTenants[index]['d_tenant_name']);
@@ -577,20 +588,19 @@ class _GlobalCat extends State<GlobalCat>{
                                 Future.delayed(const Duration(milliseconds: 500), () async {
                                   if (getTenantStatusXmas == '1') {
                                     print('pwede');
-                                    await Navigator.of(context).push(_loadStore(
-                                        'All items',
-                                        categoryIdXmas,
-                                        widget.buCode,
-                                        widget.buAcroname,
-                                        'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
-                                        tenantIdXmas,
-                                        'CHRISTMAS BASKETS',
-                                        widget.groupCode)
-                                    );
+
+                                    // LoadStore
+                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
+                                        categoryName  : 'All items',
+                                        categoryId    : categoryIdXmas,
+                                        buCode        : widget.buCode,
+                                        buAcroname    : widget.buAcroname,
+                                        storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
+                                        tenantCode    : tenantIdXmas,
+                                        tenantName    : 'CHRISTMAS BASKETS',
+                                        globalID      : widget.groupCode
+                                    )),).then((val)=>{onRefresh()});
                                   }
-                                  // else {
-                                  //   print('wala');
-                                  // }
                                 });
                               }
                             },
@@ -622,16 +632,16 @@ class _GlobalCat extends State<GlobalCat>{
                                 Future.delayed(const Duration(milliseconds: 500), () async {
                                   if (getTenantStatusMedPlus == '1') {
                                     print('pwede');
-                                    await Navigator.of(context).push(_loadStore(
-                                        'Promotional Items',
-                                        '500',
-                                        '1',
-                                        'ICM',
-                                        'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
-                                        '39',
-                                        'MEDICINE PLUS',
-                                        '4')
-                                    );
+                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
+                                        categoryName  : 'Promotional Items',
+                                        categoryId    : '500',
+                                        buCode        : '1',
+                                        buAcroname    : 'ICM',
+                                        storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
+                                        tenantCode    : '39',
+                                        tenantName    : 'MEDICINE PLUS',
+                                        globalID      : '4'
+                                    )),).then((val)=>{onRefresh()});
                                   }
                                   // else {
                                   //   Fluttertoast.showToast(
@@ -675,16 +685,17 @@ class _GlobalCat extends State<GlobalCat>{
                                     Future.delayed(const Duration(milliseconds: 500), () async {
                                       if (getTenantStatusValentines == '1') {
                                         print('pwede');
-                                        await Navigator.of(context).push(_loadStore(
-                                          'All items',
-                                          categoryIdValentines,
-                                          widget.buCode,
-                                          widget.buAcroname,
-                                          'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
-                                          tenantIdValentines,
-                                          'VALENTINE BOUQUETS',
-                                          widget.groupCode)
-                                        );
+
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
+                                            categoryName  : 'All items',
+                                            categoryId    : categoryIdValentines,
+                                            buCode        : widget.buCode,
+                                            buAcroname    : widget.buAcroname,
+                                            storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
+                                            tenantCode    : tenantIdValentines,
+                                            tenantName    : 'VALENTINE BOUQUETS',
+                                            globalID      : widget.groupCode
+                                        )),).then((val)=>{onRefresh()});
                                       }
                                       // else {
                                       //   Fluttertoast.showToast(
@@ -868,7 +879,15 @@ Route _loadGC(
 
 Route _loadStore(categoryName,categoryId,buCode, buAcroname, storeLogo, tenantCode, tenantName, globalID) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => LoadStore(categoryName:categoryName,categoryId:categoryId, buCode:buCode, buAcroname:buAcroname, storeLogo:storeLogo, tenantCode:tenantCode, tenantName:tenantName, globalID:globalID),
+    pageBuilder: (context, animation, secondaryAnimation) => LoadStore(
+        categoryName:categoryName,
+        categoryId:categoryId,
+        buCode:buCode,
+        buAcroname:buAcroname,
+        storeLogo:storeLogo,
+        tenantCode:tenantCode,
+        tenantName:tenantName,
+        globalID:globalID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

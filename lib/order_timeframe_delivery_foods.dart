@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'create_account_signin.dart';
 import 'db_helper.dart';
 
-class OrderTimeFrameDelivery extends StatefulWidget {
+class OrderTimeFrameDeliveryFoods extends StatefulWidget {
   final ticketNo;
   final mop;
   final acroname;
@@ -14,13 +16,13 @@ class OrderTimeFrameDelivery extends StatefulWidget {
   final tenantId;
   final ticketId;
 
-  const OrderTimeFrameDelivery({Key key, this.ticketNo, this.mop, this.acroname, this.tenantName, this.tenantId, this.ticketId}) : super(key: key);
+  const OrderTimeFrameDeliveryFoods({Key key, this.ticketNo, this.mop, this.acroname, this.tenantName, this.tenantId, this.ticketId}) : super(key: key);
   // const OrderTimeFrame({Key key, @required this.cart}) : super(key: key);
   @override
-  _OrderTimeFrameDeliveryState createState() => _OrderTimeFrameDeliveryState();
+  _OrderTimeFrameDeliveryFoodsState createState() => _OrderTimeFrameDeliveryFoodsState();
 }
 
-class _OrderTimeFrameDeliveryState extends State<OrderTimeFrameDelivery>{
+class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFoods>{
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   var isLoading = true;
@@ -183,6 +185,15 @@ class _OrderTimeFrameDeliveryState extends State<OrderTimeFrameDelivery>{
     });
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    timeFrame();
+    getContainer();
+  }
   @override
   void initState(){
     print(widget.ticketNo);
@@ -190,6 +201,7 @@ class _OrderTimeFrameDeliveryState extends State<OrderTimeFrameDelivery>{
     print(widget.acroname);
     print(widget.tenantName);
     print(widget.tenantId);
+    onRefresh();
     timeFrame();
     getContainer();
     // canceLstatus();
@@ -222,7 +234,7 @@ class _OrderTimeFrameDeliveryState extends State<OrderTimeFrameDelivery>{
           Expanded(
             child:RefreshIndicator(
               color: Colors.deepOrangeAccent,
-                onRefresh: refresh,
+                onRefresh: onRefresh,
                 child: Scrollbar(
                 child: ListView(
                   padding: EdgeInsets.zero,
@@ -412,5 +424,21 @@ class _OrderTimeFrameDeliveryState extends State<OrderTimeFrameDelivery>{
   }
 }
 
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
 
 

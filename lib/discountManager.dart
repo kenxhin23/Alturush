@@ -49,8 +49,21 @@ class _DiscountManager extends State<DiscountManager> {
       }
     });
   }
+
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadId();
+    checkIfHasId();
+  }
+
+
   @override
   void initState() {
+    onRefresh();
     loadId();
     checkIfHasId();
     super.initState();
@@ -172,7 +185,7 @@ class _DiscountManager extends State<DiscountManager> {
           Expanded(
             child: RefreshIndicator(
               color: Colors.deepOrangeAccent,
-              onRefresh: loadId,
+              onRefresh: onRefresh,
               child: Scrollbar(
                 child: ListView(
                   children: <Widget>[

@@ -995,7 +995,7 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Rider's Fee",style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
+                            Text("Delivery  Fee",style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
                             Text('₱ ${oCcy.format(deliveryCharge)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal)),
                           ],
                         ),

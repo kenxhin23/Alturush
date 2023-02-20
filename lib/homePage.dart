@@ -66,8 +66,17 @@ class _HomePageState extends State<HomePage> {
   bool showBadge;
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     loadProfile();
     loadProfilePic();
+    futureLoadQuotes();
+    listenCartCount();
+    // getGlobalCat();
+    // loadBu();
   }
 
   ///Get the list of Business Units
@@ -582,12 +591,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState(){
+    onRefresh();
+    loadProfile();
+    loadProfilePic();
     futureLoadQuotes();
     listenCartCount();
-    loadProfile();
-    // getGlobalCat();
-    loadProfilePic();
-    // loadBu();
     super.initState();
   }
 

@@ -301,8 +301,23 @@ class _MyHomePageState extends State<MyHomePage>  {
     });
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    futureLoadQuotes();
+    listenCartCount();
+    loadProfile();
+    getGlobalCat();
+    loadProfilePic();
+    // loadBu();
+  }
+
   @override
   void initState(){
+    onRefresh();
     futureLoadQuotes();
     listenCartCount();
     loadProfile();

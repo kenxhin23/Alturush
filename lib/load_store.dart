@@ -161,14 +161,27 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     getCounter();
     loadBu();
     loadProfile();
     loadProfilePic();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    onRefresh();
+    getCounter();
+    loadBu();
+    loadProfile();
+    loadProfilePic();
+
     if(widget.categoryName == 'All items'){
       getItemsByCategoriesAll();
     }else{

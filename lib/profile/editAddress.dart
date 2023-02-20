@@ -892,8 +892,18 @@ class _EditAddress extends State<EditAddress> {
     );
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadAddress();
+  }
+
   @override
   void initState() {
+    onRefresh();
     loadAddress();
     addressType = hint;
     print(addressType);

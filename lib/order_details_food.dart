@@ -1,4 +1,4 @@
-import 'package:arush/order_summary_pickup.dart';
+import 'package:arush/order_summary_pickup_foods.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +15,9 @@ import 'create_account_signin.dart';
 
 import 'dart:async';
 
-import 'order_summary_delivery.dart';
-import 'order_timeframe_delivery.dart';
-import 'order_timeframe_pickup.dart';
+import 'order_summary_delivery_foods.dart';
+import 'order_timeframe_delivery_foods.dart';
+import 'order_timeframe_pickup_foods.dart';
 class ToDeliverFood extends StatefulWidget {
   final pend;
   final ticketNo;
@@ -238,6 +238,11 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
   }
 
   Future refresh() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     print('refreshed');
     setState(() {
       if(widget.type == '0') {
@@ -559,7 +564,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
     selectType();
     getTotal();
     getTotalAmount();
-    // print(widget.ticketId);
+    print(widget.ticketId);
     // print(widget.pend);
     // print(widget.mop);
     timer = Timer.periodic(Duration(seconds: 30), (Timer t) => refresh());
@@ -759,7 +764,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                     children: [
 
                                       Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 35),
+                                        padding: EdgeInsets.symmetric(horizontal: 40),
                                         child: Text('Status', style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
                                       ),
 
@@ -841,7 +846,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                       ),
                                                     ),
                                                   ],
-                                                )
+                                                ),
                                               ),
 
                                               Expanded(
@@ -866,6 +871,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
 
                                                         Row(
                                                           children: [
+
                                                             Visibility(
                                                               visible:  trans2(checkTransIfExists) && loadItems[index]['tag_pickup'] == '0' &&  remitStatus2(checkRemitIfExists) && loadItems[index]['canceled_status'] == '0' ? true : false,
                                                               child: Padding(
@@ -1205,7 +1211,7 @@ Route _signIn() {
 
 Route _orderTimeFramePickup(ticketNo, mop, acroname, tenantName, tenantId) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFramePickup(
+    pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFramePickupFoods(
         ticketNo:ticketNo,
         mop:mop,
         acroname:acroname,
@@ -1226,7 +1232,7 @@ Route _orderTimeFramePickup(ticketNo, mop, acroname, tenantName, tenantId) {
 
 Route _orderTimeFrameDelivery(ticketNo, ticketId, mop, acroname, tenantName, tenantId) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFrameDelivery(
+    pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFrameDeliveryFoods(
       ticketNo:ticketNo,
       ticketId:ticketId,
       mop:mop,
@@ -1248,7 +1254,7 @@ Route _orderTimeFrameDelivery(ticketNo, ticketId, mop, acroname, tenantName, ten
 
 Route _orderSummaryPickup(ticketNo, ticketId) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => OrderSummaryPickup(
+    pageBuilder: (context, animation, secondaryAnimation) => OrderSummaryPickupFoods(
         ticketNo:ticketNo,
         ticketId:ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -1266,7 +1272,7 @@ Route _orderSummaryPickup(ticketNo, ticketId) {
 
 Route _orderSummaryDelivery(ticketNo, ticketId) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => OrderSummaryDelivery(ticketNo:ticketNo, ticketId:ticketId),
+    pageBuilder: (context, animation, secondaryAnimation) => OrderSummaryDeliveryFoods(ticketNo:ticketNo, ticketId:ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

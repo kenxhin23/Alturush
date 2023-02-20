@@ -4,23 +4,25 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'create_account_signin.dart';
 import 'db_helper.dart';
 
-class OrderTimeFramePickup extends StatefulWidget {
+class OrderTimeFramePickupFoods extends StatefulWidget {
   final ticketNo;
   final mop;
   final acroname;
   final tenantName;
   final tenantId;
 
-  const OrderTimeFramePickup({Key key, this.ticketNo, this.mop, this.acroname, this.tenantName, this.tenantId}) : super(key: key);
+  const OrderTimeFramePickupFoods({Key key, this.ticketNo, this.mop, this.acroname, this.tenantName, this.tenantId}) : super(key: key);
   // const OrderTimeFrame({Key key, @required this.cart}) : super(key: key);
   @override
-  _OrderTimeFramePickupState createState() => _OrderTimeFramePickupState();
+  _OrderTimeFramePickupFoodsState createState() => _OrderTimeFramePickupFoodsState();
 }
 
-class _OrderTimeFramePickupState extends State<OrderTimeFramePickup>{
+class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   var isLoading = true;
@@ -50,9 +52,14 @@ class _OrderTimeFramePickupState extends State<OrderTimeFramePickup>{
   var canceL = true;
 
   Future refresh() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     setState(() {
       // canceLstatus();
-      // timeFrame();
+      timeFrame();
     });
   }
 
@@ -96,7 +103,7 @@ class _OrderTimeFramePickupState extends State<OrderTimeFramePickup>{
     print(widget.acroname);
     print(widget.tenantName);
     print(widget.tenantId);
-    timeFrame();
+    refresh();
   }
 
 
@@ -235,5 +242,19 @@ class _OrderTimeFramePickupState extends State<OrderTimeFramePickup>{
   }
 }
 
-
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
 

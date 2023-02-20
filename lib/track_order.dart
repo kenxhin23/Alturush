@@ -149,13 +149,18 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
   }
 
   Future toRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     print('refresh na');
     loadProfile(); //load profile picture
     getTicketNoOnFoods(); //p
     getTicketNoOnGoods();// ending request
     // getTicketNoFoodOnTransit(); //on transit request
     // getTicketNoFoodOnDelivered(); // delivered
-    getTicketCancelled(); // cancelled
+    // getTicketCancelled(); // cancelled
 
     isLoading = false;
   }
@@ -615,22 +620,11 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                       onTap:(){
                                         getOrderTicketIfExist(ticketId);
 
-                                        print(ticket);
-                                        // Future.delayed(const Duration(milliseconds: 100), () {
-                                        //   setState(() {
-                                        //     if (orderTicket == 'true') {
-                                        //       // print('dayon kol');
-                                        //       Navigator.of(context).push(viewUpComingFood(1,
-                                        //           ticket,
-                                        //           ticketId,
-                                        //           mop,
-                                        //           type));
-                                        //     } else if (orderTicket =='false') {
-                                        //       print('ayaw kol');
-                                              Navigator.of(context).push(viewUpComingGood(ticketId));
-                                        //     }
-                                        //   });
-                                        // });
+                                              Navigator.of(context).push(viewUpComingGood(
+                                                ticket,
+                                                ticketId,
+                                                mop,
+                                              ));
                                       },
                                       child: Visibility(
                                         visible: month == selectedMonth,
@@ -718,9 +712,9 @@ Route viewUpComingFood(pend, ticketNo,ticketId, mop, type) {
   );
 }
 
-Route viewUpComingGood(ticketNo) {
+Route viewUpComingGood(ticket, ticketId, mop) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ToDeliverGood(ticketNo:ticketNo),
+    pageBuilder: (context, animation, secondaryAnimation) => ToDeliverGood(ticket : ticket, ticketId : ticketId, mop : mop),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

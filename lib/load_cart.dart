@@ -121,6 +121,11 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     print('ni refresh na');
     loadCart();
     loadTotal();

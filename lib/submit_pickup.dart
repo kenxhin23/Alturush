@@ -128,6 +128,11 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
   }
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     print('ni refresh nah');
     getPlaceOrderData();
     loadId();
@@ -135,6 +140,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
     loadCart2();
     // getBuSegregate1();
     getBuSegregate2();
+    getTenantSegregate();
+    checkIfHasId();
   }
 
   Future getPlaceOrderData() async{
@@ -955,11 +962,16 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
     selectedDiscountType.clear();
     tenantID.clear();
     amountTender.text = oCcy.format(widget.subtotal).toString();
-    getTenantSegregate();
+
+    onRefresh();
+    getPlaceOrderData();
+    loadId();
+    // loadCart();
+    loadCart2();
     // getBuSegregate1();
     getBuSegregate2();
+    getTenantSegregate();
     checkIfHasId();
-    onRefresh();
     print(widget.productID);
     initController();
     super.initState();

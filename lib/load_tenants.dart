@@ -247,9 +247,22 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
       }
     );
   }
+
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    getCounter();
+    loadTenant();
+    loadProfile();
+    loadProfilePic();
+  }
   @override
   void initState() {
     super.initState();
+    onRefresh();
     getCounter();
     loadTenant();
     loadProfile();
@@ -497,7 +510,7 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
             Expanded(
               child: RefreshIndicator(
                 color: Colors.deepOrangeAccent,
-                onRefresh: loadTenant,
+                onRefresh: onRefresh,
                 child: Scrollbar(
                   child: ListView.builder(
                     physics: BouncingScrollPhysics(),

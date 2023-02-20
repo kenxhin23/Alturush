@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sleek_button/sleek_button.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:arush/db_helper.dart';
+import '../create_account_signin.dart';
 import 'addNewAddress.dart';
 import 'editAddress.dart';
 
@@ -134,8 +136,19 @@ class _AddressMasterFile extends State<AddressMasterFile> {
     });
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadAddress();
+    checkIfHasId();
+  }
+
   @override
   void initState() {
+    onRefresh();
     loadAddress();
     checkIfHasId();
     super.initState();
@@ -177,7 +190,7 @@ class _AddressMasterFile extends State<AddressMasterFile> {
           Expanded(
             child:RefreshIndicator(
               color: Colors.deepOrangeAccent,
-              onRefresh: loadAddress,
+              onRefresh: onRefresh,
               child: Scrollbar(
                 child: ListView(
                   children: [
@@ -458,6 +471,22 @@ Route editAddress() {
     pageBuilder: (context, animation, secondaryAnimation) => EditAddress(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

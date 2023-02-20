@@ -501,11 +501,28 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
     );
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    getOrderData();
+    getBuSegregate();
+    getTrueTime();
+    // getTenantSegregate();
+    // loadTotal();
+    loadTotal2();
+    // loadCart();
+    loadCart2();
+  }
+
   @override
   void initState(){
     selectedDiscountType.clear();
     super.initState();
     selectedDiscountType.clear();
+    onRefresh();
     getOrderData();
     getBuSegregate();
     getTrueTime();
@@ -568,7 +585,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                 key: _key,
                 child: RefreshIndicator(
                   color: Colors.deepOrangeAccent,
-                  onRefresh: loadCart2,
+                  onRefresh: onRefresh,
                   child: Scrollbar(
                     child: ListView.builder(
                       itemCount: getTenant == null ? 0 : getTenant.length,

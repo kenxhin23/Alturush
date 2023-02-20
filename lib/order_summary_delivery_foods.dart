@@ -2,19 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'create_account_signin.dart';
 import 'db_helper.dart';
 
-class OrderSummaryDelivery extends StatefulWidget {
+class OrderSummaryDeliveryFoods extends StatefulWidget {
   final ticketNo;
   final ticketId;
 
-  const OrderSummaryDelivery({Key key, this.ticketNo, this.ticketId}) : super(key: key);
+  const OrderSummaryDeliveryFoods({Key key, this.ticketNo, this.ticketId}) : super(key: key);
   @override
-  _OrderSummaryDeliveryState createState() => _OrderSummaryDeliveryState();
+  _OrderSummaryDeliveryFoodsState createState() => _OrderSummaryDeliveryFoodsState();
 }
 
-class _OrderSummaryDeliveryState extends State<OrderSummaryDelivery> {
+class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
 
@@ -59,6 +61,11 @@ class _OrderSummaryDeliveryState extends State<OrderSummaryDelivery> {
 
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     getDiscount();
     // getTotal();
     getOrderSummary();
@@ -332,7 +339,7 @@ class _OrderSummaryDeliveryState extends State<OrderSummaryDelivery> {
                                 controller: _deliveryTime,
                                 textAlign: TextAlign.end,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.timer,color: Colors.deepOrangeAccent,),
+                                  prefixIcon: Icon(Icons.timer_outlined,color: Colors.deepOrangeAccent,),
                                   contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                                   focusedBorder:OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
@@ -563,7 +570,7 @@ class _OrderSummaryDeliveryState extends State<OrderSummaryDelivery> {
                           VerticalDivider(color: Colors.black54),
 
                           SizedBox(width: 70,
-                              child: Text("Rider's Fee", style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black))
+                              child: Text("Delivery Fee", style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black))
                           ),
                         ],
                       ),
@@ -626,4 +633,20 @@ class _OrderSummaryDeliveryState extends State<OrderSummaryDelivery> {
       )
     );
   }
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

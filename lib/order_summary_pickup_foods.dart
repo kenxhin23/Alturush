@@ -2,18 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import 'create_account_signin.dart';
 import 'db_helper.dart';
 
-class OrderSummaryPickup extends StatefulWidget {
+class OrderSummaryPickupFoods extends StatefulWidget {
   final ticketNo;
   final ticketId;
-  const OrderSummaryPickup({Key key, this.ticketNo, this.ticketId}) : super(key: key);
+  const OrderSummaryPickupFoods({Key key, this.ticketNo, this.ticketId}) : super(key: key);
   @override
-  _OrderSummaryPickupState createState() => _OrderSummaryPickupState();
+  _OrderSummaryPickupFoodsState createState() => _OrderSummaryPickupFoodsState();
 }
 
-class _OrderSummaryPickupState extends State<OrderSummaryPickup> {
+class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   final _deliveryDate = TextEditingController();
@@ -55,11 +57,17 @@ class _OrderSummaryPickupState extends State<OrderSummaryPickup> {
 
 
   Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
     getPickupSummary();
     // getTotal();
     getDiscount();
     getPickupSchedule();
   }
+
   Future getPickupSummary() async {
     var res = await db.getPickupSummary(widget.ticketId);
     if (!mounted) return;
@@ -173,8 +181,8 @@ class _OrderSummaryPickupState extends State<OrderSummaryPickup> {
         ),
       ),
         body:
-        isLoading
-            ? Center(
+        isLoading ?
+        Center(
           child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
           ),
@@ -408,7 +416,7 @@ class _OrderSummaryPickupState extends State<OrderSummaryPickup> {
 
                           Padding(
                             padding: EdgeInsets.only(left: 5),
-                            child: Text("$discounted", style: TextStyle(fontSize: 13, color: Colors.orangeAccent, fontWeight: FontWeight.bold)),
+                            child: Text("$discounted", style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -476,8 +484,6 @@ class _OrderSummaryPickupState extends State<OrderSummaryPickup> {
                       ),
                     ],
                   ),
-
-
                 ],
               ),
             )
@@ -486,4 +492,20 @@ class _OrderSummaryPickupState extends State<OrderSummaryPickup> {
       )
     );
   }
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

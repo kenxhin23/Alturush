@@ -1,5 +1,6 @@
 import 'package:arush/grocery/groceryMain.dart';
 import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -292,11 +293,36 @@ class _GcLoadStore extends State<GcLoadStore> {
               width: 50.0,
               height: 50.0,
               child: Padding(
-                padding:EdgeInsets.all(5.0),
+                padding:EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                 child: profileLoading ? CircularProgressIndicator(
                   valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
-                ) : CircleAvatar(
-                  backgroundImage: NetworkImage(profilePicture),
+                ) : CachedNetworkImage(
+                  imageUrl: profilePicture,
+                  imageBuilder: (context, imageProvider) => Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.white,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
+                  placeholder: (context, url) => const CircularProgressIndicator(color: Colors.deepOrangeAccent,),
+                  errorWidget: (context, url, error) => Container(
+                    height: 50,
+                    width: 50,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      color: Colors.white,
+                      image: DecorationImage(
+                        image: AssetImage("assets/jpg/no_photo.jpg"),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -439,6 +465,20 @@ class _GcLoadStore extends State<GcLoadStore> {
     );
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadStore();
+    getGcCounter();
+    loadProfile();
+    loadProfilePic();
+    getItemsByCategories();
+    getItemsByCategories1();
+    loadGcSubTotal();
+  }
 
 
   @override
@@ -449,6 +489,7 @@ class _GcLoadStore extends State<GcLoadStore> {
     bUnitCodeGc = widget.bUnitCode;
     categoryName = widget.categoryName;
     categoryId = widget.categoryNo;
+    onRefresh();
     loadStore();
     getGcCounter();
     loadProfile();
@@ -503,7 +544,7 @@ class _GcLoadStore extends State<GcLoadStore> {
             Expanded(
               child: RefreshIndicator(
                 color: Colors.green,
-                onRefresh: loadStore,
+                onRefresh: onRefresh,
                 child:Scrollbar(
                   child: ListView(
                     controller: scrollController,
@@ -543,6 +584,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                                         ),
                                       ),
                                     ),
+
                                     title: Text(
                                       widget.businessUnit,
                                       style: GoogleFonts.openSans(
@@ -608,8 +650,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                                   border: Border(
                                     top: BorderSide(width: 1.0, color: Colors.black12),
                                     right: BorderSide(width: 1.0, color: Colors.black12),
-//                                          left: BorderSide(width: 1.0, color: Colors.black12),
-//                                          bottom: BorderSide(width: 1.0, color: Colors.black12)
+                                    left: BorderSide(width: 1.0, color: Colors.black12),
+                                    bottom: BorderSide(width: 1.0, color: Colors.black12)
                                   ),
                                   color: Colors.transparent,
                                 ),
@@ -618,9 +660,40 @@ class _GcLoadStore extends State<GcLoadStore> {
                                   children: <Widget>[
 
                                     new Expanded(
-                                      child: FadeInImage.assetNetwork(
-                                        placeholder: cupertinoActivityIndicatorSmall,
-                                        image:loadStoreData[index]['image'],fit: BoxFit.scaleDown,
+                                      child: CachedNetworkImage(
+                                        imageUrl: loadStoreData[index]['image'] ,
+                                        fit: BoxFit.contain,
+                                        imageBuilder: (context, imageProvider) => Container(
+                                          height: 150,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                              image: imageProvider,
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                          ),
+                                        ),
+                                        placeholder: (context, url,) => Center(
+                                          child: SizedBox(
+                                            width: 40.0,
+                                            height: 40.0,
+                                            child: new CircularProgressIndicator(color: Colors.grey),
+                                          ),
+                                        ),
+                                        errorWidget: (context, url, error) => Container(
+                                          height: 150,
+                                          width: 150,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                            color: Colors.white,
+                                            image: DecorationImage(
+                                              image: AssetImage("assets/png/No_image_available.png"),
+                                              fit: BoxFit.scaleDown,
+                                            ),
+                                          ),
+                                        ),
                                       ),
                                     ),
 
@@ -681,6 +754,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                                 border: Border(
                                   top: BorderSide(width: 1.0, color: Colors.black12),
                                   right: BorderSide(width: 1.0, color: Colors.black12),
+                                    left: BorderSide(width: 1.0, color: Colors.black12),
+                                    bottom: BorderSide(width: 1.0, color: Colors.black12)
                                 ),
                                 color: Colors.transparent,
                               ),
@@ -689,14 +764,52 @@ class _GcLoadStore extends State<GcLoadStore> {
                                 children: <Widget>[
 
                                   new Expanded(
-                                    child: getItemsByCategoriesList[index]['image'] == 'https://admin.alturush.com/ITEM-IMAGES/' ? FadeInImage.assetNetwork(
-                                      placeholder: cupertinoActivityIndicatorSmall,
-                                      image:'https://dummyimage.com/400x400/ffffff/040405.png&text=+No+image',fit: BoxFit.scaleDown,
-                                    ) : FadeInImage.assetNetwork(
-                                      placeholder: cupertinoActivityIndicatorSmall,
-                                      image:getItemsByCategoriesList[index]['image'],fit: BoxFit.scaleDown,
+                                    child: CachedNetworkImage(
+                                      imageUrl: getItemsByCategoriesList[index]['image'] ,
+                                      fit: BoxFit.contain,
+                                      imageBuilder: (context, imageProvider) => Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                        ),
+                                      ),
+                                      placeholder: (context, url,) => Center(
+                                        child: SizedBox(
+                                          width: 40.0,
+                                          height: 40.0,
+                                          child: new CircularProgressIndicator(color: Colors.grey),
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) => Container(
+                                        height: 150,
+                                        width: 150,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                          color: Colors.white,
+                                          image: DecorationImage(
+                                            image: AssetImage("assets/png/No_image_available.png"),
+                                            fit: BoxFit.scaleDown,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
+
+                                  // new Expanded(
+                                  //   child: getItemsByCategoriesList[index]['image'] == 'https://admin.alturush.com/ITEM-IMAGES/' ? FadeInImage.assetNetwork(
+                                  //     placeholder: cupertinoActivityIndicatorSmall,
+                                  //     image:'https://dummyimage.com/400x400/ffffff/040405.png&text=+No+image',fit: BoxFit.scaleDown,
+                                  //   ) : FadeInImage.assetNetwork(
+                                  //     placeholder: cupertinoActivityIndicatorSmall,
+                                  //     image:getItemsByCategoriesList[index]['image'],fit: BoxFit.scaleDown,
+                                  //   ),
+                                  // ),
 
                                   SizedBox(height: 25),
 

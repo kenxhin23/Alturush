@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'create_account_signin.dart';
 import 'db_helper.dart';
 // import 'package:flutter_map/flutter_map.dart';
 // import "package:latlong/latlong.dart" as latLng;
@@ -168,9 +170,19 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
 //    }
 //  }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadRiderPage();
+  }
+
   @override
   void initState() {
 //    getUserLocation();
+    onRefresh();
     loadRiderPage();
     super.initState();
   }
@@ -207,7 +219,7 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
         ),
       ) : RefreshIndicator(
-        onRefresh: loadRiderPage,
+        onRefresh: onRefresh,
         child: Scrollbar(
           child: ListView(
             children: [
@@ -510,6 +522,22 @@ Route chartRoute(firstName,lastName,riderId,ticketId) {
     pageBuilder: (context, animation, secondaryAnimation) => Chat(firstName:firstName,lastName:lastName,riderId:riderId,ticketId:ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

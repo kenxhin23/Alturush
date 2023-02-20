@@ -116,81 +116,94 @@ class _GcDelivery extends State<GcDelivery> {
 
   modeOfPayment(_modeOfPayment){
     showModalBottomSheet(
-        isScrollControlled: true,
-        isDismissible: true,
-        context: context,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
-        ),
-        builder: (ctx) {
-          return Container(
-            height: MediaQuery.of(context).size.height  * 0.4,
-            child:Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children:[
-                  SizedBox(height:10.0),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
-                    child:Text("Payment method",style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      _modeOfPayment.text = "CASH ON DELIVERY";
-                      Navigator.of(context).pop();
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage("assets/mop/cod.png"),
-                        ),
-                        title: Text("CASH ON DELIVERY"),
+      isScrollControlled: true,
+      isDismissible: true,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
+      ),
+      builder : (ctx) {
+        return Container(
+          height: MediaQuery.of(context).size.height  * 0.4,
+          child:Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children:[
+                SizedBox(height:10.0),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 10.0),
+                  child:Text("Payment method",style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),),
+                ),
+                InkWell(
+                  onTap: () {
+                    _modeOfPayment.text = "CASH ON DELIVERY";
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage("assets/mop/cod.png"),
                       ),
+                      title: Text("CASH ON DELIVERY"),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      _modeOfPayment.text = "GCASH";
-                      Navigator.of(context).pop();
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage("assets/mop/gcash.jpg"),
-                        ),
-                        title: Text("GCASH"),
+                ),
+                InkWell(
+                  onTap: () {
+                    _modeOfPayment.text = "GCASH";
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage("assets/mop/gcash.jpg"),
                       ),
+                      title: Text("GCASH"),
                     ),
                   ),
+                ),
 
-                  InkWell(
-                    onTap: () {
-                      _modeOfPayment.text = "PAYMAYA";
-                      Navigator.of(context).pop();
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage: AssetImage("assets/mop/paymaya.jpg"),
-                        ),
-                        title: Text("PAYMAYA"),
+                InkWell(
+                  onTap: () {
+                    _modeOfPayment.text = "PAYMAYA";
+                    Navigator.of(context).pop();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage: AssetImage("assets/mop/paymaya.jpg"),
                       ),
+                      title: Text("PAYMAYA"),
                     ),
                   ),
+                ),
 
-                ],
-              ),
+              ],
             ),
-          );
-        });
+          ),
+        );
+      }
+    );
+  }
+
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    getBill();
+    gcGroupByBu();
+    getTrueTime();
   }
 
   @override
   void initState(){
     super.initState();
+    onRefresh();
     getBill();
     gcGroupByBu();
     getTrueTime();

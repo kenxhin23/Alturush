@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'create_account_signin.dart';
 import 'uploadSrId.dart';
 import 'db_helper.dart';
 import 'package:sleek_button/sleek_button.dart';
@@ -89,8 +91,19 @@ class _IdMasterFile extends State<IdMasterFile> {
     });
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadId();
+    checkIfHasId();
+  }
+
   @override
   void initState() {
+    onRefresh();
     loadId();
     checkIfHasId();
     super.initState();
@@ -129,7 +142,7 @@ class _IdMasterFile extends State<IdMasterFile> {
           Expanded(
             child:RefreshIndicator(
               color: Colors.deepOrangeAccent,
-              onRefresh: loadId,
+              onRefresh: onRefresh,
               child: Scrollbar(
                 child: ListView(
                   shrinkWrap: true,
@@ -253,6 +266,22 @@ Route addIds(){
     pageBuilder: (context, animation, secondaryAnimation) => UploadSrImage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

@@ -224,8 +224,18 @@ class _ProfilePage extends State<ProfilePage> {
     );
   }
 
+  Future onRefresh() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String username = prefs.getString('s_customerId');
+    if(username == null){
+      Navigator.of(context).push(_signIn());
+    }
+    loadProfile();
+  }
+
   @override
   void initState() {
+    onRefresh();
     loadProfile();
     super.initState();
   }
