@@ -666,7 +666,7 @@ Route _orderSummaryPickupGoods(ticket, ticketId) {
         ticket   : ticket,
         ticketId : ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -684,7 +684,7 @@ Route _orderSummaryDeliveryGoods(ticket, ticketId) {
      ticket   : ticket,
      ticketId : ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -706,7 +706,7 @@ Route _orderTimeFramePickup(ticket, ticketId, mop, acroname, bunit_name, bu_id) 
         bunit_name: bunit_name,
         bu_id  : bu_id),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -728,7 +728,7 @@ Route _orderTimeFrameDelivery(ticket, ticketId, mop, acroname, bunit_name, bu_id
         bunit_name : bunit_name,
         bu_id      : bu_id),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

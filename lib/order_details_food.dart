@@ -1218,7 +1218,7 @@ Route _orderTimeFramePickup(ticketNo, mop, acroname, tenantName, tenantId) {
         tenantName:tenantName,
         tenantId:tenantId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1240,7 +1240,7 @@ Route _orderTimeFrameDelivery(ticketNo, ticketId, mop, acroname, tenantName, ten
       tenantName:tenantName,
       tenantId:tenantId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1258,7 +1258,7 @@ Route _orderSummaryPickup(ticketNo, ticketId) {
         ticketNo:ticketNo,
         ticketId:ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1274,7 +1274,7 @@ Route _orderSummaryDelivery(ticketNo, ticketId) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => OrderSummaryDeliveryFoods(ticketNo:ticketNo, ticketId:ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

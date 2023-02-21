@@ -214,6 +214,7 @@ class _GcLoadStore extends State<GcLoadStore> {
       cat = true;
       offset = 0;
     });
+    print('ka isa ra dapat');
   }
 
   getItemsByCategories1() async{
@@ -227,6 +228,7 @@ class _GcLoadStore extends State<GcLoadStore> {
         // print(loadStoreDataTemp[q]);
       }
     });
+    print('inig scroll na dapat');
   }
 
 
@@ -471,12 +473,11 @@ class _GcLoadStore extends State<GcLoadStore> {
     if(username == null){
       Navigator.of(context).push(_signIn());
     }
+    getItemsByCategories();
     loadStore();
     getGcCounter();
     loadProfile();
     loadProfilePic();
-    getItemsByCategories();
-    getItemsByCategories1();
     loadGcSubTotal();
   }
 
@@ -494,8 +495,6 @@ class _GcLoadStore extends State<GcLoadStore> {
     getGcCounter();
     loadProfile();
     loadProfilePic();
-    getItemsByCategories();
-    getItemsByCategories1();
     loadGcSubTotal();
     isLoading = true;
 

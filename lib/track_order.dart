@@ -94,12 +94,9 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     if (!mounted) return;
     setState(() {
       listGetTicketOnGoods = res['user_details'];
-      print(res);
-      print('sa goods ni');
 
-      // print(listGetTicket);
     });
-    // print(listGetTicket);
+
   }
 
   Future getOrderTicketIfExist(ticketID) async {
@@ -154,10 +151,10 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     if(username == null){
       Navigator.of(context).push(_signIn());
     }
-    print('refresh na');
     loadProfile(); //load profile picture
     getTicketNoOnFoods(); //p
     getTicketNoOnGoods();// ending request
+
     // getTicketNoFoodOnTransit(); //on transit request
     // getTicketNoFoodOnDelivered(); // delivered
     // getTicketCancelled(); // cancelled
@@ -215,7 +212,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
 
   @override
   void dispose() {
-    timer?.cancel();
+    timer.cancel();
     super.dispose();
   }
 
@@ -591,11 +588,11 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                               itemCount: listGetTicketOnGoods == null ? 0 : listGetTicketOnGoods.length,
                               itemBuilder: (BuildContext context, int index) {
                                 String status;
-                                // if (double.parse(listGetTicketOnGoods[index]['total']) == 0) {
-                                //   status ='(Cancelled)';
-                                // } else {
-                                //   status ='';
-                                // }
+                                if (double.parse(listGetTicketOnGoods[index]['total']) == 0) {
+                                  status ='(Cancelled)';
+                                } else {
+                                  status ='';
+                                }
                                 String ticket = listGetTicketOnGoods[index]['d_ticket'];
                                 String ticketId = listGetTicketOnGoods[index]['d_ticket_id'];
                                 String mop = listGetTicketOnGoods[index]['d_mop'];
@@ -660,10 +657,10 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                                         ],
                                                       ),
 
-                                                      // Padding(
-                                                      //   padding: EdgeInsets.only(top: 15),
-                                                      //   child: Text(' $status', style: TextStyle(fontSize: 16.0,color: Colors.redAccent, fontWeight: FontWeight.bold)),
-                                                      // ),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(top: 15),
+                                                        child: Text(' $status', style: TextStyle(fontSize: 16.0,color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                                                      ),
                                                     ],
                                                   ),
                                                 ),
