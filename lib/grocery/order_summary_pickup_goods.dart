@@ -1,42 +1,32 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'create_account_signin.dart';
-import 'db_helper.dart';
+import '../create_account_signin.dart';
+import '../db_helper.dart';
 
-class OrderSummaryPickupFoods extends StatefulWidget {
-  final ticketNo;
+class OrderSummaryPickupGoods extends StatefulWidget {
+  final ticket;
   final ticketId;
-  const OrderSummaryPickupFoods({Key key, this.ticketNo, this.ticketId}) : super(key: key);
+
+  const OrderSummaryPickupGoods({Key key, this.ticket, this.ticketId}) : super(key: key);
   @override
-  _OrderSummaryPickupFoodsState createState() => _OrderSummaryPickupFoodsState();
+  _OrderSummaryPickupGoodsState createState() => _OrderSummaryPickupGoodsState();
 }
 
-class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
+class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
+
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
-  final _deliveryDate = TextEditingController();
-  final _deliveryTime = TextEditingController();
-
-
-  double grandTotal = 0.00;
-  double subTotal = 0.00;
-  double total = 0.00;
-  double amountTender = 0.00;
-  double change = 0.00;
-  double discount;
-
-  var isLoading = true;
-  var index = 0;
-
+  var isLoading = false;
 
   List pickupSummary;
-  List loadTotal;
-  List loadDiscount;
   List loadSchedule;
+  List loadTotal;
 
   String submitted, submittedDate;
   String firstname;
@@ -54,7 +44,13 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
   String discounted;
   String status;
 
-
+  double grandTotal = 0.00;
+  double total = 0.00;
+  double pickingFee = 0.00;
+  double subTotal = 0.00;
+  double amountTender = 0.00;
+  double change = 0.00;
+  double discount;
 
   Future onRefresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,13 +59,10 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
       Navigator.of(context).push(_signIn());
     }
     getPickupSummary();
-    // getTotal();
-    getDiscount();
-    getPickupSchedule();
   }
 
   Future getPickupSummary() async {
-    var res = await db.getPickupSummaryFoods(widget.ticketId);
+    var res = await db.getPickupSummaryGoods(widget.ticketId);
     if (!mounted) return;
     setState(() {
       pickupSummary = res['user_details'];
@@ -80,7 +73,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
       if (pickupSummary[0]['house_no'] == null) {
         houseNo = "";
       } else {
-        houseNo = pickupSummary[0]['house_no']+" ";
+        houseNo = "${pickupSummary[0]['house_no']} ";
       }
 
       street = pickupSummary[0]['street'];
@@ -93,76 +86,50 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
       submitted = DateFormat().format(date);
 
       status = pickupSummary[0]['cancel_status'];
-      print(status);
-      isLoading = false;
-    });
-  }
-
-  Future getDiscount() async{
-    var res = await db.getDiscount(widget.ticketId);
-    if (!mounted) return;
-    setState(() {
-      getTotal();
-      loadDiscount = res['user_details'];
-
-      if (loadDiscount[index]['total_discount'] != null){
-        discount = double.parse(loadDiscount[0]['total_discount']);
-        discounted ="(Discounted)";
-      } else {
-        discount = 0.00;
-        discounted ="";
-      }
-
-      print(loadDiscount);
-      isLoading = false;
-    });
-  }
-
-  Future getTotal() async{
-    var res = await db.getTotal2(widget.ticketId);
-    if (!mounted) return;
-    setState(() {
-      // grandTotal = 0.0;
-      loadTotal = res['user_details'];
-      total = double.parse(loadTotal[index]['total_price']);
-      subTotal = double.parse(loadTotal[index]['sub_total']);
-      amountTender = double.parse(loadTotal[index]['amount_tender']);
-      change = double.parse(loadTotal[index]['change']);
-      grandTotal = total - discount;
-      if (total == 0) {
-        amountTender = 0.00;
-        change = 0.00;
-      } else {
-        change = amountTender - grandTotal;
-      }
-
-      // print(loadTotal);
+      print(pickupSummary);
       isLoading = false;
     });
   }
 
   Future getPickupSchedule() async{
-    var res = await db.getPickupScheduleFoods(widget.ticketId);
+    var res = await db.getPickupScheduleGoods(widget.ticketId);
     if (!mounted) return;
     setState(() {
       loadSchedule = res['user_details'];
-      // print(loadSchedule);
+      print(loadSchedule);
       isLoading = false;
     });
   }
 
+  Future getTotal() async {
+    var res = await db.getTotalGoods(widget.ticketId);
+    if (!mounted) return;
+    setState(() {
+      loadTotal = res['user_details'];
+      subTotal = oCcy.parse(loadTotal[0]['sub_total']);
+      pickingFee = oCcy.parse(loadTotal[0]['picking_charge']);
+      grandTotal = subTotal + pickingFee;
+      amountTender = oCcy.parse(loadTotal[0]['amount_tender']);
+      change = oCcy.parse(loadTotal[0]['change']);
+      print(loadTotal);
+    });
+  }
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     onRefresh();
     getPickupSummary();
-    // getTotal();
-    getDiscount();
     getPickupSchedule();
+    getTotal();
+    print(widget.ticket);
+    print(widget.ticketId);
 
-    DateTime now = DateTime.now();
-    String formattedTime = DateFormat().add_jms().format(now);
-    // print(now);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -177,23 +144,22 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
           icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Summary (Pick-up)', style: GoogleFonts.openSans(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 16.0),
+        title: Text('Summary (Pickup)', style: GoogleFonts.openSans(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
       ),
-        body:
-        isLoading ?
-        Center(
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-          ),
-        ) : Column(
+      body: isLoading
+          ? Center(
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+        ),
+      ) : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
 
           Expanded(
             child: RefreshIndicator(
+              color: Colors.green,
               onRefresh: onRefresh,
-              color: Colors.deepOrangeAccent,
               child: Scrollbar(
                 child: ListView(
                   shrinkWrap: false,
@@ -206,7 +172,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(widget.ticketNo, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text(widget.ticket, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
                     ),
 
                     Padding(
@@ -255,15 +221,15 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                       shrinkWrap: true,
                       itemCount: loadSchedule == null ? 0 : loadSchedule.length,
                       itemBuilder: (BuildContext context, int index) {
-
-                        pickupTimeStart = loadSchedule[index]['time_start'];
-                        DateTime start = DateFormat("hh:mm").parse(pickupTimeStart);
-                        pickupStart = DateFormat().add_jm().format(start);
-                        // print(pickupStart);
-
-                        pickupTimeEnd = loadSchedule[index]['time_end'];
-                        DateTime end = DateFormat("hh:mm").parse(pickupTimeEnd);
-                        pickupEnd = DateFormat().add_jm().format(end);
+                        //
+                        // pickupTimeStart = loadSchedule[index]['time_start'];
+                        // DateTime start = DateFormat("hh:mm").parse(pickupTimeStart);
+                        // pickupStart = DateFormat().add_jm().format(start);
+                        // // print(pickupStart);
+                        //
+                        // pickupTimeEnd = loadSchedule[index]['time_end'];
+                        // DateTime end = DateFormat("hh:mm").parse(pickupTimeEnd);
+                        // pickupEnd = DateFormat().add_jm().format(end);
                         // print(pickupEnd);
 
                         pickupSchedDate = loadSchedule[index]['time_pickup'];
@@ -275,39 +241,38 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent,),
+                              Divider(thickness: 1, color: Colors.green,),
 
                               Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('${loadSchedule[index]['tenant_name']}',
-                                        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                    Text('${loadSchedule[index]['bu_name']}',
+                                        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.green)
                                     ),
                                   ],
                                 ),
                               ),
 
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent,),
+                              Divider(thickness: 1, color: Colors.green,),
 
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Picked-up Time', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                    Row(
-                                      children: [
-                                        Text(pickupStart, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                        Text(' - ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                        Text(pickupEnd, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                      ],
-                                    ),
-
-                                  ],
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.symmetric(horizontal: 10),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //     children: [
+                              //       Text('Picked-up Time', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                              //       Row(
+                              //         children: [
+                              //           Text(pickupStart, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                              //           Text(' - ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                              //           Text(pickupEnd, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                              //         ],
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
 
                               Divider(),
 
@@ -334,12 +299,12 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                         );
                       },
                     ),
+
                   ],
                 ),
               ),
             ),
           ),
-
           Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: SingleChildScrollView(
@@ -357,7 +322,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                     ),
                   ),
 
-                  Divider(thickness: 1, color: Colors.deepOrangeAccent,),
+                  Divider(thickness: 1, color: Colors.green,),
 
                   ListView.builder(
                     shrinkWrap: true,
@@ -381,18 +346,18 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
-                                  Text('${loadSchedule[index]['tenant_name']}',
-                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                  Text('${loadSchedule[index]['bu_name']}',
+                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.green)
                                   ),
 
                                   Text('₱ ${oCcy.format(price)}',
-                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.green)
                                   ),
                                 ],
                               ),
                             ),
 
-                            Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                            Divider(thickness: 1, color: Colors.green),
 
                           ],
                         ),
@@ -406,6 +371,42 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
 
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text('SUBTOTAL', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text('₱ ${oCcy.format(subTotal)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                      )
+                    ],
+                  ),
+
+                  Divider(color: Colors.black54),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text("PICKING FEE", style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text('₱ ${oCcy.format(pickingFee)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                      )
+                    ],
+                  ),
+
+                  Divider(color: Colors.black54),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+
                       Row(
                         children: [
 
@@ -414,16 +415,16 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                             child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
                           ),
 
-                          Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: Text("$discounted", style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
-                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(left: 5),
+                          //   child: Text("discounted", style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
+                          // ),
                         ],
                       ),
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(grandTotal).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
+                        child: Text('₱ ${oCcy.format(grandTotal)}', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
                       )
                     ],
                   ),
@@ -441,7 +442,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(amountTender).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
+                        child: Text('₱ ${oCcy.format(amountTender)}', style: TextStyle(fontSize: 13, color: Colors.green)),
                       ),
                     ],
                   ),
@@ -459,7 +460,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(change).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
+                        child: Text('₱ ${oCcy.format(change)}', style: TextStyle(fontSize: 13, color: Colors.green)),
                       ),
                     ],
                   ),
@@ -480,16 +481,16 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('CASH', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.normal)),
+                        child: Text('CASH', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.normal)),
                       ),
                     ],
                   ),
                 ],
               ),
-            )
+            ),
           )
         ],
-      )
+      ),
     );
   }
 }

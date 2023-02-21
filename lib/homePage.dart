@@ -121,6 +121,7 @@ class _HomePageState extends State<HomePage> {
       author = "-"+res["author"];
     });
   }
+
   ///Load profile
   Future loadProfile() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -144,6 +145,7 @@ class _HomePageState extends State<HomePage> {
       logout = false;
     }
   }
+
   ///Get cart counter
   Future getCounter() async {
     var res = await db.getCounter();
@@ -163,7 +165,6 @@ class _HomePageState extends State<HomePage> {
       cartLoading = false;
       listCounter = res['user_details'];
       cartCount = listCounter[0]['num'];
-
       if (cartCount == 0) {
         showBadge = false;
       } else {
@@ -172,6 +173,7 @@ class _HomePageState extends State<HomePage> {
       // print(cartCount);
     });
   }
+
   ///Dialog for province list
   List getProvinceData;
   selectProvince() async{
@@ -381,6 +383,7 @@ class _HomePageState extends State<HomePage> {
     // );
 
   }
+
   ///Dialog for town list
   List getTownData;
   selectTown() async{
@@ -591,12 +594,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState(){
-    onRefresh();
-    loadProfile();
+    super.initState();
+    print('dili mo load');
     loadProfilePic();
+    loadProfile();
+    onRefresh();
     futureLoadQuotes();
     listenCartCount();
-    super.initState();
   }
 
 

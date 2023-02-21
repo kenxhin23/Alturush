@@ -3,14 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
-import 'db_helper.dart';
+import '../db_helper.dart';
 import 'package:intl/intl.dart';
-import 'load_bu.dart';
-import 'live_map.dart';
+import '../load_bu.dart';
+import '../live_map.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sleek_button/sleek_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'create_account_signin.dart';
+import '../create_account_signin.dart';
 import 'order_summary_delivery_goods.dart';
 import 'order_summary_pickup_goods.dart';
 import 'order_timeframe_delivery_goods.dart';
@@ -95,24 +95,6 @@ class _ToDeliver extends State<ToDeliverGood> {
   }
   var delCharge;
   var grandTotal;
-
-
-  Future getTotal() async{
-    var res = await db.getTotal(widget.ticketId);
-    if (!mounted) return;
-    setState(() {
-      loadTotal = res['user_details'];
-      if(loadTotal[0]['charge'] == null && loadTotal[0]['grand_total'] ){
-        delCharge = 0;
-        grandTotal = 0;
-        print("opps");
-      }else{
-        delCharge = loadTotal[0]['charge'];
-        grandTotal = loadTotal[0]['grand_total'];
-        print("naa");
-      }
-    });
-  }
 
   Future cancelOrderSingle(tomsId) async{
     // await db.cancelOrderSingleGood(tomsId);
@@ -268,6 +250,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                             print('for pick-up');
                                             Navigator.of(context).push(_orderTimeFramePickup(
                                                 widget.ticket,
+                                                widget.ticketId,
                                                 widget.mop,
                                                 acroname,
                                                 bunit_name,
@@ -713,10 +696,11 @@ Route _orderSummaryDeliveryGoods(ticket, ticketId) {
   );
 }
 
-Route _orderTimeFramePickup(ticket, mop, acroname, bunit_name, bu_id) {
+Route _orderTimeFramePickup(ticket, ticketId, mop, acroname, bunit_name, bu_id) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFramePickupGoods(
         ticket    : ticket,
+        ticketId  : ticketId,
         mop       : mop,
         acroname  : acroname,
         bunit_name: bunit_name,

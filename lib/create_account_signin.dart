@@ -10,6 +10,7 @@ import 'db_helper.dart';
 import 'package:flutter_rounded_date_picker/flutter_rounded_date_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'homePage.dart';
 import 'showDpn.dart';
 import 'dart:async';
 import 'account_lock/accountLock.dart';
@@ -1004,6 +1005,11 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
             // prefs.setString('s_brgId', userData[0]['d_brgId']);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
           }
         } else {
           attempt = true;
@@ -1056,6 +1062,11 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
           // prefs.setString('s_brgId', userData[0]['d_brgId']);
           Navigator.of(context).pop();
           Navigator.of(context).pop();
+          Navigator.of(context).pop();
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
         }
       }
 
@@ -2826,3 +2837,4 @@ Route enterUsername(login) {
     },
   );
 }
+

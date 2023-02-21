@@ -158,7 +158,7 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
   }
 
   Future getPickupSchedule() async{
-    var res = await db.getPickupSchedule(widget.ticketId);
+    var res = await db.getPickupScheduleFoods(widget.ticketId);
     if (!mounted) return;
     setState(() {
       loadSchedule = res['user_details'];

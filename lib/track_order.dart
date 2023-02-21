@@ -16,7 +16,7 @@ import 'package:badges/badges.dart';
 import 'profile/accountSettings.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:arush/profile_page.dart';
-import 'order_details_goods.dart';
+import 'grocery/order_details_goods.dart';
 
 
 class TrackOrder extends StatefulWidget {

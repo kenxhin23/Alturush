@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'create_account_signin.dart';
-import 'db_helper.dart';
+import '../create_account_signin.dart';
+import '../db_helper.dart';
 
 class OrderTimeFramePickupGoods extends StatefulWidget {
   final ticket;
@@ -28,6 +28,11 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   var isLoading = false;
 
+  List getTime;
+
+  String prepared, preparedDate;
+  String taggedPickup, taggedPickupDate;
+
 
   Future onRefresh() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -37,10 +42,44 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
     }
   }
 
+  Future timeFrame() async{
+    var res = await db.orderTimeFramePickUpGoods(widget.ticketId, widget.bu_id);
+    if (!mounted) return;
+    setState(() {
+
+      getTime = res['user_details'];
+
+
+      if (getTime[0]['prepared_at'] == null) {
+        prepared = '';
+      } else {
+        preparedDate = getTime[0]['prepared_at'];
+        DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(preparedDate);
+        prepared = DateFormat().add_yMMMMd().add_jm().format(date);
+      }
+
+
+      if (getTime[0]['ready_pickup'] == null) {
+        taggedPickup = '';
+      } else {
+        taggedPickupDate = getTime[0]['ready_pickup'];
+        DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(taggedPickupDate);
+        taggedPickup = DateFormat().add_yMMMMd().add_jm().format(date);
+      }
+
+
+      print(getTime);
+      print(prepared);
+      print(taggedPickup);
+      isLoading = false;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     onRefresh();
+    timeFrame();
     print(widget.ticket);
     print(widget.ticketId);
     print(widget.mop);
@@ -133,12 +172,12 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
                         Padding(
                           padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('(Submitted Order by Tenant)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
+                          child: Text('(Submitted Order)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
                         ),
 
                         Padding(
                           padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('submitted', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                          child: Text('$prepared', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
                         ),
 
                         Divider(color: Colors.black54),
@@ -157,7 +196,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
                         Padding(
                           padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('tagged pickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                          child: Text('$taggedPickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
                         ),
 
                         Divider(color: Colors.black54),

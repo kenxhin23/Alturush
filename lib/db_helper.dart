@@ -521,6 +521,18 @@ class RapidA {
     return dataUser;
   }
 
+  Future orderTimeFramePickUpGoods(ticketId, buId) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/orderTimeFramePickUpGoods_r"),body:{
+      'ticketId' : encrypt(ticketId),
+      'buId' : encrypt(buId),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   Future getContainer(ticketId, tenantId) async{
     var client = http.Client();
     Map dataUser;
@@ -649,10 +661,32 @@ class RapidA {
     return dataUser;
   }
 
-  Future getPickupSchedule(ticketNo) async{
+  Future getTotalGoods(ticketNo) async{
     var client = http.Client();
     Map dataUser;
-    final response = await client.post(Uri.parse("$server/getPickupSchedule_r"),body:{
+    final response = await client.post(Uri.parse("$server/getTotalGoods_r"),body:{
+      'ticketNo' : encrypt(ticketNo),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future getPickupScheduleFoods(ticketNo) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/getPickupScheduleFoods_r"),body:{
+      'ticketNo' : encrypt(ticketNo),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future getPickupScheduleGoods(ticketNo) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/getPickupScheduleGoods_r"),body:{
       'ticketNo' : encrypt(ticketNo),
     });
     dataUser = jsonDecode(response.body);
@@ -693,10 +727,21 @@ class RapidA {
     return dataUser;
   }
 
-  Future getPickupSummary(ticketId) async{
+  Future getPickupSummaryFoods(ticketId) async{
     var client = http.Client();
     Map dataUser;
-    final response = await client.post(Uri.parse("$server/getPickupSummary_r"),body:{
+    final response = await client.post(Uri.parse("$server/getPickupSummaryFoods_r"),body:{
+      'ticketId' : encrypt(ticketId),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future getPickupSummaryGoods(ticketId) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/getPickupSummaryGoods_r"),body:{
       'ticketId' : encrypt(ticketId),
     });
     dataUser = jsonDecode(response.body);
