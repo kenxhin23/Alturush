@@ -128,11 +128,7 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     print('ni refresh nah');
     getPlaceOrderData();
     loadId();
@@ -225,6 +221,10 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
     if (!mounted) return;
     setState(() {
       getBu = res['user_details'];
+      for (int i=0; i<getBu.length; i++) {
+        groupID = getBu[i]['d_bu_group_id'];
+        displayAdd(groupID);
+      }
       stores = getBu.length;
     });
   }
@@ -373,7 +373,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(_signIn());
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                        // Navigator.of(context).push(_signIn());
                                       }else{
                                         getPlaceOrderData();
                                         displayAddresses(context).then((val) => {onRefresh()});
@@ -546,7 +547,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(_signIn());
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                        // Navigator.of(context).push(_signIn());
                                       }else{
                                         // applyDiscount();
                                         showApplyDiscountDialog(context).then((_)=>{loadId()});
@@ -679,7 +681,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                                             String username = prefs.getString('s_customerId');
                                                             if (username == null) {
-                                                              await Navigator.of(context).push(_signIn());
+                                                              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                                              // await Navigator.of(context).push(_signIn());
                                                             } else {
 
                                                               removeDiscountId(loadIdList[index]['id']);
@@ -796,7 +799,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String username = prefs.getString('s_customerId');
     if(username == null){
-      Navigator.of(context).push(_signIn());
+      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+      // Navigator.of(context).push(_signIn());
     }else{
       _placeOrderPickUp();
       CoolAlert.show(
@@ -810,7 +814,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String username = prefs.getString('s_customerId');
           if(username == null){
-            Navigator.of(context).push(_signIn());
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+            // Navigator.of(context).push(_signIn());
           }if(username != null){
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -823,9 +828,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
     }
   }
 
-
-
   Future displayAddresses(context) async{
+    print(groupID);
     displayAdd(groupID);
     return showModalBottomSheet(
       transitionAnimationController: controller,

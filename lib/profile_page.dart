@@ -103,7 +103,7 @@ class _ProfilePage extends State<ProfilePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String username = prefs.getString('s_customerId');
     if(username == null){
-      await Navigator.of(context).push(_signIn());
+      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
     }else{
       loading();
       String base64Image = base64Encode(_image.readAsBytesSync());
@@ -126,7 +126,8 @@ class _ProfilePage extends State<ProfilePage> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String username = prefs.getString('s_customerId');
         if (username == null) {
-          Navigator.of(context).push(_signIn());
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+          // Navigator.of(context).push(_signIn());
         }
         if (username != null) {
           Navigator.of(context).pop();
@@ -225,11 +226,7 @@ class _ProfilePage extends State<ProfilePage> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     loadProfile();
   }
 

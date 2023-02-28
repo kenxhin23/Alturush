@@ -51,12 +51,8 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
   var remit = true;
   var canceL = true;
 
-  Future refresh() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+  Future onRefresh() async{
+
     setState(() {
       // canceLstatus();
       timeFrame();
@@ -103,7 +99,7 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
     print(widget.acroname);
     print(widget.tenantName);
     print(widget.tenantId);
-    refresh();
+    onRefresh();
   }
 
 
@@ -135,7 +131,7 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
           Expanded(
             child:RefreshIndicator(
               color: Colors.deepOrangeAccent,
-              onRefresh: refresh,
+              onRefresh: onRefresh,
               child: Scrollbar(
                 child: ListView(
                   padding: EdgeInsets.zero,

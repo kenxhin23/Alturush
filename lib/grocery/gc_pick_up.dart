@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -76,12 +77,15 @@ class _GcPickUp extends State<GcPickUp> {
   var lt = 0;
   var items = 0;
   var stock = 0;
+  var time;
 
   Future getTrueTime() async{
     var res = await db.getTrueTime();
     if (!mounted) return;
     setState(() {
       trueTime = res['user_details'];
+      time = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
+      print(time);
     });
   }
 
@@ -152,11 +156,11 @@ class _GcPickUp extends State<GcPickUp> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
     print('ni refresh na');
     gcLoadPriceGroup();
     getTrueTime();
@@ -456,29 +460,57 @@ class _GcPickUp extends State<GcPickUp> {
                                           Row(
                                             children: <Widget>[
                                               Padding(
-                                                padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    Container(
-                                                        width: 75.0, height: 75.0,
-                                                        decoration: new BoxDecoration(
-                                                          shape: BoxShape.circle,
-                                                          image: new DecorationImage(
-                                                            image: new NetworkImage(
-                                                                loadCartData[index0]['product_image']),
-                                                            fit: BoxFit.scaleDown,
+                                                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                                                  child: Column(
+                                                    children: <Widget>[
+                                                      CachedNetworkImage(
+                                                        imageUrl:  loadCartData[index0]['product_image'],
+                                                        fit: BoxFit.contain,
+                                                        imageBuilder: (context, imageProvider) => Container(
+                                                          height: 75,
+                                                          width: 75,
+                                                          decoration: new BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            image: new DecorationImage(
+                                                              image: imageProvider,
+                                                              fit: BoxFit.scaleDown,
+                                                            ),
                                                           ),
-                                                        )),
-
-                                                    Padding(
-                                                      padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
-                                                      child: Text("₱ ${loadCartData[index0]['price_price'].toString()}",
-                                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                            color: Colors.black),
+                                                        ),
+                                                        placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
+                                                        errorWidget: (context, url, error) => Container(
+                                                          height: 75,
+                                                          width: 75,
+                                                          decoration: new BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            image: new DecorationImage(
+                                                              image: AssetImage("assets/png/No_image_available.png"),
+                                                              fit: BoxFit.scaleDown,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                )
+                                                      // Container(
+                                                      //   width: 75.0, height: 75.0,
+                                                      //   decoration: new BoxDecoration(
+                                                      //     shape: BoxShape.circle,
+                                                      //     image: new DecorationImage(
+                                                      //       image: new NetworkImage(
+                                                      //           loadCartData[index]['main_item']['image']),
+                                                      //       fit: BoxFit.scaleDown,
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
+
+                                                      Padding(
+                                                        padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
+                                                        child: Text("₱ ${loadCartData[index0]['price_price'].toString()}",
+                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
+                                                              color: Colors.black),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  )
                                               ),
 
                                               Expanded(
@@ -666,6 +698,7 @@ class _GcPickUp extends State<GcPickUp> {
                                                       physics: BouncingScrollPhysics(),
                                                       itemCount: 4,
                                                       itemBuilder: (BuildContext context, int index1) {
+
                                                         int n = 0;
                                                         n = index1;
                                                         var d1 = DateTime.parse(trueTime[0]['date_today']);
@@ -674,6 +707,7 @@ class _GcPickUp extends State<GcPickUp> {
                                                         final String formatted = formatter.format(d2);
                                                         return InkWell(
                                                           onTap: (){
+
                                                             while(deliveryDateData.length > getBuName.length-1){
                                                               deliveryDateData.removeAt(index);
                                                             }
@@ -683,19 +717,26 @@ class _GcPickUp extends State<GcPickUp> {
                                                             Navigator.of(context).pop();
                                                             if(index1 == 0){
                                                               setState(() {
-                                                                timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"19:30")).inHours;
+                                                                timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"15:00:00")).inHours;
                                                                 timeCount = timeCount.abs();
                                                                 _globalTime = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
                                                                 _globalTime2 = _globalTime.hour;
+                                                                if (_globalTime2 >= 15) {
+                                                                  timeCount = 0;
+                                                                }
+
                                                               });
                                                             }else{
                                                               setState(() {
-                                                                timeCount = 12;
+                                                                timeCount = 8;
                                                                 _globalTime = new DateTime.now();
                                                                 _globalTime2 = 07;
                                                                 // _deliveryDate.clear();
                                                               });
                                                             }
+                                                            print(time);
+                                                            print(timeCount);
+                                                            print(_globalTime2);
                                                           },
                                                           child: Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -838,7 +879,7 @@ class _GcPickUp extends State<GcPickUp> {
                                                           int t = index1;
                                                           t++;
                                                           final now =  _globalTime;
-                                                          final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+30, now.minute, now.second);
+                                                          final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+00, now.minute, now.second);
                                                           // final dtTo = DateTime(now.year, now.month, now.day, 8+t, 0+30);
                                                           final format = DateFormat.jm();
                                                           final formatt = DateFormat.Hm(); //"6:00 AM"
@@ -988,7 +1029,8 @@ class _GcPickUp extends State<GcPickUp> {
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(_signIn());
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          // Navigator.of(context).push(_signIn());
                         }else{
                           Navigator.of(context).push(_gcPickUpFinal(
                             groupValue,

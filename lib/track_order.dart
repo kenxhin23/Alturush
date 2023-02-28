@@ -94,7 +94,6 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     if (!mounted) return;
     setState(() {
       listGetTicketOnGoods = res['user_details'];
-
     });
 
   }
@@ -145,12 +144,8 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     });
   }
 
-  Future toRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+  Future onRefresh() async {
+
     loadProfile(); //load profile picture
     getTicketNoOnFoods(); //p
     getTicketNoOnGoods();// ending request
@@ -203,10 +198,10 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     getUserName();
     getTicketNoOnFoods();
     getTicketNoOnGoods();
-    toRefresh();
+    onRefresh();
     // print(months);
     // getOrderTicketIfExist();
-    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => toRefresh());
+    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => onRefresh());
     super.initState();
   }
 
@@ -377,7 +372,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                 Expanded(
                   child: RefreshIndicator(
                     color: Colors.deepOrangeAccent,
-                    onRefresh: toRefresh,
+                    onRefresh: onRefresh,
                     child: Scrollbar(
                       child: ListView(
                         children: [
@@ -416,15 +411,23 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                 return Padding(
                                   padding:EdgeInsets.symmetric(horizontal: 2.0, vertical: 0.0),
                                   child: InkWell(
-                                    onTap:(){
-                                      getOrderTicketIfExist(ticketId);
-                                      Navigator.of(context).push(viewUpComingFood(
-                                        1,
-                                        ticket,
-                                        ticketId,
-                                        mop,
-                                        type,
-                                      ));
+                                    onTap:() async {
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      String username = prefs.getString('s_customerId');
+                                      if(username == null){
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                        // await Navigator.of(context).push(_signIn());
+                                      } else {
+                                        getOrderTicketIfExist(ticketId);
+                                        Navigator.of(context).push(viewUpComingFood(
+                                          1,
+                                          ticket,
+                                          ticketId,
+                                          mop,
+                                          type,
+                                        ));
+                                      }
+
                                       // Future.delayed(const Duration(milliseconds: 100), () {
                                       //   setState(() {
                                       //     if (orderTicket == 'true') {
@@ -575,7 +578,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                 Expanded(
                   child: RefreshIndicator(
                     color: Colors.deepOrangeAccent,
-                    onRefresh: toRefresh,
+                    onRefresh: onRefresh,
                     child: Scrollbar(
                       child: ListView(
                         children: [
@@ -614,14 +617,22 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                 return Padding(
                                   padding:EdgeInsets.symmetric(horizontal: 2.0, vertical: 0.0),
                                   child: InkWell(
-                                      onTap:(){
-                                        getOrderTicketIfExist(ticketId);
+                                      onTap:() async {
+                                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                                        String username = prefs.getString('s_customerId');
+                                        if(username == null){
+                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                          // await Navigator.of(context).push(_signIn());
+                                        } else {
+                                          getOrderTicketIfExist(ticketId);
 
-                                              Navigator.of(context).push(viewUpComingGood(
-                                                ticket,
-                                                ticketId,
-                                                mop,
-                                              ));
+                                          Navigator.of(context).push(viewUpComingGood(
+                                            ticket,
+                                            ticketId,
+                                            mop,
+                                          ));
+                                        }
+
                                       },
                                       child: Visibility(
                                         visible: month == selectedMonth,

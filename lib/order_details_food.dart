@@ -237,12 +237,8 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
     // getSubTotal();
   }
 
-  Future refresh() async{
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+  Future onRefresh() async{
+
     print('refreshed');
     setState(() {
       if(widget.type == '0') {
@@ -555,7 +551,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
 
   @override
   void initState(){
-    refresh();
+    onRefresh();
     lookItemsSegregate();
     getSpecialInstructions();
     // checkIfOnGoing();
@@ -567,7 +563,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
     print(widget.ticketId);
     // print(widget.pend);
     // print(widget.mop);
-    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => refresh());
+    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => onRefresh());
 
     // getSubTotal();
     if(widget.mop == 'Pick-up'){
@@ -668,7 +664,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
             Expanded(
               child: RefreshIndicator(
                 color: Colors.deepOrangeAccent,
-                onRefresh: refresh,
+                onRefresh: onRefresh,
                 child: Scrollbar(
                   child:ListView.builder(
                     itemCount: instructions == null || lookItemsSegregateList == null || loadTotalAmount == null ? 0 : lookItemsSegregateList?.length ?? 0,
@@ -719,26 +715,34 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                   child: SizedBox(width: 20, height: 20,
                                     child: RawMaterialButton(
                                       onPressed: () async {
-                                        String acroname = lookItemsSegregateList[index0]['acroname'];
-                                        String tenantName = lookItemsSegregateList[index0]['tenant_name'];
-                                        String tenantId = lookItemsSegregateList[index0]['tenant_id'];
-                                        if (widget.mop == 'Pick-up') {
-                                          Navigator.of(context).push(_orderTimeFramePickup(
-                                            widget.ticketNo,
-                                            widget.mop,
-                                            acroname,
-                                            tenantName,
-                                            tenantId),
-                                          );
-                                        } else if (widget.mop == 'Delivery') {
-                                          Navigator.of(context).push(_orderTimeFrameDelivery(
-                                            widget.ticketNo,
-                                            widget.ticketId,
-                                            widget.mop,
-                                            acroname,
-                                            tenantName,
-                                            tenantId),
-                                          );
+
+                                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                                        String username = prefs.getString('s_customerId');
+                                        if(username == null){
+                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                          // await Navigator.of(context).push(_signIn());
+                                        } else {
+                                          String acroname = lookItemsSegregateList[index0]['acroname'];
+                                          String tenantName = lookItemsSegregateList[index0]['tenant_name'];
+                                          String tenantId = lookItemsSegregateList[index0]['tenant_id'];
+                                          if (widget.mop == 'Pick-up') {
+                                            Navigator.of(context).push(_orderTimeFramePickup(
+                                                widget.ticketNo,
+                                                widget.mop,
+                                                acroname,
+                                                tenantName,
+                                                tenantId),
+                                            );
+                                          } else if (widget.mop == 'Delivery') {
+                                            Navigator.of(context).push(_orderTimeFrameDelivery(
+                                                widget.ticketNo,
+                                                widget.ticketId,
+                                                widget.mop,
+                                                acroname,
+                                                tenantName,
+                                                tenantId),
+                                            );
+                                          }
                                         }
                                       },
                                       elevation: 1.0,
@@ -985,22 +989,22 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                             Visibility(
                                                               visible: delivered()  && loadItems[index]['canceled_status'] == '0' ? true : false,
                                                               child: Padding(
-                                                                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                                  child: Container(height: 25, width: 65,
-                                                                    child: OutlinedButton(
-                                                                      style: ButtonStyle(
-                                                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
-                                                                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                                                        backgroundColor: MaterialStateProperty.all(Colors.greenAccent),
-                                                                        overlayColor: MaterialStateProperty.all(Colors.black12),
-                                                                        side: MaterialStateProperty.all(BorderSide(
-                                                                          color: Colors.greenAccent,
-                                                                          width: 1.0,
-                                                                          style: BorderStyle.solid,)),
-                                                                      ),
-                                                                      child:Text("Delivered", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                                                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                                                child: Container(height: 25, width: 65,
+                                                                  child: OutlinedButton(
+                                                                    style: ButtonStyle(
+                                                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.greenAccent),
+                                                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                                                      side: MaterialStateProperty.all(BorderSide(
+                                                                        color: Colors.greenAccent,
+                                                                        width: 1.0,
+                                                                        style: BorderStyle.solid,)),
                                                                     ),
-                                                                  )
+                                                                    child:Text("Delivered", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
 
@@ -1148,10 +1152,17 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                     child: SleekButton(
                       onTap: () async {
 
-                        if (widget.mop == 'Pick-up') {
-                          Navigator.of(context).push(_orderSummaryPickup(widget.ticketNo, widget.ticketId));
-                        } else if (widget.mop == 'Delivery') {
-                          Navigator.of(context).push(_orderSummaryDelivery(widget.ticketNo, widget.ticketId));
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          // await Navigator.of(context).push(_signIn());
+                        } else {
+                          if (widget.mop == 'Pick-up') {
+                            Navigator.of(context).push(_orderSummaryPickup(widget.ticketNo, widget.ticketId));
+                          } else if (widget.mop == 'Delivery') {
+                            Navigator.of(context).push(_orderSummaryDelivery(widget.ticketNo, widget.ticketId));
+                          }
                         }
                       },
                       style: SleekButtonStyle.flat(

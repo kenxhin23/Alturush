@@ -74,7 +74,8 @@ class _ViewItem extends State<ViewItem>  {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String username = prefs.getString('s_customerId');
     if(username == null){
-      Navigator.of(context).push(_signIn());
+      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+      // Navigator.of(context).push(_signIn());
     } else {
 
       CoolAlert.show(
@@ -117,11 +118,11 @@ class _ViewItem extends State<ViewItem>  {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
   }
 
 
@@ -135,7 +136,7 @@ class _ViewItem extends State<ViewItem>  {
     uomTemp =  widget.uom;
     priceTemp = widget.price;
     // print(uomTemp);
-    // print(widget.uomId);
+    print(widget.prodId);
   }
 
   @override
@@ -196,8 +197,6 @@ class _ViewItem extends State<ViewItem>  {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children:[
-
-
 
                               Padding(
                                 padding: EdgeInsets.only(top: 10, bottom: 5),
@@ -379,7 +378,10 @@ class _ViewItem extends State<ViewItem>  {
                   Flexible(
                     child: SleekButton(
                       onTap: () async{
-                       addToCart();
+
+                          addToCart();
+
+
                       },
                       style: SleekButtonStyle.flat(
                         color: Colors.green,

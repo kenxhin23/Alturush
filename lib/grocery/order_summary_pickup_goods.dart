@@ -22,7 +22,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
-  var isLoading = false;
+  var isLoading = true;
 
   List pickupSummary;
   List loadSchedule;
@@ -53,12 +53,10 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
   double discount;
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     getPickupSummary();
+    getPickupSchedule();
+    getTotal();
+
   }
 
   Future getPickupSummary() async {
@@ -112,6 +110,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
       amountTender = oCcy.parse(loadTotal[0]['amount_tender']);
       change = oCcy.parse(loadTotal[0]['change']);
       print(loadTotal);
+      isLoading = false;
     });
   }
 
@@ -119,9 +118,9 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
   void initState() {
     super.initState();
     onRefresh();
-    getPickupSummary();
-    getPickupSchedule();
-    getTotal();
+    // getPickupSummary();
+    // getPickupSchedule();
+    // getTotal();
     print(widget.ticket);
     print(widget.ticketId);
 
@@ -209,7 +208,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("$houseNo$street, $barangay, $town $zipcode, $province ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text("$houseNo$street, $barangay, $town, $province $zipcode", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
                     ),
 
                     Padding(

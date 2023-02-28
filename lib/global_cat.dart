@@ -200,13 +200,10 @@ class _GlobalCat extends State<GlobalCat>{
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     getGlobalCat();
     getCounter();
+    loadProfile();
+    loadProfilePic();
   }
 
   @override
@@ -308,7 +305,8 @@ class _GlobalCat extends State<GlobalCat>{
 
             status == null ? TextButton(
               onPressed: () async {
-                await Navigator.of(context).push(_signIn());
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                // await Navigator.of(context).push(_signIn());
                 getCounter();
                 loadProfile();
               },
@@ -322,7 +320,8 @@ class _GlobalCat extends State<GlobalCat>{
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    await Navigator.of(context).push(_signIn());
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    // await Navigator.of(context).push(_signIn());
                     getCounter();
                     loadProfile();
                     loadProfilePic();
@@ -399,7 +398,8 @@ class _GlobalCat extends State<GlobalCat>{
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if(username == null){
-                        await Navigator.of(context).push(_signIn());
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                        // await Navigator.of(context).push(_signIn());
                         getCounter();
                       
                       }else{
@@ -503,34 +503,42 @@ class _GlobalCat extends State<GlobalCat>{
                         itemBuilder: (BuildContext context, int index) {
                           return InkWell(
                             onTap: () async{
-                              if (globalCat[index]['id'] != '2'){
-                                Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadTenants(
-                                    buLogo: widget.buLogo,
-                                    buName: widget.buName,
-                                    buAcroname: widget.buAcroname,
-                                    buCode: widget.buCode,
-                                    globalPic: globalCat[index]['cat_picture'],
-                                    globalCat:globalCat[index]['category'],
-                                    globalID:globalCat[index]['id']
-                                )),).then((val)=>{onRefresh()});
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              String username = prefs.getString('s_customerId');
+                              if(username == null){
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                // Navigator.of(context).push(_signIn());
                               } else {
-                                print(widget.buCode);
-                                if (widget.buCode == '3' || widget.buCode == '4' || widget.buCode == '5') {
-
-                                  print('dili pa pwde');
-                                } else {
-                                  print('unya naka');
-
-                                  Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcCategory(
-                                      logo:widget.buLogo,
-                                      categoryName : globalCat[index]['category'],
-                                      categoryNo   : globalCat[index]['id'],
-                                      businessUnit : widget.buName,
-                                      bUnitCode    : widget.buCode,
-                                      groupCode    : widget.groupCode
+                                if (globalCat[index]['id'] != '2'){
+                                  Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadTenants(
+                                      buLogo: widget.buLogo,
+                                      buName: widget.buName,
+                                      buAcroname: widget.buAcroname,
+                                      buCode: widget.buCode,
+                                      globalPic: globalCat[index]['cat_picture'],
+                                      globalCat:globalCat[index]['category'],
+                                      globalID:globalCat[index]['id']
                                   )),).then((val)=>{onRefresh()});
+                                } else {
+                                  print(widget.buCode);
+                                  if (widget.buCode == '3' || widget.buCode == '4' || widget.buCode == '5') {
+
+                                    print('dili pa pwde');
+                                  } else {
+                                    print('unya naka');
+
+                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcCategory(
+                                        logo:widget.buLogo,
+                                        categoryName : globalCat[index]['category'],
+                                        categoryNo   : globalCat[index]['id'],
+                                        businessUnit : widget.buName,
+                                        bUnitCode    : widget.buCode,
+                                        groupCode    : widget.groupCode
+                                    )),).then((val)=>{onRefresh()});
+                                  }
                                 }
                               }
+
                               // selectCategory(context,widget.buCode,loadTenants[index]['logo'], loadTenants[index]['tenant_id'], loadTenants[index]['d_tenant_name']);
                             },
                             child:Container(
@@ -583,26 +591,33 @@ class _GlobalCat extends State<GlobalCat>{
                           padding: EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 20),
                           child: GestureDetector(
                             onTap: () async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              String username = prefs.getString('s_customerId');
+                              if(username == null){
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                // Navigator.of(context).push(_signIn());
+                              } else {
+                                if (widget.buCode != '3') {
+                                  Future.delayed(const Duration(milliseconds: 500), () async {
+                                    if (getTenantStatusXmas == '1') {
+                                      print('pwede');
 
-                              if (widget.buCode != '3') {
-                                Future.delayed(const Duration(milliseconds: 500), () async {
-                                  if (getTenantStatusXmas == '1') {
-                                    print('pwede');
-
-                                    // LoadStore
-                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
-                                        categoryName  : 'All items',
-                                        categoryId    : categoryIdXmas,
-                                        buCode        : widget.buCode,
-                                        buAcroname    : widget.buAcroname,
-                                        storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
-                                        tenantCode    : tenantIdXmas,
-                                        tenantName    : 'CHRISTMAS BASKETS',
-                                        globalID      : widget.groupCode
-                                    )),).then((val)=>{onRefresh()});
-                                  }
-                                });
+                                      // LoadStore
+                                      Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
+                                          categoryName  : 'All items',
+                                          categoryId    : categoryIdXmas,
+                                          buCode        : widget.buCode,
+                                          buAcroname    : widget.buAcroname,
+                                          storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
+                                          tenantCode    : tenantIdXmas,
+                                          tenantName    : 'CHRISTMAS BASKETS',
+                                          globalID      : widget.groupCode
+                                      )),).then((val)=>{onRefresh()});
+                                    }
+                                  });
+                                }
                               }
+
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -627,36 +642,45 @@ class _GlobalCat extends State<GlobalCat>{
                           padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 20),
                           child: GestureDetector(
                             onTap: () async {
-                              if (widget.buCode == '1') {
-                              setState(() {
-                                Future.delayed(const Duration(milliseconds: 500), () async {
-                                  if (getTenantStatusMedPlus == '1') {
-                                    print('pwede');
-                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
-                                        categoryName  : 'Promotional Items',
-                                        categoryId    : '500',
-                                        buCode        : '1',
-                                        buAcroname    : 'ICM',
-                                        storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
-                                        tenantCode    : '39',
-                                        tenantName    : 'MEDICINE PLUS',
-                                        globalID      : '4'
-                                    )),).then((val)=>{onRefresh()});
-                                  }
-                                  // else {
-                                  //   Fluttertoast.showToast(
-                                  //     msg: "This promo is currently unavailable",
-                                  //     toastLength: Toast.LENGTH_SHORT,
-                                  //     gravity: ToastGravity.BOTTOM,
-                                  //     timeInSecForIosWeb: 2,
-                                  //     backgroundColor: Colors.black.withOpacity(0.7),
-                                  //     textColor: Colors.white,
-                                  //     fontSize: 16.0
-                                  //   );
-                                  // }
-                                });
-                              });
+
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              String username = prefs.getString('s_customerId');
+                              if(username == null){
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                // Navigator.of(context).push(_signIn());
+                              } else {
+                                if (widget.buCode == '1') {
+                                  setState(() {
+                                    Future.delayed(const Duration(milliseconds: 500), () async {
+                                      if (getTenantStatusMedPlus == '1') {
+                                        print('pwede');
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
+                                            categoryName  : 'Promotional Items',
+                                            categoryId    : '500',
+                                            buCode        : '1',
+                                            buAcroname    : 'ICM',
+                                            storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
+                                            tenantCode    : '39',
+                                            tenantName    : 'MEDICINE PLUS',
+                                            globalID      : '4'
+                                        )),).then((val)=>{onRefresh()});
+                                      }
+                                      // else {
+                                      //   Fluttertoast.showToast(
+                                      //     msg: "This promo is currently unavailable",
+                                      //     toastLength: Toast.LENGTH_SHORT,
+                                      //     gravity: ToastGravity.BOTTOM,
+                                      //     timeInSecForIosWeb: 2,
+                                      //     backgroundColor: Colors.black.withOpacity(0.7),
+                                      //     textColor: Colors.white,
+                                      //     fontSize: 16.0
+                                      //   );
+                                      // }
+                                    });
+                                  });
+                                }
                               }
+
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -680,36 +704,43 @@ class _GlobalCat extends State<GlobalCat>{
                           padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 30),
                           child: GestureDetector(
                               onTap: () async {
-                                if (widget.buCode != '3') {
-                                  setState(() {
-                                    Future.delayed(const Duration(milliseconds: 500), () async {
-                                      if (getTenantStatusValentines == '1') {
-                                        print('pwede');
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                String username = prefs.getString('s_customerId');
+                                if(username == null){
+                                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                  // Navigator.of(context).push(_signIn());
+                                } else {
+                                  if (widget.buCode != '3') {
+                                    setState(() {
+                                      Future.delayed(const Duration(milliseconds: 500), () async {
+                                        if (getTenantStatusValentines == '1') {
+                                          print('pwede');
 
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
-                                            categoryName  : 'All items',
-                                            categoryId    : categoryIdValentines,
-                                            buCode        : widget.buCode,
-                                            buAcroname    : widget.buAcroname,
-                                            storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
-                                            tenantCode    : tenantIdValentines,
-                                            tenantName    : 'VALENTINE BOUQUETS',
-                                            globalID      : widget.groupCode
-                                        )),).then((val)=>{onRefresh()});
-                                      }
-                                      // else {
-                                      //   Fluttertoast.showToast(
-                                      //       msg: "This promo is currently unavailable",
-                                      //       toastLength: Toast.LENGTH_SHORT,
-                                      //       gravity: ToastGravity.BOTTOM,
-                                      //       timeInSecForIosWeb: 2,
-                                      //       backgroundColor: Colors.black.withOpacity(0.7),
-                                      //       textColor: Colors.white,
-                                      //       fontSize: 16.0
-                                      //   );
-                                      // }
+                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
+                                              categoryName  : 'All items',
+                                              categoryId    : categoryIdValentines,
+                                              buCode        : widget.buCode,
+                                              buAcroname    : widget.buAcroname,
+                                              storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
+                                              tenantCode    : tenantIdValentines,
+                                              tenantName    : 'VALENTINE BOUQUETS',
+                                              globalID      : widget.groupCode
+                                          )),).then((val)=>{onRefresh()});
+                                        }
+                                        // else {
+                                        //   Fluttertoast.showToast(
+                                        //       msg: "This promo is currently unavailable",
+                                        //       toastLength: Toast.LENGTH_SHORT,
+                                        //       gravity: ToastGravity.BOTTOM,
+                                        //       timeInSecForIosWeb: 2,
+                                        //       backgroundColor: Colors.black.withOpacity(0.7),
+                                        //       textColor: Colors.white,
+                                        //       fontSize: 16.0
+                                        //   );
+                                        // }
+                                      });
                                     });
-                                  });
+                                  }
                                 }
                               },
                               child: Container(

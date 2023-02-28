@@ -26,7 +26,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
-  var isLoading = false;
+  var isLoading = true;
 
   List getTime;
 
@@ -35,11 +35,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    timeFrame();
   }
 
   Future timeFrame() async{

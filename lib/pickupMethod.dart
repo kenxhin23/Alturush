@@ -502,11 +502,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     getOrderData();
     getBuSegregate();
     getTrueTime();
@@ -938,10 +934,13 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                               Navigator.of(context).pop();
                                                               if (index1 == 0) {
                                                                 setState(() {
-                                                                  timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"19:30")).inHours;
+                                                                  timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"19:00")).inHours;
                                                                   timeCount = timeCount.abs();
                                                                   _globalTime = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
                                                                   _globalTime2 = _globalTime.hour;
+                                                                  if (_globalTime2 >= 19) {
+                                                                    timeCount = 0;
+                                                                  }
                                                                 });
                                                               } else {
                                                                 setState(() {
@@ -1092,7 +1091,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                             int t = index1;
                                                             t++;
                                                             final now =  _globalTime;
-                                                            final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+30, now.minute, now.second);
+                                                            final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+00, now.minute, now.second);
                                                             // final dtTo = DateTime(now.year, now.month, now.day, 8+t, 0+30);
                                                             final format = DateFormat.jm();
                                                             final formatt = DateFormat.Hm(); //"6:00 AM"
@@ -1235,16 +1234,25 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                 children: <Widget>[
                   Flexible(
                     child: SleekButton(
-                      onTap: () {
-                        if (_key.currentState.validate()) {
-                          submitPickUp();
-                        }
-                        for (int i=0; i<getTenant.length; i++){
-                          while(specialInstruction.length > getTenant.length-1){
-                            specialInstruction.removeAt(i);
+                      onTap: () async {
+
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          // await Navigator.of(context).push(_signIn());
+                        } else {
+                          if (_key.currentState.validate()) {
+                            submitPickUp();
                           }
-                          specialInstruction.insert(i, "'${_specialInstruction[i].text}'");
+                          for (int i=0; i<getTenant.length; i++){
+                            while(specialInstruction.length > getTenant.length-1){
+                              specialInstruction.removeAt(i);
+                            }
+                            specialInstruction.insert(i, "'${_specialInstruction[i].text}'");
+                          }
                         }
+
 
                         // String time = '12:30 PM';
                         // DateTime tempDate = new DateFormat("hh:mm:ss").parse(time);

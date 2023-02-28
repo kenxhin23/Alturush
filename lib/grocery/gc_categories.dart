@@ -125,11 +125,11 @@ class _GcCategory extends State<GcCategory>{
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
     loadStore();
     loadProfilePic();
     // loadGcSubTotal();
@@ -190,12 +190,19 @@ class _GcCategory extends State<GcCategory>{
             IconButton(
               icon: Icon(Icons.search_outlined, color: Colors.black54, size: 25,),
               onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String username = prefs.getString('s_customerId');
+                if(username == null){
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                  // Navigator.of(context).push(_signIn());
+                }
                 Navigator.of(context).push(_search());
               }
             ),
             status == null ? TextButton(
               onPressed: () async {
-                await Navigator.of(context).push(_signIn());
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                // await Navigator.of(context).push(_signIn());
                 loadProfile();
                 getGcCounter();
               },
@@ -209,7 +216,8 @@ class _GcCategory extends State<GcCategory>{
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    await Navigator.of(context).push(_signIn());
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    // await Navigator.of(context).push(_signIn());
                     loadProfile();
                     getGcCounter();
                     loadProfilePic();
@@ -285,7 +293,8 @@ class _GcCategory extends State<GcCategory>{
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if(username == null){
-                        await Navigator.of(context).push(_signIn());
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                        // await Navigator.of(context).push(_signIn());
                         getGcCounter();
                       } else {
                         await Navigator.of(context).push(_gcViewCart());

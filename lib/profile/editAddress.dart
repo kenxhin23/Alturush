@@ -1447,8 +1447,15 @@ class _EditAddress extends State<EditAddress> {
                 Flexible(
                   child: SleekButton(
                     onTap: () async {
-                      if(_formKey.currentState.validate()) {
-                        updateNewAddress();
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String username = prefs.getString('s_customerId');
+                      if(username == null){
+                      // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                      Navigator.of(context).push(_signIn());
+                      } else {
+                        if(_formKey.currentState.validate()) {
+                          updateNewAddress();
+                        }
                       }
                     },
                     style: SleekButtonStyle.flat(

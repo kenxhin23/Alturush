@@ -1005,11 +1005,11 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
             // prefs.setString('s_brgId', userData[0]['d_brgId']);
             Navigator.of(context).pop();
             Navigator.of(context).pop();
-            Navigator.of(context).pop();
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
+            // Navigator.of(context).pop();
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => HomePage()),
+            // );
           }
         } else {
           attempt = true;
@@ -1062,11 +1062,11 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
           // prefs.setString('s_brgId', userData[0]['d_brgId']);
           Navigator.of(context).pop();
           Navigator.of(context).pop();
-          Navigator.of(context).pop();
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
+          // Navigator.of(context).pop();
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(builder: (context) => HomePage()),
+          // );
         }
       }
 

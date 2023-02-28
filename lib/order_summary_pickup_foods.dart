@@ -57,11 +57,6 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
 
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     getPickupSummary();
     // getTotal();
     getDiscount();
@@ -243,7 +238,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("$houseNo$street, $barangay, $town $zipcode, $province ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text("$houseNo$street, $barangay, $town, $province $zipcode", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
                     ),
 
                     Padding(

@@ -61,11 +61,6 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
 
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     getDiscount();
     // getTotal();
     getOrderSummary();
@@ -278,7 +273,7 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("$houseNo$street, $barangay, $town $zipcode, $province ", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
+                        child: Text("$houseNo$street, $barangay, $town, $province $zipcode", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
                       ),
 
                       Padding(

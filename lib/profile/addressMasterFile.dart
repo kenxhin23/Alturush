@@ -137,11 +137,6 @@ class _AddressMasterFile extends State<AddressMasterFile> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     loadAddress();
     checkIfHasId();
   }
@@ -266,8 +261,16 @@ class _AddressMasterFile extends State<AddressMasterFile> {
                                             child: RawMaterialButton(
                                               onPressed:
                                                   () async {
-                                                Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddress(idd: loadAddressList[index]['id'], cusId: loadAddressList[index]['d_customerId'])),
-                                                );
+
+                                                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                    String username = prefs.getString('s_customerId');
+                                                    if(username == null){
+
+                                                      Navigator.of(context).push(_signIn());
+                                                    } else {
+                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddress(idd: loadAddressList[index]['id'], cusId: loadAddressList[index]['d_customerId'])),);
+                                                    }
+
                                               },
                                               elevation: 1.0,
                                               child:
@@ -286,7 +289,15 @@ class _AddressMasterFile extends State<AddressMasterFile> {
                                               child: RawMaterialButton(
                                                 onPressed:
                                                     () async {
-                                                  deleteAddress(loadAddressList[index]['id']);
+                                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                      String username = prefs.getString('s_customerId');
+                                                      if(username == null){
+
+                                                        Navigator.of(context).push(_signIn());
+                                                      } else {
+                                                        deleteAddress(loadAddressList[index]['id']);
+                                                      }
+
                                                 },
                                                 elevation: 1.0,
                                                 child:
@@ -424,9 +435,17 @@ class _AddressMasterFile extends State<AddressMasterFile> {
 
                 Flexible(child: SleekButton(
                   onTap: () async {
+                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                    String username = prefs.getString('s_customerId');
+                    if(username == null){
+                      // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                      Navigator.of(context).push(_signIn());
+                    } else {
                       await Navigator.of(context).push(addNewAddress());
                       loadAddress();
                       checkIfHasId();
+                    }
+
                     },
                     style: SleekButtonStyle.flat(
                       color: Colors.deepOrange,

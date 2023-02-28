@@ -190,11 +190,11 @@ class _GcDelivery extends State<GcDelivery> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
     getBill();
     gcGroupByBu();
     getTrueTime();
@@ -876,7 +876,8 @@ class _GcDelivery extends State<GcDelivery> {
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           String username = prefs.getString('s_customerId');
                           if(username == null){
-                            Navigator.of(context).push(_signIn());
+                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                            // Navigator.of(context).push(_signIn());
                           }else{
                             Navigator.of(context).push(_gcPickUpFinal(groupValue,deliveryDateData,deliveryTimeData,buNameData,buData,totalData,convenienceData,placeRemarksData,_modeOfPayment.text));
                           }

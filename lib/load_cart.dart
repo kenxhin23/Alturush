@@ -121,11 +121,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     print('ni refresh na');
     loadCart();
     loadTotal();
@@ -906,7 +902,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                               SharedPreferences prefs = await SharedPreferences.getInstance();
                               String username = prefs.getString('s_customerId');
                               if (username == null) {
-                                Navigator.of(context).push(_signIn());
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                               }
                               if (username != null) {
                                 Navigator.of(context).pop();
@@ -1514,7 +1510,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                                                       String username = prefs.getString('s_customerId');
                                                                       if (username == null) {
-                                                                        await Navigator.of(context).push(_signIn());
+                                                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                                                                       } else {
                                                                         setState(() {
                                                                           var x = loadCartData[index]['main_item']['quantity'];
@@ -1564,7 +1560,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                                                       String username = prefs.getString('s_customerId');
                                                                       if (username == null) {
-                                                                        await Navigator.of(context).push(_signIn());
+                                                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                                                                       } else {
                                                                         setState(() {
                                                                           var x = loadCartData[index]['main_item']['quantity'];
@@ -1601,7 +1597,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                                         SharedPreferences prefs = await SharedPreferences.getInstance();
                                                                         String username = prefs.getString('s_customerId');
                                                                         if (username == null) {
-                                                                          await Navigator.of(context).push(_signIn());
+                                                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                                                                         } else {
                                                                           removeFromCart(loadCartData[index]['main_item']['id']);
                                                                         }
@@ -1903,7 +1899,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                               String username =
                               prefs.getString('s_customerId');
                               if (username == null) {
-                                await Navigator.of(context).push(_signIn());
+                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                               } else {
                                 if (lGetAmountPerTenant[0]['isavail'] ==
                                     false) {

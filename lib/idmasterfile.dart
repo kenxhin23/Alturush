@@ -92,11 +92,7 @@ class _IdMasterFile extends State<IdMasterFile> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     loadId();
     checkIfHasId();
   }
@@ -235,9 +231,16 @@ class _IdMasterFile extends State<IdMasterFile> {
                 Flexible(
                   child: SleekButton(
                     onTap: () async {
-                      await Navigator.of(context).push(addIds());
-                      loadId();
-                      checkIfHasId();
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String username = prefs.getString('s_customerId');
+                      if(username == null){
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                      } else {
+                        await Navigator.of(context).push(addIds());
+                        loadId();
+                        checkIfHasId();
+                      }
+
                     },
                     style: SleekButtonStyle.flat(
                       color: Colors.deepOrange,

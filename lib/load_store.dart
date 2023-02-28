@@ -162,11 +162,6 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     getCounter();
     loadBu();
     loadProfile();
@@ -224,6 +219,7 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
   }
 
 
+
   void displayCategory(BuildContext context) async{
     List categoryData;
     var res = await db.selectCategory(widget.tenantCode);
@@ -263,15 +259,24 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
                             itemCount: categoryData.length,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  if(index == 0){
-                                    categoryName = 'All items';
-                                    getItemsByCategoriesAll();
-                                  }else{
-                                    categoryName = categoryData[index]['category'];
-                                    getItemsByCategories(categoryData[index]['category_id']);
+                                onTap: () async {
+
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  String username = prefs.getString('s_customerId');
+                                  if(username == null){
+                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                    // await Navigator.of(context).push(_signIn());
+                                  } else {
+                                    Navigator.pop(context);
+                                    if(index == 0){
+                                      categoryName = 'All items';
+                                      getItemsByCategoriesAll();
+                                    }else{
+                                      categoryName = categoryData[index]['category'];
+                                      getItemsByCategories(categoryData[index]['category_id']);
+                                    }
                                   }
+
                                   // Navigator.of(context).push(_loadStore(categoryData[index]['category_id'],buCode,logo,tenantId,tenantName));
                                 },
                                 child:Container(
@@ -414,7 +419,7 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
             status == null ?
             TextButton(
               onPressed: () async {
-                await Navigator.of(context).push(_signIn());
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                 getCounter();
                 loadProfile();
               },
@@ -428,7 +433,8 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if (username == null) {
-                    await Navigator.of(context).push(_signIn());
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    // await Navigator.of(context).push(_signIn());
                     loadProfile();
                     getCounter();
 
@@ -504,8 +510,8 @@ class _LoadStore extends State<LoadStore> with SingleTickerProviderStateMixin{
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if (username == null) {
-
-                        await Navigator.of(context).push(_signIn());
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                        // await Navigator.of(context).push(_signIn());
                         getCounter();
 
                       } else {

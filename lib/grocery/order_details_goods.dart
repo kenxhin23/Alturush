@@ -31,7 +31,7 @@ class _ToDeliver extends State<ToDeliverGood> {
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
   List loadTotal,lGetAmountPerTenant;
-  var isLoading = false;
+  var isLoading = true;
   List loadItems;
 
   Future getBunit() async {
@@ -141,11 +141,11 @@ class _ToDeliver extends State<ToDeliverGood> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
     lookItemsGood();
     getBunit();
     checkIfOnGoing();
@@ -241,32 +241,41 @@ class _ToDeliver extends State<ToDeliverGood> {
                                       child: RawMaterialButton(
                                         onPressed: () async {
 
-                                          String acroname = lGetAmountPerTenant[index0]['acroname'];
-                                          String bunit_name = lGetAmountPerTenant[index0]['business_unit'];
-                                          String bu_id = lGetAmountPerTenant[index0]['bu_id'];
-                                          print(lGetAmountPerTenant[index0]['ticket_id']);
-                                          print(widget.mop);
-                                          if(widget.mop == 'Pick-up') {
-                                            print('for pick-up');
-                                            Navigator.of(context).push(_orderTimeFramePickup(
-                                                widget.ticket,
-                                                widget.ticketId,
-                                                widget.mop,
-                                                acroname,
-                                                bunit_name,
-                                                bu_id),
-                                            );
-                                          } else if (widget.mop == 'Delivery') {
-                                            print('for delivery');
-                                            Navigator.of(context).push(_orderTimeFrameDelivery(
-                                                widget.ticket,
-                                                widget.ticketId,
-                                                widget.mop,
-                                                acroname,
-                                                bunit_name,
-                                                bu_id),
-                                            );
+                                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                                          String username = prefs.getString('s_customerId');
+                                          if(username == null){
+                                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                            // Navigator.of(context).push(_signIn());
+                                          } else {
+                                            String acroname = lGetAmountPerTenant[index0]['acroname'];
+                                            String bunit_name = lGetAmountPerTenant[index0]['business_unit'];
+                                            String bu_id = lGetAmountPerTenant[index0]['bu_id'];
+                                            print(lGetAmountPerTenant[index0]['ticket_id']);
+                                            print(widget.mop);
+                                            if(widget.mop == 'Pick-up') {
+                                              print('for pick-up');
+                                              Navigator.of(context).push(_orderTimeFramePickup(
+                                                  widget.ticket,
+                                                  widget.ticketId,
+                                                  widget.mop,
+                                                  acroname,
+                                                  bunit_name,
+                                                  bu_id),
+                                              );
+                                            } else if (widget.mop == 'Delivery') {
+                                              print('for delivery');
+                                              Navigator.of(context).push(_orderTimeFrameDelivery(
+                                                  widget.ticket,
+                                                  widget.ticketId,
+                                                  widget.mop,
+                                                  acroname,
+                                                  bunit_name,
+                                                  bu_id),
+                                              );
+                                            }
                                           }
+
+
                                         },
                                         elevation: 1.0,
                                         child: Icon(Icons.timer_outlined, color: Colors.green),
@@ -316,6 +325,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                 var pending_status;
                                 var ready_for_pickup;
                                 var claimed;
+                                var paid;
                                 var cancelled;
 
                                 if (loadItems[index1]['pending_status'] == '1') {
@@ -334,6 +344,12 @@ class _ToDeliver extends State<ToDeliverGood> {
                                   claimed = true;
                                 } else {
                                   claimed = false;
+                                }
+
+                                if (loadItems[index1]['paid_status'] == '1') {
+                                  paid = true;
+                                } else {
+                                  paid = false;
                                 }
 
                                 if (loadItems[index1]['cancelled_status'] == '1' || loadItems[index1]['canceled_status'] == '1') {
@@ -418,7 +434,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                         ),
 
                                                         Visibility(
-                                                          visible: pending_status && cancelled == false,
+                                                          visible: pending_status && cancelled == false && ready_for_pickup == false,
                                                           child: Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                                             child: Container(height: 25, width: 60,
@@ -440,7 +456,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                         ),
 
                                                         Visibility(
-                                                          visible: ready_for_pickup && cancelled == false && claimed == false,
+                                                          visible: ready_for_pickup && cancelled == false && claimed == false && paid == false,
                                                           child: Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                                                             child: Container(height: 30, width: 65,
@@ -462,10 +478,10 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                         ),
 
                                                         Visibility(
-                                                          visible: claimed && cancelled == false,
+                                                          visible: paid || claimed && cancelled == false,
                                                           child: Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                            child: Container(height: 25, width: 60,
+                                                            child: Container(height: 30, width: 60,
                                                               child: OutlinedButton(
                                                                 style: ButtonStyle(
                                                                   shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
@@ -477,7 +493,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                                     width: 1.0,
                                                                     style: BorderStyle.solid,)),
                                                                 ),
-                                                                child:Text("Claimed", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal)),
+                                                                child:Text("Paid & Release", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal), textAlign: TextAlign.center,),
                                                               ),
                                                             ),
                                                           ),
@@ -613,11 +629,17 @@ class _ToDeliver extends State<ToDeliverGood> {
                   Flexible(
                     child: SleekButton(
                       onTap: () async {
-
-                        if (widget.mop == 'Pick-up') {
-                          Navigator.of(context).push(_orderSummaryPickupGoods(widget.ticket, widget.ticketId));
-                        } else if (widget.mop == 'Delivery') {
-                          Navigator.of(context).push(_orderSummaryDeliveryGoods(widget.ticket, widget.ticketId));
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          // Navigator.of(context).push(_signIn());
+                        } else {
+                          if (widget.mop == 'Pick-up') {
+                            Navigator.of(context).push(_orderSummaryPickupGoods(widget.ticket, widget.ticketId));
+                          } else if (widget.mop == 'Delivery') {
+                            Navigator.of(context).push(_orderSummaryDeliveryGoods(widget.ticket, widget.ticketId));
+                          }
                         }
                       },
                       style: SleekButtonStyle.flat(

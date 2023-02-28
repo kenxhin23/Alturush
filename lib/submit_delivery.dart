@@ -321,7 +321,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String username = prefs.getString('s_customerId');
         if (username == null) {
-          Navigator.of(context).push(_signIn());
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+          // Navigator.of(context).push(_signIn());
         }
         if (username != null) {
           Navigator.of(context).pop();
@@ -335,7 +336,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String username = prefs.getString('s_customerId');
     if (username == null) {
-      Navigator.of(context).push(_signIn());
+      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+      // Navigator.of(context).push(_signIn());
     } else if(amountTender.text.isEmpty) {
       return showDialog<void>(
         context: context,
@@ -391,7 +393,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String username = prefs.getString('s_customerId');
           if (username == null) {
-            Navigator.of(context).push(_signIn());
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+            // Navigator.of(context).push(_signIn());
           }
           if (username != null) {
             Navigator.of(context).pop();
@@ -450,6 +453,7 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
   }
 
   Future displayAddresses(context) async{
+    print(groupID);
     displayAdd(groupID);
     return showModalBottomSheet(
       transitionAnimationController: controller,
@@ -869,7 +873,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                                     SharedPreferences prefs = await SharedPreferences.getInstance();
                                     String username = prefs.getString('s_customerId');
                                     if(username == null){
-                                      Navigator.of(context).push(_signIn());
+                                      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                      // Navigator.of(context).push(_signIn());
                                     }else{
                                       getPlaceOrderData();
                                       displayAddresses(context).then((_) => {onRefresh()});
@@ -1134,7 +1139,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                                     SharedPreferences prefs = await SharedPreferences.getInstance();
                                     String username = prefs.getString('s_customerId');
                                     if(username == null){
-                                      Navigator.of(context).push(_signIn());
+                                      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                      // Navigator.of(context).push(_signIn());
                                     }else{
                                       // applyDiscount();
                                       showApplyDiscountDialog(context).then((_)=>{loadId()});
@@ -1282,7 +1288,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                                                           SharedPreferences prefs = await SharedPreferences.getInstance();
                                                           String username = prefs.getString('s_customerId');
                                                           if (username == null) {
-                                                            await Navigator.of(context).push(_signIn());
+                                                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                                            // await Navigator.of(context).push(_signIn());
                                                           } else {
 
                                                             removeDiscountId(loadIdList[index]['id']);
@@ -1516,6 +1523,7 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           String username = prefs.getString('s_customerId');
                           if(username == null){
+                            // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                             Navigator.of(context).push(_signIn());
                           }else{
                             showAddDiscountDialog(context).then((_)=>{loadID()});

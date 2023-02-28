@@ -38,6 +38,8 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
   List listCounter;
   List globalCat;
   List listSubtotal;
+  List categoryData;
+  List getItemsByCategoriesListTemp = [];
 
   int gridCount;
 
@@ -47,6 +49,8 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
   var subtotal;
   var cartCount;
   var profilePicture = "";
+  var offset = 0;
+  var tenantId;
 
   bool showBadge;
 
@@ -54,7 +58,10 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
 
   AnimationController controller;
 
+  ScrollController scrollController;
+
   void initController(){
+
     controller = BottomSheet.createAnimationController(this);
     // Animation duration for displaying the BottomSheet
     controller.duration = const Duration(milliseconds: 700);
@@ -111,12 +118,12 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
   }
 
   void selectCategory(BuildContext context ,buCode, buAcroname, logo, tenantId, tenantName, globalID) async{
-    List categoryData;
     var res = await db.selectCategory(tenantId);
     if (!mounted) return;
     setState(() {
       categoryData = res['user_details'];
     });
+
     showModalBottomSheet(
       transitionAnimationController: controller,
       isScrollControlled: true,
@@ -125,37 +132,35 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
       ),
-      builder: (ctx) {
-          return Container(
-            height: MediaQuery.of(context).size.height/1.5,
-            child: Scrollbar(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+      builder: (context)
+      {
+        return Container(
+          height: MediaQuery.of(context).size.height/1.5,
+          child: Scrollbar(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(25.0, 20.0, 20.0, 20.0),
-                    child:Text("Category",style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),),
-                  ),
-
-                  Expanded(
-                    child: ListView(
-                      children: [
-
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children:[
-
-                            ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: categoryData.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return InkWell(
-                                  onTap: () async{
-                                    print(buAcroname);
-                                    if (index == 0) {
-                                      await Navigator.of(context).push(_loadStore(
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25.0, 20.0, 20.0, 20.0),
+                  child:Text("Category",style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),),
+                ),
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children:[
+                          ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: categoryData.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return InkWell(
+                                onTap: () async{
+                                  print(buAcroname);
+                                  if (index == 0) {
+                                    await Navigator.of(context).push(_loadStore(
                                         'All items',
                                         categoryData[index]['category_id'],
                                         buCode,
@@ -164,10 +169,10 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                                         tenantId,
                                         tenantName,
                                         globalID));
-                                      getCounter();
-                                      loadProfile();
-                                    } else {
-                                      await Navigator.of(context).push(_loadStore(
+                                    getCounter();
+                                    loadProfile();
+                                  } else {
+                                    await Navigator.of(context).push(_loadStore(
                                         categoryData[index]['category'],
                                         categoryData[index]['category_id'],
                                         buCode,
@@ -176,56 +181,56 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                                         tenantId,
                                         tenantName,
                                         globalID));
-                                      getCounter();
-                                      loadProfile();
-                                    }
-                                  },
-                                  child:Container(
-                                    height: 100.0,
-                                    width: 30.0,
-                                    child: Card(
-                                      color: Colors.white,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[index == 0 ?
+                                    getCounter();
+                                    loadProfile();
+                                  }
+                                },
+                                child:Container(
+                                  height: 100.0,
+                                  width: 30.0,
+                                  child: Card(
+                                    color: Colors.white,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[index == 0 ?
 
-                                        ListTile(
-                                          leading:Container(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            decoration: new BoxDecoration(
-                                              image: new DecorationImage(
-                                                image: new NetworkImage(categoryData[index]['image']),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                              border: new Border.all(
-                                                color: Colors.black54,
-                                                width: 0.5,
-                                              ),
+                                      ListTile(
+                                        leading:Container(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          decoration: new BoxDecoration(
+                                            image: new DecorationImage(
+                                              image: new NetworkImage(categoryData[index]['image']),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                                            border: new Border.all(
+                                              color: Colors.black54,
+                                              width: 0.5,
                                             ),
                                           ),
-
-                                            title: Text("All items",style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
-                                          ) :
-                                        ListTile(
-                                          leading:Container(
-                                            width: 50.0,
-                                            height: 50.0,
-                                            decoration: new BoxDecoration(
-                                              image: new DecorationImage(
-                                                image: new NetworkImage(categoryData[index]['image']),
-                                                fit: BoxFit.cover,
-                                              ),
-                                              borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                              border: new Border.all(
-                                                color: Colors.black54,
-                                                width: 0.5,
-                                              ),
-                                            ),
-                                          ),
-                                          title: Text(categoryData[index]['category'].toString(),style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
                                         ),
+
+                                        title: Text("All items",style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
+                                      ) :
+                                      ListTile(
+                                        leading:Container(
+                                          width: 50.0,
+                                          height: 50.0,
+                                          decoration: new BoxDecoration(
+                                            image: new DecorationImage(
+                                              image: new NetworkImage(categoryData[index]['image']),
+                                              fit: BoxFit.cover,
+                                            ),
+                                            borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                                            border: new Border.all(
+                                              color: Colors.black54,
+                                              width: 0.5,
+                                            ),
+                                          ),
+                                        ),
+                                        title: Text(categoryData[index]['category'].toString(),style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
+                                      ),
                                       ],
                                     ),
                                     elevation: 0,
@@ -248,12 +253,23 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
     );
   }
 
+  void getItemsByCategories1() async{
+    var res = await db.selectCategory(tenantId);
+    if (!mounted) return;
+    setState(() {
+      // offset =;
+      getItemsByCategoriesListTemp = res['user_details'];
+      for(int q = 0;q < getItemsByCategoriesListTemp.length; q++){
+        categoryData.add(getItemsByCategoriesListTemp[q]);
+        // print(loadStoreDataTemp[q]);
+        print('ni scroll na');
+      }
+    });
+    print('inig scroll na dapat');
+  }
+
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     getCounter();
     loadTenant();
     loadProfile();
@@ -277,6 +293,7 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
     }
     print(widget.globalCat);
     initController();
+
   }
 
   @override
@@ -325,7 +342,8 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
             ),
             status == null ? TextButton(
               onPressed: () async {
-                await Navigator.of(context).push(_signIn());
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                // await Navigator.of(context).push(_signIn());
                 getCounter();
                 loadProfile();
               },
@@ -338,12 +356,12 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    await Navigator.of(context).push(_signIn());
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                     getCounter();
                     loadProfile();
                     loadProfilePic();
                   }else{
-                    await Navigator.of(context).push(profile());
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ProfilePage())).then((val)=>{onRefresh()});
                     getCounter();
                     loadProfile();
                     loadProfilePic();
@@ -413,10 +431,12 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if(username == null){
-                        await Navigator.of(context).push(_signIn());
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                        // await Navigator.of(context).push(_signIn());
                         getCounter();
                       } else {
-                        await Navigator.of(context).push(_loadCart());
+                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new LoadCart())).then((val)=>{onRefresh()});
+                        // await Navigator.of(context).push(_loadCart());
                         getCounter();
                       }
                     }

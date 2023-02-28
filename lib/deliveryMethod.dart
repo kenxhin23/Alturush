@@ -1139,10 +1139,13 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                               Navigator.of(context).pop();
                                                               if (index1 == 0) {
                                                                 setState(() {
-                                                                  timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"19:30")).inHours;
+                                                                  timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"19:00")).inHours;
                                                                   timeCount = timeCount.abs();
                                                                   _globalTime = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
                                                                   _globalTime2 = _globalTime.hour;
+                                                                  if (_globalTime2 >= 19) {
+                                                                    timeCount = 0;
+                                                                  }
                                                                 });
                                                               } else {
                                                                 setState(() {
@@ -1298,7 +1301,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                             int t = index1;
                                                             t++;
                                                             final now =  _globalTime;
-                                                            final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+30, now.minute, now.second);
+                                                            final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+00, now.minute, now.second);
                                                             // final dtTo = DateTime(now.year, now.month, now.day, 8+t, 0+30);
                                                             final format = DateFormat.jm();  //"6:00 AM"
                                                             String from = format.format(dtFrom);
@@ -1444,21 +1447,29 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
 
                   Flexible(
                     child: SleekButton(
-                      onTap: () {
-                        if (_formKey.currentState.validate()) {
-                          // Navigator.of(context).push(_gcPickUpFinal(groupValue,_deliveryTime.text,_deliveryDate.text,_modeOfPayment.text));
-                          submitPlaceOrder();
-                        }
-                        for (int i=0; i<getTenant.length; i++){
-                          // print(_specialInstruction[i].text);
-                          // special.add(_specialInstruction[i].text);
-                          while(specialInstruction.length > getTenant.length-1){
-                            specialInstruction.removeAt(i);
-                          }
-                          specialInstruction.insert(i, "'${_specialInstruction[i].text}'");
-                        }
-                        // print(specialInstruction);
+                      onTap: () async{
 
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(_signIn());
+                        } else {
+                          if (_formKey.currentState.validate()) {
+                            // Navigator.of(context).push(_gcPickUpFinal(groupValue,_deliveryTime.text,_deliveryDate.text,_modeOfPayment.text));
+                            submitPlaceOrder();
+                          }
+                          for (int i=0; i<getTenant.length; i++){
+                            // print(_specialInstruction[i].text);
+                            // special.add(_specialInstruction[i].text);
+                            while(specialInstruction.length > getTenant.length-1){
+                              specialInstruction.removeAt(i);
+                            }
+                            specialInstruction.insert(i, "'${_specialInstruction[i].text}'");
+                          }
+                        }
+
+                        // print(specialInstruction);
                         // print(getTenantData);
                         // print(getTenantNameData);
                         // print(getBuNameData);

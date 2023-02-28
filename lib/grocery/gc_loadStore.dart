@@ -261,12 +261,19 @@ class _GcLoadStore extends State<GcLoadStore> {
         IconButton(
             icon: Icon(Icons.search_outlined, color: Colors.black, size: 25),
             onPressed: () async {
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              String username = prefs.getString('s_customerId');
+              if(username == null){
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                // Navigator.of(context).push(_signIn());
+              }
               Navigator.of(context).push(_search());
             }
         ),
         status == null ? TextButton(
           onPressed: () async {
-            await Navigator.of(context).push(_signIn());
+            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+            // await Navigator.of(context).push(_signIn());
             loadProfile();
             getGcCounter();
           },
@@ -280,7 +287,8 @@ class _GcLoadStore extends State<GcLoadStore> {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String username = prefs.getString('s_customerId');
               if(username == null){
-                await Navigator.of(context).push(_signIn());
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                // await Navigator.of(context).push(_signIn());
                 loadProfile();
                 getGcCounter();
                 loadProfilePic();
@@ -356,7 +364,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    await Navigator.of(context).push(_signIn());
+                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    // await Navigator.of(context).push(_signIn());
                     getGcCounter();
 
                   }else{
@@ -468,11 +477,11 @@ class _GcLoadStore extends State<GcLoadStore> {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
     getItemsByCategories();
     loadStore();
     getGcCounter();
@@ -499,7 +508,7 @@ class _GcLoadStore extends State<GcLoadStore> {
     isLoading = true;
 
 
-    scrollController=ScrollController();
+    scrollController = ScrollController();
     scrollController.addListener(() {
       FocusScope.of(context).unfocus();
       // _search.clear();
@@ -507,10 +516,12 @@ class _GcLoadStore extends State<GcLoadStore> {
         if (scrollController.position.pixels != 0) {
           setState(() {
             offset += 10;
+            print('active scrolling');
             if(cat == false){
               loadStore1();
               // print(offset);
             }else{
+
                getItemsByCategories1();
             }
           });
@@ -625,19 +636,27 @@ class _GcLoadStore extends State<GcLoadStore> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () async{
+
+
                                SharedPreferences prefs = await SharedPreferences.getInstance();
                                String username = prefs.getString('s_customerId');
-                               await Navigator.of(context).push(_gcVieItem(
-                                    loadStoreData[index]['prod_id'],
-                                    loadStoreData[index]['product_name'],
-                                    loadStoreData[index]['image'],
-                                    loadStoreData[index]['itemcode'],
-                                    loadStoreData[index]['price'],
-                                    loadStoreData[index]['uom'],
-                                    loadStoreData[index]['uom_id'],
-                                    widget.bUnitCode
-                                )
-                               );
+                               if(username == null){
+                                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                 // Navigator.of(context).push(_signIn());
+                               } else {
+                                 await Navigator.of(context).push(_gcVieItem(
+                                     loadStoreData[index]['prod_id'],
+                                     loadStoreData[index]['product_name'],
+                                     loadStoreData[index]['image'],
+                                     loadStoreData[index]['itemcode'],
+                                     loadStoreData[index]['price'],
+                                     loadStoreData[index]['uom'],
+                                     loadStoreData[index]['uom_id'],
+                                     widget.bUnitCode
+                                 )
+                                 );
+                               }
+
                                getGcCounter();
                                loadProfile();
                                if(username != null){
@@ -729,19 +748,26 @@ class _GcLoadStore extends State<GcLoadStore> {
                         ),
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
-                            onTap: () async{
+                            onTap: () async {
+
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             String username = prefs.getString('s_customerId');
-                            await Navigator.of(context).push(_gcVieItem(
-                                getItemsByCategoriesList[index]['product_id'],
-                                getItemsByCategoriesList[index]['product_name'],
-                                getItemsByCategoriesList[index]['image'],
-                                getItemsByCategoriesList[index]['itemcode'],
-                                getItemsByCategoriesList[index]['price'],
-                                getItemsByCategoriesList[index]['uom'],
-                                getItemsByCategoriesList[index]['uom_id'],
-                                widget.bUnitCode
+                            if(username == null){
+                              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                              // Navigator.of(context).push(_signIn());
+                            } else {
+                              await Navigator.of(context).push(_gcVieItem(
+                                  getItemsByCategoriesList[index]['product_id'],
+                                  getItemsByCategoriesList[index]['product_name'],
+                                  getItemsByCategoriesList[index]['image'],
+                                  getItemsByCategoriesList[index]['itemcode'],
+                                  getItemsByCategoriesList[index]['price'],
+                                  getItemsByCategoriesList[index]['uom'],
+                                  getItemsByCategoriesList[index]['uom_id'],
+                                  widget.bUnitCode
                               ));
+                            }
+
                               getGcCounter();
                               loadProfile();
                               if(username != null){

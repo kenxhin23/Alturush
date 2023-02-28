@@ -66,11 +66,12 @@ class _HomePageState extends State<HomePage> {
   bool showBadge;
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+    print('ni refresh na');
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // String username = prefs.getString('s_customerId');
+    // if(username == null){
+    //   Navigator.of(context).push(_signIn());
+    // }
     loadProfile();
     loadProfilePic();
     futureLoadQuotes();
@@ -632,7 +633,8 @@ class _HomePageState extends State<HomePage> {
               onSurface: Colors.red,
             ),
             onPressed: () async {
-              await Navigator.of(context).push(_signIn());
+              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+              // await Navigator.of(context).push(_signIn());
               listenCartCount();
               loadProfile();
               loadProfilePic();
@@ -647,12 +649,14 @@ class _HomePageState extends State<HomePage> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 String username = prefs.getString('s_customerId');
                 if(username == null){
-                  await Navigator.of(context).push(_signIn());
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                  // await Navigator.of(context).push(_signIn());
                   listenCartCount();
                   loadProfile();
                   loadProfilePic();
                 }else{
-                  await Navigator.of(context).push(profile());
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ProfilePage())).then((val)=>{onRefresh()});
+                  // await Navigator.of(context).push(profile());
                   listenCartCount();
                   loadProfile();
                   loadProfilePic();
@@ -725,7 +729,8 @@ class _HomePageState extends State<HomePage> {
                     SharedPreferences prefs = await SharedPreferences.getInstance();
                     String username = prefs.getString('s_customerId');
                     if(username == null){
-                      await Navigator.of(context).push(_signIn());
+                      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                      // await Navigator.of(context).push(_signIn());
                       getCounter();
                       listenCartCount();
                     }else{
@@ -827,7 +832,8 @@ class _HomePageState extends State<HomePage> {
 
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             String status  = prefs.getString('s_status');
-                            status != null ? await Navigator.of(context).push(profile()) : await Navigator.of(context).push(_signIn());
+
+                            status != null ? Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ProfilePage())).then((val)=>{onRefresh()}) :  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                             // await Navigator.of(context).push(_loadCart());
                             getCounter();
                             listenCartCount();
@@ -850,7 +856,8 @@ class _HomePageState extends State<HomePage> {
                           SharedPreferences prefs = await SharedPreferences.getInstance();
                           String username = prefs.getString('s_customerId');
                           if(username == null){
-                            await Navigator.of(context).push(_signIn());
+                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                            // await Navigator.of(context).push(_signIn());
                             getCounter();
                             listenCartCount();
                             loadProfile();

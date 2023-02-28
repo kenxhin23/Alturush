@@ -1,4 +1,5 @@
 import 'package:arush/profile/addressMasterFile.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -76,11 +77,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     print('ni refresh na');
 
         gcLoadPriceGroup();
@@ -125,8 +121,22 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     setState(() {
       subTotalStore.clear();
       getTotalAmount = res['user_details'];
-      for(int q=0;q<getTotalAmount.length;q++){
-        bool result = oCcy.parse(getTotalAmount[q]['total']) > minimumAmount;
+      // for(int q=0;q<getTotalAmount.length;q++){
+      //   bool result = oCcy.parse(getTotalAmount[q]['total']) > minimumAmount;
+      //   subTotalStore.add(result);
+      // }
+      isLoading = false;
+    });
+  }
+
+  Future getTotal2() async{
+    var res = await db.getAmountPerStore2(tempID);
+    if (!mounted) return;
+    setState(() {
+      subTotalStore.clear();
+      getTotalAmount2 = res['user_details'];
+      for(int q=0;q<getTotalAmount2.length;q++){
+        bool result = oCcy.parse(getTotalAmount2[q]['total']) > minimumAmount;
         subTotalStore.add(result);
       }
       isLoading = false;
@@ -182,6 +192,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     loadCart2();
     loadGcSubTotal2();
     gcLoadBu2();
+    getTotal2();
   }
 
 
@@ -277,7 +288,13 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children:[
                     GestureDetector(
-                      onTap: (){
+                      onTap: () async {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+
+                        }
                         CoolAlert.show(
                           context: context,
                           type: CoolAlertType.info,
@@ -309,67 +326,66 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                     ),
 
                     GestureDetector(
-                      onTap: (){
-                        if (subTotalStore.contains(false)) {
+                      onTap: () async {
 
-                          CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.error,
-                            text: "Must reach a minimum order of ₱${oCcy.format(minimumAmount)} on each store.",
-                            confirmBtnColor: Colors.green,
-                            backgroundColor: Colors.green,
-                            barrierDismissible: false,
-                            onConfirmBtnTap: () async {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            },
-                          );
-                        } else if (getAddress.isEmpty) {
-                          CoolAlert.show(
-                            context: context,
-                            type: CoolAlertType.error,
-                            text: "Add new address",
-                            confirmBtnColor: Colors.green,
-                            backgroundColor: Colors.green,
-                            barrierDismissible: false,
-                            onConfirmBtnTap: () async {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            },
-                            onCancelBtnTap: () async {}
-                          );
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+
+                        } else {
+                          if (subTotalStore.contains(false)) {
+
+                            CoolAlert.show(
+                              context: context,
+                              type: CoolAlertType.error,
+                              text: "Must reach a minimum order of ₱${oCcy.format(minimumAmount)} on each store.",
+                              confirmBtnColor: Colors.green,
+                              backgroundColor: Colors.green,
+                              barrierDismissible: false,
+                              onConfirmBtnTap: () async {
+                                Navigator.of(context).pop();
+                                Navigator.of(context).pop();
+                              },
+                            );
+                          } else if (getAddress.isEmpty) {
+                            CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.error,
+                                text: "Add new address",
+                                confirmBtnColor: Colors.green,
+                                backgroundColor: Colors.green,
+                                barrierDismissible: false,
+                                onConfirmBtnTap: () async {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                                onCancelBtnTap: () async {}
+                            );
                           } else {
-                          setState(() {
+                            setState(() {
 
-                            for (int i=0;i<side.length;i++){
-                              side[i] = false;
-                              for(int j=0;j<side1.length;j++){
-                                side1[j] = false;
+                              for (int i=0;i<side.length;i++){
+                                side[i] = false;
+                                for(int j=0;j<side1.length;j++){
+                                  side1[j] = false;
+                                }
                               }
-                            }
-                          });
+                            });
 
-                          Navigator.pop(context);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcPickUp(
-                            stores : stores,
-                            items : items,
-                            subTotal : subTotal,
-                            pickingFee : pickingFee,
-                            grandTotal : grandTotal,
-                            priceGroup : priceGroup,
-                            tempID : tempID,
+                            Navigator.pop(context);
+                            Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcPickUp(
+                              stores : stores,
+                              items : items,
+                              subTotal : subTotal,
+                              pickingFee : pickingFee,
+                              grandTotal : grandTotal,
+                              priceGroup : priceGroup,
+                              tempID : tempID,
                             )
-                          )).then((val)=>{onRefresh()});
-                          // Navigator.of(context).push(_pickUp(
-                          //     stores,
-                          //     items,
-                          //     subTotal,
-                          //     pickingFee,
-                          //     grandTotal,
-                          //     priceGroup,
-                          // ));
+                            )).then((val)=>{onRefresh()});
+                          }
                         }
-
                       },
                       child: Container(
                         width:130,
@@ -626,8 +642,14 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
           title: Text("My cart", style: GoogleFonts.openSans(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16.0)),
           actions: <Widget>[
             IconButton(
-              onPressed: () {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddressMasterFile())).then((val)=>{onRefresh()});
+              onPressed: () async{
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String username = prefs.getString('s_customerId');
+                if(username == null){
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                } else {
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddressMasterFile())).then((val)=>{onRefresh()});
+                }
               },
               icon: Icon(Icons.edit_location_outlined, color: Colors.green,),
             ),
@@ -790,30 +812,59 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                         ),
                                                       ),
                                                     ),
+
                                                     Padding(
-                                                      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Container(
-                                                            width: 75.0, height: 75.0,
-                                                            decoration: new BoxDecoration(
-                                                              shape: BoxShape.circle,
-                                                              image: new DecorationImage(
-                                                                image: new NetworkImage(
-                                                                    loadCartData[index0]['product_image']),
-                                                                fit: BoxFit.scaleDown,
+                                                        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                                                        child: Column(
+                                                          children: <Widget>[
+                                                            CachedNetworkImage(
+                                                              imageUrl: loadCartData[index0]['product_image'],
+                                                              fit: BoxFit.contain,
+                                                              imageBuilder: (context, imageProvider) => Container(
+                                                                height: 75,
+                                                                width: 75,
+                                                                decoration: new BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  image: new DecorationImage(
+                                                                    image: imageProvider,
+                                                                    fit: BoxFit.scaleDown,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                              placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
+                                                              errorWidget: (context, url, error) => Container(
+                                                                height: 75,
+                                                                width: 75,
+                                                                decoration: new BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  image: new DecorationImage(
+                                                                    image: AssetImage("assets/png/No_image_available.png"),
+                                                                    fit: BoxFit.scaleDown,
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
+                                                            // Container(
+                                                            //   width: 75.0, height: 75.0,
+                                                            //   decoration: new BoxDecoration(
+                                                            //     shape: BoxShape.circle,
+                                                            //     image: new DecorationImage(
+                                                            //       image: new NetworkImage(
+                                                            //           loadCartData[index]['main_item']['image']),
+                                                            //       fit: BoxFit.scaleDown,
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
 
-                                                          Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 5, 10, 0),
-                                                            child: Text("₱ ${loadCartData[index0]['price_price'].toString()}",
-                                                              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black),
+                                                            Padding(
+                                                              padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
+                                                              child: Text("₱ ${loadCartData[index0]['price_price'].toString()}",
+                                                                style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
+                                                                    color: Colors.black),
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      )
+                                                          ],
+                                                        )
                                                     ),
 
                                                     Expanded(
@@ -858,7 +909,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                       child: TextButton(style: TextButton.styleFrom(primary: Colors.black, onSurface: Colors.green,
                                                                       ),
                                                                         child: Text('-', style: TextStyle(fontSize: 16.0)),
-                                                                        onPressed: (){
+                                                                        onPressed: side1[index0] ? null :() async{
                                                                           setState(() {
                                                                             var x = loadCartData[index0]['cart_qty'];
                                                                             int d = int.parse(x.toString());
@@ -901,7 +952,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                           onSurface: Colors.green,
                                                                         ),
                                                                         child: Text('+', style: TextStyle(fontSize: 15.0)),
-                                                                        onPressed: (){
+                                                                        onPressed:  side1[index0] ? null : () async {
                                                                           setState(() {
                                                                             var x = loadCartData[index0]['cart_qty'];
                                                                             int d = int.parse(x.toString());
@@ -928,11 +979,11 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                   child: SizedBox(
                                                                       height: 30, width: 60,
                                                                       child: TextButton(
-                                                                          onPressed: () async {
+                                                                          onPressed: side1[index0] ? null : () async {
                                                                             SharedPreferences prefs = await SharedPreferences.getInstance();
                                                                             String username = prefs.getString('s_customerId');
                                                                             if (username == null) {
-                                                                              await Navigator.of(context).push(_signIn());
+                                                                              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                                                                             } else {
                                                                               removeFromCart(loadCartData[index0]['cart_id']);
                                                                             }
@@ -1213,8 +1264,9 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             String username = prefs.getString('s_customerId');
                             if(username == null){
-                              Navigator.of(context).push(_signIn());
-                            }else{
+                              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+
+                            } else {
                               // Navigator.of(context).push(_pickUp());
                             if (tempID.isEmpty){
                               Fluttertoast.showToast(

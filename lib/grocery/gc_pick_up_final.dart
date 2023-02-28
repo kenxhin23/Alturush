@@ -157,16 +157,13 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
   }
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
     print('na refresh na');
+    setState(() {
+      getBuSegregate();
+      getPlaceOrderData();
+      gcLoadPriceGroup();
+    });
 
-    getBuSegregate();
-    getPlaceOrderData();
-    gcLoadPriceGroup();
   }
 
   Future gcLoadPriceGroup() async {
@@ -226,7 +223,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
     });
   }
 
-  Future getBuSegregate() async{
+  Future getBuSegregate() async {
     var res = await db.getBuSegregate();
     if (!mounted) return;
     setState(() {
@@ -235,6 +232,9 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
         groupID = getBu[i]['d_bu_group_id'];
         displayAdd(groupID);
       }
+      print(getBu);
+      print('mao ni ag group id');
+      print(groupID);
       isLoading = false;
     });
     // print(getBu.length);
@@ -283,7 +283,8 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String username = prefs.getString('s_customerId');
         if(username == null){
-          Navigator.of(context).push(_signIn());
+          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+          // Navigator.of(context).push(_signIn());
         }if(username != null){
           Navigator.of(context).pop();
           Navigator.of(context).pop();
@@ -528,7 +529,8 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(_signIn());
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                        // Navigator.of(context).push(_signIn());
                                       }else{
                                         getPlaceOrderData();
                                         displayAddresses(context).then((val) => {onRefresh()});
@@ -821,7 +823,8 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(_signIn());
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          // Navigator.of(context).push(_signIn());
                         }else{
                           print(widget.groupValue);
                           print(widget.deliveryDateData);

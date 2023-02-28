@@ -163,11 +163,7 @@ class _ViewItem extends State<ViewItem>{
   String sides;
 
   Future onRefresh() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String username = prefs.getString('s_customerId');
-    if(username == null){
-      Navigator.of(context).push(_signIn());
-    }
+
     loadStore();
     // getSuggestion();
   }
