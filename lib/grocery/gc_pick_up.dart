@@ -690,13 +690,13 @@ class _GcPickUp extends State<GcPickUp> {
                                                 Divider(thickness: 1, color: Colors.green),
                                                 Container(
                                                   padding: EdgeInsets.all(0),
-                                                  height:150.0, // Change as per your requirement
+                                                  height:190.0, // Change as per your requirement
                                                   width: 300.0, // Change as per your requirement
                                                   child: Scrollbar(
                                                     child:ListView.builder(
                                                       padding: EdgeInsets.all(0),
                                                       physics: BouncingScrollPhysics(),
-                                                      itemCount: 4,
+                                                      itemCount: 5,
                                                       itemBuilder: (BuildContext context, int index1) {
 
                                                         int n = 0;

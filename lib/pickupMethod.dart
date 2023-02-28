@@ -64,9 +64,11 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
   var isLoading = true;
   var lt = 0;
   var timeCount;
+  var timeCount2;
   var items;
   var stores;
   var _globalTime,_globalTime2;
+  var timeStart, timeEnd;
   var stock;
   String date;
   String time;
@@ -202,7 +204,6 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
     if (!mounted) return;
     setState(() {
       getTenant = res['user_details'];
-
       isLoading = false;
       lt=getTenant.length;
       for(int q=0;q<lt;q++){
@@ -211,6 +212,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
         getBuNameData.add(getTenant[q]['bu_name']);
         getAcroNameData.add(getTenant[q]['acroname']);
       }
+      print(getTenant);
     });
   }
 
@@ -239,7 +241,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
     if (!mounted) return;
     setState(() {
       trueTime = res['user_details'];
-      print(trueTime);
+      // print(trueTime);
     });
   }
 
@@ -909,13 +911,13 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                   Divider(thickness: 1, color: Colors.deepOrangeAccent),
                                                   Container(
                                                     padding: EdgeInsets.all(0),
-                                                    height:150.0, // Change as per your requirement
+                                                    height:190.0, // Change as per your requirement
                                                     width: 300.0, // Change as per your requirement
                                                     child: Scrollbar(
                                                       child:ListView.builder(
                                                         padding: EdgeInsets.all(0),
                                                         physics: BouncingScrollPhysics(),
-                                                        itemCount: 4,
+                                                        itemCount: 5,
                                                         itemBuilder: (BuildContext context, int index1) {
                                                           int n = 0;
                                                           n = index1;
@@ -934,22 +936,36 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                               Navigator.of(context).pop();
                                                               if (index1 == 0) {
                                                                 setState(() {
-                                                                  timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"19:00")).inHours;
-                                                                  timeCount = timeCount.abs();
+                                                                  DateTime timeS = new DateFormat("hh:mm:ss").parse("${getTenant[index0]['time_start'].toString()}");
+                                                                  DateTime timeE = new DateFormat("hh:mm:ss").parse("${getTenant[index0]['time_end'].toString()}");
+                                                                  DateTime timeNow = DateTime.now();
+
+                                                                    timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"${getTenant[index0]['time_end'].toString()}")).inHours;
+                                                                    timeCount = timeCount.abs();
+
                                                                   _globalTime = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
                                                                   _globalTime2 = _globalTime.hour;
-                                                                  if (_globalTime2 >= 19) {
+                                                                  if (_globalTime2 >= timeE.hour) {
                                                                     timeCount = 0;
                                                                   }
+                                                                  print(timeS.hour);
+                                                                  print(timeE.hour);
+                                                                  print(timeNow);
                                                                 });
                                                               } else {
                                                                 setState(() {
-                                                                  timeCount = 12;
+                                                                  DateTime timeStart = new DateFormat("hh:mm:ss").parse("${getTenant[index0]['time_start'].toString()}");
+                                                                  DateTime timeEnd = new DateFormat("hh:mm:ss").parse("${getTenant[index0]['time_end'].toString()}");
+
+                                                                  timeCount = timeEnd.difference(timeStart).inHours+1;
+                                                                  // timeCount = 12;
                                                                   _globalTime = new DateTime.now();
-                                                                  _globalTime2 = 07;
+                                                                  _globalTime2 = timeStart.hour-1;
                                                                   // _deliveryDate.clear();
                                                                 });
                                                               }
+                                                              print(getTenant[index0]['time_end'].toString());
+                                                              print(timeCount);
                                                             },
                                                             child: Column(
                                                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1097,6 +1113,8 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                             final formatt = DateFormat.Hm(); //"6:00 AM"
                                                             String from = format.format(dtFrom);
                                                             String fromm = formatt.format(dtFrom);
+                                                            print(dtFrom);
+                                                            print(_globalTime2);
 
                                                             return InkWell(
                                                               onTap: (){

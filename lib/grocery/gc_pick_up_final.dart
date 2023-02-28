@@ -215,6 +215,8 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       lt=getBuName.length;
       for(int q=0;q<getBuName.length;q++){
         billPerBu.add(getBuName[q]['total']);
+        groupID = getBuName[q]['buId'];
+        displayAdd(groupID);
       }
       stores = getBuName.length;
       getConFee(lt);
@@ -229,8 +231,6 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
     setState(() {
       getBu = res['user_details'];
       for (int i=0; i<getBu.length; i++) {
-        groupID = getBu[i]['d_bu_group_id'];
-        displayAdd(groupID);
       }
       print(getBu);
       print('mao ni ag group id');

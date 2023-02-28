@@ -433,98 +433,101 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                           ),
                                                         ),
 
-                                                        Visibility(
-                                                          visible: pending_status && cancelled == false && ready_for_pickup == false,
-                                                          child: Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                            child: Container(height: 25, width: 60,
-                                                              child: OutlinedButton(
-                                                                style: ButtonStyle(
-                                                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
-                                                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                                                  backgroundColor: MaterialStateProperty.all(Colors.yellow),
-                                                                  overlayColor: MaterialStateProperty.all(Colors.black12),
-                                                                  side: MaterialStateProperty.all(BorderSide(
-                                                                    color: Colors.yellow,
-                                                                    width: 1.0,
-                                                                    style: BorderStyle.solid,)),
-                                                                ),
-                                                                child:Text("Pending", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal)),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
 
-                                                        Visibility(
-                                                          visible: ready_for_pickup && cancelled == false && claimed == false && paid == false,
-                                                          child: Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                            child: Container(height: 30, width: 65,
-                                                              child: OutlinedButton(
-                                                                style: ButtonStyle(
-                                                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
-                                                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                                                  backgroundColor: MaterialStateProperty.all(Colors.cyan),
-                                                                  overlayColor: MaterialStateProperty.all(Colors.black12),
-                                                                  side: MaterialStateProperty.all(BorderSide(
-                                                                    color: Colors.cyan,
-                                                                    width: 1.0,
-                                                                    style: BorderStyle.solid,)),
-                                                                ),
-                                                                child:Text("Ready for pickup", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal,),textAlign: TextAlign.center,),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-
-                                                        Visibility(
-                                                          visible: paid || claimed && cancelled == false,
-                                                          child: Padding(
-                                                            padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                            child: Container(height: 30, width: 60,
-                                                              child: OutlinedButton(
-                                                                style: ButtonStyle(
-                                                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
-                                                                  padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                                                  backgroundColor: MaterialStateProperty.all(Colors.greenAccent),
-                                                                  overlayColor: MaterialStateProperty.all(Colors.black12),
-                                                                  side: MaterialStateProperty.all(BorderSide(
-                                                                    color: Colors.greenAccent,
-                                                                    width: 1.0,
-                                                                    style: BorderStyle.solid,)),
-                                                                ),
-                                                                child:Text("Paid & Release", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal), textAlign: TextAlign.center,),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-
-                                                        Visibility(
-                                                          visible: cancelled,
-                                                          child: Padding(
-                                                              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                                              child: Container(height: 25, width: 65,
-                                                                child: OutlinedButton(
-                                                                  style: ButtonStyle(
-                                                                    shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
-                                                                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                                                    backgroundColor: MaterialStateProperty.all(Colors.redAccent),
-                                                                    overlayColor: MaterialStateProperty.all(Colors.black12),
-                                                                    side: MaterialStateProperty.all(BorderSide(
-                                                                      color: Colors.redAccent,
-                                                                      width: 1.0,
-                                                                      style: BorderStyle.solid,)),
-                                                                  ),
-                                                                  child:Text("Cancelled", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
-                                                                ),
-                                                              )
-                                                          ),
-                                                        ),
 
                                                         Row(
                                                           children: <Widget>[
+
+                                                            Visibility(
+                                                              visible: pending_status && cancelled == false && ready_for_pickup == false,
+                                                              child: Padding(
+                                                                padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                                                                child: Container(height: 25, width: 60,
+                                                                  child: OutlinedButton(
+                                                                    style: ButtonStyle(
+                                                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.yellow),
+                                                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                                                      side: MaterialStateProperty.all(BorderSide(
+                                                                        color: Colors.yellow,
+                                                                        width: 1.0,
+                                                                        style: BorderStyle.solid,)),
+                                                                    ),
+                                                                    child:Text("Pending", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal)),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            Visibility(
+                                                              visible: ready_for_pickup && cancelled == false && claimed == false && paid == false,
+                                                              child: Padding(
+                                                                padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                                                                child: Container(height: 30, width: 65,
+                                                                  child: OutlinedButton(
+                                                                    style: ButtonStyle(
+                                                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.cyan),
+                                                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                                                      side: MaterialStateProperty.all(BorderSide(
+                                                                        color: Colors.cyan,
+                                                                        width: 1.0,
+                                                                        style: BorderStyle.solid,)),
+                                                                    ),
+                                                                    child:Text("Ready for pickup", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal,),textAlign: TextAlign.center,),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            Visibility(
+                                                              visible: (paid || claimed) && cancelled == false,
+                                                              child: Padding(
+                                                                padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                                                                child: Container(height: 30, width: 60,
+                                                                  child: OutlinedButton(
+                                                                    style: ButtonStyle(
+                                                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.greenAccent),
+                                                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                                                      side: MaterialStateProperty.all(BorderSide(
+                                                                        color: Colors.greenAccent,
+                                                                        width: 1.0,
+                                                                        style: BorderStyle.solid,)),
+                                                                    ),
+                                                                    child:Text("Paid & Release", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal), textAlign: TextAlign.center,),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                            Visibility(
+                                                              visible: cancelled,
+                                                              child: Padding(
+                                                                  padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                                                                  child: Container(height: 25, width: 65,
+                                                                    child: OutlinedButton(
+                                                                      style: ButtonStyle(
+                                                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                                                                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                                                        backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                                                        overlayColor: MaterialStateProperty.all(Colors.black12),
+                                                                        side: MaterialStateProperty.all(BorderSide(
+                                                                          color: Colors.redAccent,
+                                                                          width: 1.0,
+                                                                          style: BorderStyle.solid,)),
+                                                                      ),
+                                                                      child:Text("Cancelled", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                                                    ),
+                                                                  )
+                                                              ),
+                                                            ),
+
                                                             Container(
-                                                              width: 80,
+                                                              width: 85,
                                                               padding: EdgeInsets.fromLTRB(0, 2, 10, 0),
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.end,
