@@ -205,7 +205,7 @@ class _GcLoadStore extends State<GcLoadStore> {
 
 
   Future getItemsByCategories() async{
-    var res = await db.getItemsByGcCategories(categoryId, offset, widget.groupCode);
+    var res = await db.getItemsByGcCategories(categoryId, offset, widget.groupCode, widget.bUnitCode);
     if (!mounted) return;
     setState(() {
       scrollController.animateTo(0.0, duration: Duration(seconds: 1), curve: Curves.ease);
@@ -218,7 +218,7 @@ class _GcLoadStore extends State<GcLoadStore> {
   }
 
   getItemsByCategories1() async{
-    var res = await db.getItemsByGcCategories(categoryId, offset, widget.groupCode);
+    var res = await db.getItemsByGcCategories(categoryId, offset, widget.groupCode, widget.bUnitCode);
     if (!mounted) return;
     setState(() {
       // offset =;
@@ -267,7 +267,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                 // Navigator.of(context).push(_signIn());
               }
-              Navigator.of(context).push(_search());
+              Navigator.of(context).push(_search(widget.bUnitCode));
             }
         ),
         status == null ? TextButton(
@@ -636,7 +636,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () async{
-
+                                print('sa loadstore list ni');
 
                                SharedPreferences prefs = await SharedPreferences.getInstance();
                                String username = prefs.getString('s_customerId');
@@ -750,6 +750,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                           return GestureDetector(
                             onTap: () async {
 
+                              print('sa getitembycategorylist ni');
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             String username = prefs.getString('s_customerId');
                             if(username == null){
@@ -979,9 +980,9 @@ Route _signIn() {
   );
 }
 
-Route _search() {
+Route _search(bunitCode) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(),
+    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(bunitCode: bunitCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

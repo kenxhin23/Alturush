@@ -509,6 +509,18 @@ class RapidA {
     return dataUser;
   }
 
+  Future orderTimeFrameDelivery(ticketNo, tenantId) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/orderTimeFrameDelivery_r"),body:{
+      'ticketNo' : encrypt(ticketNo),
+      'tenantId' : encrypt(tenantId),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   Future orderTimeFramePickUp(ticketNo, tenantId) async{
     var client = http.Client();
     Map dataUser;
@@ -538,18 +550,6 @@ class RapidA {
     Map dataUser;
     final response = await client.post(Uri.parse("$server/getContainer_r"),body:{
       'ticketId' : encrypt(ticketId),
-      'tenantId' : encrypt(tenantId),
-    });
-    dataUser = jsonDecode(response.body);
-    client.close();
-    return dataUser;
-  }
-
-  Future orderTimeFrameDelivery(ticketNo, tenantId) async{
-    var client = http.Client();
-    Map dataUser;
-    final response = await client.post(Uri.parse("$server/orderTimeFrameDelivery_r"),body:{
-      'ticketNo' : encrypt(ticketNo),
       'tenantId' : encrypt(tenantId),
     });
     dataUser = jsonDecode(response.body);
@@ -738,7 +738,7 @@ class RapidA {
     return dataUser;
   }
 
-  Future getPickupSummaryGoods(ticketId) async{
+  Future getPickupSummaryGoods(ticketId) async {
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/getPickupSummaryGoods_r"),body:{
@@ -836,8 +836,18 @@ class RapidA {
     return dataUser;
   }
 
+  Future getPickupTime() async {
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/getPickupTime_r"),body:{
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   //node
-  Future getBusinessUnitsCi() async{
+  Future getBusinessUnitsCi() async {
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/display_store_r"),body:{
@@ -1209,18 +1219,28 @@ class RapidA {
 
   Future cancelOrderTenant(tenantID,ticketID) async{
     var client = http.Client();
-    await client.post(Uri.parse("$server/cancelOrderTenant_r"),body:{
+    final response = await client.post(Uri.parse("$server/cancelOrderTenant_r"),body:{
       'tenantID' : encrypt(tenantID),
       'ticketID' : encrypt(ticketID)
     });
     client.close();
+    return response.body;
   }
 
+  Future cancelOrderGoods(buId,ticketID) async{
+    var client = http.Client();
+    final response = await client.post(Uri.parse("$server/cancelOrderGoods_r"),body:{
+      'buId' : encrypt(buId),
+      'ticketID' : encrypt(ticketID)
+    });
+    client.close();
+    return response.body;
+  }
 
-  Future cancelOrderSingleGood(tomsId,ticketId) async{
+  Future cancelOrderSingleGood(buId,ticketId) async{
     var client = http.Client();
     await client.post(Uri.parse("$server/cancelOrderSingleGood_r"),body:{
-      'tomsId'  : encrypt(tomsId),
+      'buId'  : encrypt(buId),
       'ticketId': encrypt(ticketId)
     });
     client.close();
@@ -1452,13 +1472,14 @@ class RapidA {
     return dataUser;
   }
 
-  Future getItemsByGcCategories(categoryId,offset, groupCode) async{
+  Future getItemsByGcCategories(categoryId, offset, groupCode, bunitCode) async{
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/getItemsByGcCategories_r"),body:{
       'categoryId'  : encrypt(categoryId),
       'offset'      : encrypt(offset.toString()),
-      'groupCode'   : encrypt(groupCode)
+      'groupCode'   : encrypt(groupCode),
+      'bunitCode'   : encrypt(bunitCode)
     });
     dataUser = jsonDecode(response.body);
     client.close();
@@ -1663,6 +1684,19 @@ class RapidA {
     });
     client.close();
   }
+
+  Future deleteCartGc(buCode) async {
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    final response = await client.post(Uri.parse("$server/deleteCartGc_r"),body:{
+      'cusID'  : encrypt(userID),
+      'buCode' : encrypt(buCode)
+    });
+    client.close();
+    return response.body;
+  }
+
 
   Future checkIfHasId() async{
     var client = http.Client();
@@ -2246,12 +2280,13 @@ class RapidA {
     return dataUser;
   }
 
-  Future searchProdGc(search,unitGroupId) async{
+  Future searchProdGc(search, unitGroupId, bunitCode) async{
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/searchGc_item_r"),body:{
-      'search'      : search,
-      'unitGroupId' : '$unitGroupId'
+    'search'      : search,
+    'unitGroupId' : '$unitGroupId',
+    'bunitCode'   : bunitCode
     });
     dataUser = jsonDecode(response.body);
     client.close();
@@ -2330,6 +2365,20 @@ class RapidA {
     Map dataUser;
     final response = await client.post(Uri.parse("$server/loadProfile_r"),body:{
       'cusId' : encrypt(userID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
+  Future checkBuId(bunitCode) async{
+    var client = http.Client();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userID = prefs.getString('s_customerId');
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/checkBuId_r"),body:{
+      'cusId'     : encrypt(userID),
+      'bunitCode' : encrypt(bunitCode),
     });
     dataUser = jsonDecode(response.body);
     client.close();

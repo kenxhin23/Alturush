@@ -44,6 +44,8 @@ class _GlobalCat extends State<GlobalCat>{
   List buData;
   List tenantStatus;
   List tenantStatus2;
+  List listBuId;
+  List<bool> buId = [];
 
   var isLoading = true;
   var cartLoading = true;
@@ -68,6 +70,7 @@ class _GlobalCat extends State<GlobalCat>{
   String getTenantStatusXmas;
   String getTenantStatusMedPlus;
   String getTenantStatusValentines;
+  String status;
 
   String image;
 //   Future loadTenant() async {
@@ -192,11 +195,32 @@ class _GlobalCat extends State<GlobalCat>{
     });
   }
 
+  Future deleteCartGc() async {
+    var res = await db.deleteCartGc(widget.buCode);
+    if (!mounted) return;
+    print('deleted na');
+    print(res);
+  }
 
-  String status;
   Future loadProfile() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     status  = prefs.getString('s_status');
+  }
+
+  Future checkBuId() async {
+    var res = await db.checkBuId(widget.buCode); {
+      if (!mounted) return;
+      setState(() {
+        listBuId = res['user_details'];
+        for (int i=0;i<listBuId.length;i++) {
+          bool result = listBuId[i]['bunitCode'] == widget.buCode;
+          buId.add(result);
+          print('true or false buid');
+          print(buId);
+        }
+      });
+      print(listBuId);
+    }
   }
 
   Future onRefresh() async {
@@ -215,7 +239,9 @@ class _GlobalCat extends State<GlobalCat>{
     getStatus();
     loadProfile();
     loadProfilePic();
+    checkBuId();
 
+    print('mao ni ang bucode');
     print(widget.buCode);
 
     ///live
@@ -521,10 +547,21 @@ class _GlobalCat extends State<GlobalCat>{
                                   )),).then((val)=>{onRefresh()});
                                 } else {
                                   print(widget.buCode);
-                                  if (widget.buCode == '3' || widget.buCode == '4' || widget.buCode == '5') {
+                                  if(username == null){
+                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                    // Navigator.of(context).push(_signIn());
+                                  } else if (widget.buCode == '5') {
 
                                     print('dili pa pwde');
                                   } else {
+                                    if (buId.contains(true)) {
+                                      print('ayaw delete');
+                                    } else {
+                                      print('delete ang sulod sa cart_gc');
+                                      setState(() {
+                                        deleteCartGc();
+                                      });
+                                    }
                                     print('unya naka');
 
                                     Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcCategory(

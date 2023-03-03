@@ -32,6 +32,13 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
   String prepared, preparedDate;
   String taggedPickup, taggedPickupDate;
+  String status;
+  String pendingStatus;
+
+  bool pending;
+  bool cancel;
+  bool prep;
+  bool taggedpickup;
 
 
   Future onRefresh() async {
@@ -45,28 +52,47 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
       getTime = res['user_details'];
 
+      pendingStatus = getTime[0]['pending_status'];
+      status = getTime[0]['cancel_status'];
+
+      if (pendingStatus == '1') {
+        pending = true;
+      } else {
+        pending = false;
+      }
+      if (status == '1') {
+        cancel = true;
+      } else {
+        cancel = false;
+      }
+
 
       if (getTime[0]['prepared_at'] == null) {
         prepared = '';
+        prep = false;
       } else {
         preparedDate = getTime[0]['prepared_at'];
         DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(preparedDate);
         prepared = DateFormat().add_yMMMMd().add_jm().format(date);
+        prep = true;
       }
 
 
-      if (getTime[0]['ready_pickup'] == null) {
+      if (getTime[0]['paid_at'] == null) {
         taggedPickup = '';
+        taggedpickup = false;
       } else {
-        taggedPickupDate = getTime[0]['ready_pickup'];
+        taggedPickupDate = getTime[0]['paid_at'];
         DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(taggedPickupDate);
         taggedPickup = DateFormat().add_yMMMMd().add_jm().format(date);
+        taggedpickup = true;
       }
 
 
       print(getTime);
       print(prepared);
       print(taggedPickup);
+      print(status);
       isLoading = false;
     });
   }
@@ -134,7 +160,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
                     Divider(thickness: 1, color: Colors.green),
 
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
 
                         Center(
@@ -146,54 +172,89 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
                         Divider(color: Colors.black54),
 
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        Visibility(
+                          visible: pending && taggedpickup == false && prep == false && cancel == false,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('PENDING...', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: cancel,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('CANCELLED ORDER', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: prep || taggedpickup && cancel == false,
+                          child: Column(
                             children: [
-                              Icon(CupertinoIcons.time, size: 16, color: Colors.black),
-                              Text(' ORDER TIME FRAME', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(CupertinoIcons.time, size: 16, color: Colors.black),
+                                    Text(' ORDER TIME FRAME', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
+                                  ],
+                                ),
+                              ),
+
+                              Divider(color: Colors.black54),
+
+                              SizedBox(height: 10),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Order Submission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('(Submitted Order)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$prepared', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                              ),
+
+                              Divider(color: Colors.black54),
+
+                              SizedBox(height: 10),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Order Claimed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('(Picked-Up By Customer)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$taggedPickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                              ),
+
                             ],
                           ),
                         ),
 
-                        Divider(color: Colors.black54),
-
-                        SizedBox(height: 10),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Order Submission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('(Submitted Order)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('$prepared', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        SizedBox(height: 10),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Order Claimed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('(Picked-Up By Customer)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('$taggedPickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
-                        ),
 
                         Divider(color: Colors.black54),
 

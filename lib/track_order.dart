@@ -385,7 +385,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                               itemCount: listGetTicketOnFoods == null ? 0 : listGetTicketOnFoods.length,
                               itemBuilder: (BuildContext context, int index) {
                                 String status;
-                                if (double.parse(listGetTicketOnFoods[index]['total']) == 0) {
+                                if (listGetTicketOnFoods[index]['cancel_status'] == '1') {
                                   status ='(Cancelled)';
                                 } else {
                                   status ='';
@@ -419,13 +419,20 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                         // await Navigator.of(context).push(_signIn());
                                       } else {
                                         getOrderTicketIfExist(ticketId);
-                                        Navigator.of(context).push(viewUpComingFood(
-                                          1,
-                                          ticket,
-                                          ticketId,
-                                          mop,
-                                          type,
-                                        ));
+                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ToDeliverFood(
+                                            pend:1,
+                                            ticketNo:ticket,
+                                            ticketId:ticketId,
+                                            mop:mop,
+                                            type:type))).then((val)=>{onRefresh()});
+                                        // getOrderTicketIfExist(ticketId);
+                                        // Navigator.of(context).push(viewUpComingFood(
+                                        //   1,
+                                        //   ticket,
+                                        //   ticketId,
+                                        //   mop,
+                                        //   type,
+                                        // ));
                                       }
 
                                       // Future.delayed(const Duration(milliseconds: 100), () {
@@ -591,7 +598,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                               itemCount: listGetTicketOnGoods == null ? 0 : listGetTicketOnGoods.length,
                               itemBuilder: (BuildContext context, int index) {
                                 String status;
-                                if (double.parse(listGetTicketOnGoods[index]['total']) == 0) {
+                                if (listGetTicketOnGoods[index]['cancel_status'] == '1') {
                                   status ='(Cancelled)';
                                 } else {
                                   status ='';
@@ -625,12 +632,16 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                           // await Navigator.of(context).push(_signIn());
                                         } else {
                                           getOrderTicketIfExist(ticketId);
-
-                                          Navigator.of(context).push(viewUpComingGood(
-                                            ticket,
-                                            ticketId,
-                                            mop,
-                                          ));
+                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ToDeliverGood(
+                                              ticket   : ticket,
+                                              ticketId : ticketId,
+                                              mop      : mop
+                                          ))).then((val)=>{onRefresh()});
+                                          // Navigator.of(context).push(viewUpComingGood(
+                                          //   ticket,
+                                          //   ticketId,
+                                          //   mop,
+                                          // ));
                                         }
 
                                       },
@@ -722,7 +733,10 @@ Route viewUpComingFood(pend, ticketNo,ticketId, mop, type) {
 
 Route viewUpComingGood(ticket, ticketId, mop) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ToDeliverGood(ticket : ticket, ticketId : ticketId, mop : mop),
+    pageBuilder: (context, animation, secondaryAnimation) => ToDeliverGood(
+        ticket   : ticket,
+        ticketId : ticketId,
+        mop      : mop),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

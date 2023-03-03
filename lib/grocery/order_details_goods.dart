@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,9 +33,20 @@ class _ToDeliver extends State<ToDeliverGood> {
 
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
-  List loadTotal,lGetAmountPerTenant;
-  var isLoading = true;
+
+  Timer timer;
+
+  List loadTotal;
+  List lGetAmountPerTenant;
   List loadItems;
+
+  var isLoading = true;
+
+  bool ifCancelled;
+  bool hideCancelButton;
+
+  String cancelDetails;
+  String buId;
 
   Future getBunit() async {
     var res = await db.lookItemsSegregate2(widget.ticketId);
@@ -45,53 +59,14 @@ class _ToDeliver extends State<ToDeliverGood> {
     });
   }
 
-  Future cancelOrder(tomsId) async{
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return  AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal:0.0, vertical: 20.0),
-          title:Row(
-            children: <Widget>[
-              Text('Hello',style:TextStyle(fontSize: 18.0),),
-            ],
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Padding(
-                  padding:EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                  child:Center(child:Text("Do you want to cancel this item?")),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Close',style: TextStyle(
-                color: Colors.green,
-              ),),
-              onPressed: () async{
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Proceed',style: TextStyle(
-                color: Colors.green,
-              ),),
-              onPressed: () async{
-                cancelOrderSingle(tomsId);
-                Navigator.of(context).pop();
-                cancelSuccess();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Future cancelOrderGoods(buId, ticketID) async{
+    var res = await db.cancelOrderGoods(buId, ticketID);
+    if (!mounted) return;
+    setState(() {
+      print(res);
+      onRefresh();
+      print('cancelling order');
+    });
   }
   var delCharge;
   var grandTotal;
@@ -161,10 +136,12 @@ class _ToDeliver extends State<ToDeliverGood> {
     print(widget.ticket);
     print(widget.ticketId);
     print(widget.mop);
+    timer = Timer.periodic(Duration(seconds: 30), (Timer t) => onRefresh());
   }
 
   @override
   void dispose() {
+    timer?.cancel();
     super.dispose();
   }
 
@@ -210,13 +187,32 @@ class _ToDeliver extends State<ToDeliverGood> {
                     itemCount: lGetAmountPerTenant == null ? 0 : lGetAmountPerTenant.length,
                     itemBuilder: (BuildContext context, int index0) {
 
-                      String total = lGetAmountPerTenant[index0]['sumperstore'];
+                      String total;
+
+                      if (lGetAmountPerTenant[index0]['canceled_status'] == '1'){
+                        total = '0.00';
+                      } else {
+                        total = lGetAmountPerTenant[index0]['sumperstore'];
+                      }
 
                       String instruction;
                       if (lGetAmountPerTenant[index0]['instructions'] == null) {
                         instruction ='';
                       } else {
                         instruction = lGetAmountPerTenant[index0]['instructions'];
+                      }
+
+                      if (lGetAmountPerTenant[index0]['cancelled_status'] == '1') {
+                        cancelDetails = 'Order(s) has been cancelled.';
+                      } else {
+                        cancelDetails = '';
+                      }
+
+                      ifCancelled = lGetAmountPerTenant[index0]['cancelled_status'] == '1' ? true : false;
+                      if (lGetAmountPerTenant[index0]['prepared_status'] == '0') {
+                        hideCancelButton = true;
+                      } else {
+                        hideCancelButton = false;
                       }
                       return Container(
                         child: Column(
@@ -250,8 +246,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                             String acroname = lGetAmountPerTenant[index0]['acroname'];
                                             String bunit_name = lGetAmountPerTenant[index0]['business_unit'];
                                             String bu_id = lGetAmountPerTenant[index0]['bu_id'];
-                                            print(lGetAmountPerTenant[index0]['ticket_id']);
-                                            print(widget.mop);
+
                                             if(widget.mop == 'Pick-up') {
                                               print('for pick-up');
                                               Navigator.of(context).push(_orderTimeFramePickup(
@@ -320,7 +315,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                               shrinkWrap: true,
                               itemCount:loadItems == null ? 0 : loadItems.length,
                               itemBuilder: (BuildContext context, int index1) {
-                                print(loadItems[index1]['pending_status']);
+                                // print(loadItems[index1]['pending_status']);
 
                                 var pending_status;
                                 var ready_for_pickup;
@@ -352,13 +347,13 @@ class _ToDeliver extends State<ToDeliverGood> {
                                   paid = false;
                                 }
 
-                                if (loadItems[index1]['cancelled_status'] == '1' || loadItems[index1]['canceled_status'] == '1') {
+                                if (loadItems[index1]['canceled_status'] == '1') {
                                   cancelled = true;
                                 } else {
                                   cancelled = false;
                                 }
 
-                                print(pending_status);
+                                // print(pending_status);
                                 return Visibility(
                                   visible: loadItems[index1]['bu_id'] != lGetAmountPerTenant[index0]['bu_id'] ? false : true,
                                   child: Container(
@@ -432,8 +427,6 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                             ),
                                                           ),
                                                         ),
-
-
 
                                                         Row(
                                                           children: <Widget>[
@@ -591,8 +584,33 @@ class _ToDeliver extends State<ToDeliverGood> {
                             ),
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              child: Text('Remove it from my order', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Remove it from my order', style: TextStyle(fontSize: 13, color: Colors.black54)),
+
+                                    Visibility(
+                                      visible: ifCancelled,
+                                      child: SizedBox(
+                                        height: 20,
+                                        child: OutlinedButton(
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0))),
+                                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                            backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                            overlayColor: MaterialStateProperty.all(Colors.black12),
+                                            side: MaterialStateProperty.all(BorderSide(
+                                              color: Colors.redAccent,
+                                              width: 1.0,
+                                              style: BorderStyle.solid,)),
+                                          ),
+                                          child:Text("$cancelDetails", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
                             ),
 
                             Padding(
@@ -614,6 +632,62 @@ class _ToDeliver extends State<ToDeliverGood> {
                                     borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                   ),
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                ),
+                              ),
+                            ),
+
+                            Visibility(
+                              visible: ifCancelled == false && hideCancelButton,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Flexible(
+                                      child: SizedBox(
+                                        height: 35,
+                                        child: OutlinedButton(
+                                          onPressed: () async {
+
+                                            buId = lGetAmountPerTenant[index0]['bu_id'];
+
+                                            CoolAlert.show(
+                                                context: context,
+                                                showCancelBtn: true,
+                                                type: CoolAlertType.warning,
+                                                text: "Are you sure?",
+                                                confirmBtnColor: Colors.deepOrangeAccent,
+                                                backgroundColor: Colors.deepOrangeAccent,
+                                                barrierDismissible: false,
+                                                confirmBtnText: 'Yes',
+                                                onConfirmBtnTap: () async {
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    cancelOrderGoods(buId, widget.ticketId);
+                                                  });
+                                                },
+                                                cancelBtnText: 'Cancel',
+                                                onCancelBtnTap: () async {
+                                                  Navigator.of(context).pop();
+                                                }
+                                            );
+
+                                          },
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0))),
+                                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                            backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                            overlayColor: MaterialStateProperty.all(Colors.black12),
+                                            side: MaterialStateProperty.all(BorderSide(
+                                              color: Colors.redAccent,
+                                              width: 1.0,
+                                              style: BorderStyle.solid,)),
+                                          ),
+                                          child:Text("CANCEL ORDER(S)", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),

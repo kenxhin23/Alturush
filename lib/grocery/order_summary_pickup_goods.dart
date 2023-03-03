@@ -27,6 +27,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
   List pickupSummary;
   List loadSchedule;
   List loadTotal;
+  List loadPickupTIme;
 
   String submitted, submittedDate;
   String firstname;
@@ -56,7 +57,26 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
     getPickupSummary();
     getPickupSchedule();
     getTotal();
+    getPickupTime();
+  }
 
+  Future getPickupTime() async {
+    var res = await db.getPickupTime();
+    if (!mounted) return;
+    setState(() {
+      loadPickupTIme = res['user_details'];
+      print(res);
+
+      pickupTimeStart = loadPickupTIme[0]['time_start'];
+      DateTime start = DateFormat("hh:mm").parse(pickupTimeStart);
+      pickupStart = DateFormat().add_jm().format(start);
+
+      pickupTimeEnd = loadPickupTIme[0]['time_end'];
+      DateTime end = DateFormat("hh:mm").parse(pickupTimeEnd);
+      pickupEnd = DateFormat().add_jm().format(end);
+      print(pickupStart);
+      print(pickupEnd);
+    });
   }
 
   Future getPickupSummary() async {
@@ -152,7 +172,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
         ),
       ) : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
 
           Expanded(
@@ -256,22 +276,22 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
                               Divider(thickness: 1, color: Colors.green,),
 
-                              // Padding(
-                              //   padding: EdgeInsets.symmetric(horizontal: 10),
-                              //   child: Row(
-                              //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //     children: [
-                              //       Text('Picked-up Time', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                              //       Row(
-                              //         children: [
-                              //           Text(pickupStart, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                              //           Text(' - ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                              //           Text(pickupEnd, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                              //         ],
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Picked-up Time', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                    Row(
+                                      children: [
+                                        Text(pickupStart, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                        Text(' - ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                        Text(pickupEnd, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
 
                               Divider(),
 
@@ -292,202 +312,181 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
                               ),
 
                               SizedBox(height: 2),
-
                             ],
                           ),
                         );
                       },
                     ),
-
                   ],
                 ),
               ),
             ),
           ),
+
           Padding(
             padding: EdgeInsets.only(bottom: 10),
             child: SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
 
-                  Divider(thickness: 1, color: Colors.black54),
-
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('ORDER SUMMARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                  Visibility(
+                    visible: status == '1',
+                    child: Column(
+                      children: <Widget>[
+                        OutlinedButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)),
+                          ),
+                          child: Text("Ticket No. ${widget.ticket} has been cancelled.",style: TextStyle(color: Colors.white),),
+                        ),
+                      ],
                     ),
                   ),
 
-                  Divider(thickness: 1, color: Colors.green,),
+                  Visibility(
+                    visible: status == '0',
+                    child: Column(
+                      children: <Widget>[
+                        Divider(thickness: 1, color: Colors.black54),
 
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: loadSchedule == null ? 0 : loadSchedule.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      double price;
-                      price = double.parse(loadSchedule[index]['price']);
-                      // if (loadSchedule[index]['cancel_status'] == '1') {
-                      //   price = 0.00;
-                      // } else {
-                      //   price = double.parse(loadSchedule[index]['price']);
-                      // }
-                      return Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text('ORDER SUMMARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                          ),
+                        ),
+
+                        Divider(thickness: 1, color: Colors.green),
+
+                        SizedBox(height: 5),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                  Text('${loadSchedule[index]['bu_name']}',
-                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.green)
-                                  ),
-
-                                  Text('₱ ${oCcy.format(price)}',
-                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.green)
-                                  ),
-                                ],
-                              ),
+                              child: Text('SUBTOTAL', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
                             ),
 
-                            Divider(thickness: 1, color: Colors.green),
-
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(subTotal)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                            )
                           ],
                         ),
-                      );
-                    },
-                  ),
 
-                  SizedBox(height: 5),
+                        Divider(color: Colors.black54),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('SUBTOTAL', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                      ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text("PICKING FEE", style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                            ),
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(subTotal)}', style: TextStyle(fontSize: 13, color: Colors.green)),
-                      )
-                    ],
-                  ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(pickingFee)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                            )
+                          ],
+                        ),
 
-                  Divider(color: Colors.black54),
+                        Divider(color: Colors.black54),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("PICKING FEE", style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                      ),
+                            Row(
+                              children: [
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(pickingFee)}', style: TextStyle(fontSize: 13, color: Colors.green)),
-                      )
-                    ],
-                  ),
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
+                                ),
 
-                  Divider(color: Colors.black54),
+                                // Padding(
+                                //   padding: EdgeInsets.only(left: 5),
+                                //   child: Text("discounted", style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
+                                // ),
+                              ],
+                            ),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(grandTotal)}', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
+                            )
+                          ],
+                        ),
 
-                      Row(
-                        children: [
+                        Divider(color: Colors.black54),
 
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                          // Padding(
-                          //   padding: EdgeInsets.only(left: 5),
-                          //   child: Text("discounted", style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
-                          // ),
-                        ],
-                      ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('AMOUNT TENDER', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                            ),
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(grandTotal)}', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
-                      )
-                    ],
-                  ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(amountTender)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                            ),
+                          ],
+                        ),
 
-                  Divider(color: Colors.black54),
+                        Divider(color: Colors.black54),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('AMOUNT TENDER', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                      ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('CHANGE', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                            ),
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(amountTender)}', style: TextStyle(fontSize: 13, color: Colors.green)),
-                      ),
-                    ],
-                  ),
-
-                  Divider(color: Colors.black54),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('CHANGE', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(change)}', style: TextStyle(fontSize: 13, color: Colors.green)),
-                      ),
-                    ],
-                  ),
-
-                  Divider(color: Colors.black54),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text('PAYMENT METHOD', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                          ),
-                        ],
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('CASH', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.normal)),
-                      ),
-                    ],
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(change)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                            ),
+                          ],
+                        ),
+                        // Divider(color: Colors.black54),
+                        //
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //         Padding(
+                        //           padding: EdgeInsets.only(left: 10),
+                        //           child: Text('PAYMENT METHOD', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //
+                        //     Padding(
+                        //       padding: EdgeInsets.symmetric(horizontal: 10),
+                        //       child: Text('CASH', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.normal)),
+                        //     ),
+                        //   ],
+                        // ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

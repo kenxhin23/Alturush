@@ -15,8 +15,9 @@ class OrderTimeFramePickupFoods extends StatefulWidget {
   final acroname;
   final tenantName;
   final tenantId;
+  final ifCancelled;
 
-  const OrderTimeFramePickupFoods({Key key, this.ticketNo, this.mop, this.acroname, this.tenantName, this.tenantId}) : super(key: key);
+  const OrderTimeFramePickupFoods({Key key, this.ticketNo, this.mop, this.acroname, this.tenantName, this.tenantId, this.ifCancelled}) : super(key: key);
   // const OrderTimeFrame({Key key, @required this.cart}) : super(key: key);
   @override
   _OrderTimeFramePickupFoodsState createState() => _OrderTimeFramePickupFoodsState();
@@ -38,12 +39,13 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
   String status;
   var index = 0;
 
-  var submit = true;
-  var taggedpickup = true;
+  bool pending;
+  bool submit;
+  bool taggedpickup;
+  bool cancel;
+
   var taggedstatus = true;
-  var cancel = true;
   var prepare = true;
-  var pending = true;
   var set_up = true;
   var trans = true;
   var deliver = true;
@@ -69,9 +71,23 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
       getStatus = res1['user_details'];
       status = getStatus[0]['cancel_status'];
 
+      if (getTime[0]['pending_status'] == '1') {
+        pending = true;
+      } else {
+        pending = false;
+      }
+
+      if (status == '1') {
+        cancel = true;
+      } else {
+        cancel = false;
+      }
+
       if (getTime[0]['prepared_at'] == null) {
+        submit = false;
         submitted = '';
       } else {
+        submit = true;
         submittedDate = getTime[0]['prepared_at'];
         DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(submittedDate);
         submitted = DateFormat().add_yMMMMd().add_jm().format(date);
@@ -79,8 +95,10 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
 
 
       if (getTime[0]['tag_pickup_at'] == null) {
+        taggedpickup = false;
         taggedPickup = '';
       } else {
+        taggedpickup = true;
         taggedPickupDate = getTime[0]['tag_pickup_at'];
         DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(taggedPickupDate);
         taggedPickup = DateFormat().add_yMMMMd().add_jm().format(date);
@@ -147,7 +165,7 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
                     Divider(thickness: 1, color: Colors.deepOrange),
 
                     Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
 
                         Center(
@@ -159,72 +177,92 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
 
                         Divider(color: Colors.black54),
 
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 5),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                        Visibility(
+                          visible: pending && taggedpickup == false && submit == false && cancel == false && widget.ifCancelled == false,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('PENDING...', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: cancel || widget.ifCancelled,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('CANCELLED ORDER', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: submit || taggedpickup && cancel == false,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(CupertinoIcons.time, size: 16, color: Colors.black),
+                                Text(' ORDER TIME FRAME', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Divider(color: Colors.black54),
+
+                        Visibility(
+                          visible: submit || taggedpickup && cancel == false,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(CupertinoIcons.time, size: 16, color: Colors.black),
-                              Text(' ORDER TIME FRAME', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
+                              SizedBox(height: 10),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Order Submission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('(Submitted Order by Tenant)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$submitted', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                              ),
+
+                              Divider(color: Colors.black54),
+
+                              SizedBox(height: 10),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Order Claimed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('(Picked-Up By Customer)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$taggedPickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                              ),
+                              Divider(color: Colors.black54),
                             ],
-                          )
+                          ),
                         ),
-
-                        Divider(color: Colors.black54),
-
-                        SizedBox(height: 10),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Order Submission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('(Submitted Order by Tenant)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('$submitted', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        SizedBox(height: 10),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('Order Claimed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('(Picked-Up By Customer)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
-                        ),
-
-                        Padding(
-                          padding:EdgeInsets.symmetric(horizontal: 10),
-                          child: Text('$taggedPickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
-                        ),
-                        Divider(color: Colors.black54),
-
-                        // Visibility(
-                        //     visible: status == '1' ? true : false,
-                        //     child: Center(
-                        //       child: Text("Cancelled Order", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.redAccent)),
-                        //     )
-                        // ),
-                        //
-                        // Visibility(
-                        //   visible: status == '0' ? true : false,
-                        //   child: Column(
-                        //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     children: [
-                        //
-                        //     ],
-                        //   ),
-                        // ),
                       ],
                     ),
                   ]

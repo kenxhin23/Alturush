@@ -119,7 +119,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     var res = await db.getAmountPerStore();
     if (!mounted) return;
     setState(() {
-      subTotalStore.clear();
       getTotalAmount = res['user_details'];
       // for(int q=0;q<getTotalAmount.length;q++){
       //   bool result = oCcy.parse(getTotalAmount[q]['total']) > minimumAmount;
@@ -138,6 +137,8 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
       for(int q=0;q<getTotalAmount2.length;q++){
         bool result = oCcy.parse(getTotalAmount2[q]['total']) > minimumAmount;
         subTotalStore.add(result);
+        print(result);
+        grandTotal = subTotal + pickingFee;
       }
       isLoading = false;
     });
@@ -189,14 +190,17 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
   }
 
   Future loadMethods() async {
+    // getTotal2();
     loadCart2();
     loadGcSubTotal2();
     gcLoadBu2();
+    getMin();
     getTotal2();
+
   }
 
 
-  Future getMin(subTotal) async {
+  Future getMin() async {
     var res = await db.getConFee();
     isLoading = false;
     if (!mounted) return;
@@ -204,21 +208,11 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
       getConFeeList = res['user_details'];
       pickupFee = double.parse(getConFeeList[0]['pickup_charge']);
       minimumAmount = double.parse(getConFeeList[0]['minimum_order_amount']);
-      pickingFee = pickupFee * lt;
-      grandTotal = subTotal + pickingFee;
+      pickingFee = pickupFee;
     });
+    print(minimumAmount);
+    print(pickingFee);
   }
-
-  // Future getMin2() async {
-  //   var res = await db.getConFee();
-  //   isLoading = false;
-  //   if (!mounted) return;
-  //   setState(() {
-  //     getConFeeList = res['user_details'];
-  //     pickupFee = double.parse(getConFeeList[0]['pickup_charge']);
-  //     pickingFee = pickupFee * lt;
-  //   });
-  // }
 
   Future loadCart() async {
     var res = await db.gcLoadCartData();
@@ -264,7 +258,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
       }else{
         subTotal = oCcy.parse(loadSubtotal[0]['d_subtotal']);
       }
-      getMin(subTotal);
+      grandTotal = subTotal + pickingFee;
       isLoading  = false;
     });
   }
@@ -574,16 +568,14 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     loadProfilePic();
     initController();
     gcGetAddress();
-    loadGcSubTotal();
+
     gcLoadBu();
-
     gcLoadPriceGroup();
-
     getTotal();
-
     loadCart2();
     loadGcSubTotal2();
     gcLoadBu2();
+    getMin();
   }
 
   @override
@@ -706,6 +698,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
 
                                                   loadMethods();
 
+
                                                   for (int q=0;q<loadCartData.length;q++) {
 
                                                     if (getTotalAmount[index]['buCode'] == loadCartData[q]['buCode']){
@@ -716,7 +709,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                 } else {
 
                                                   loadMethods();
-
+                                                  grandTotal = 0.00;
                                                   for (int q=0;q<loadCartData.length;q++) {
 
                                                     if (getTotalAmount[index]['buCode'] == loadCartData[q]['buCode']){
@@ -804,6 +797,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                 } else {
                                                                   side[index] = false;
                                                                   loadMethods();
+                                                                  grandTotal = 0.00;
 
                                                                   tempID.remove(loadCartData[index0]['cart_id']);
                                                                 }
@@ -923,7 +917,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                             Future.delayed(const Duration(milliseconds: 200), () {
                                                                               setState(() {
                                                                                 gcLoadPriceGroup();
-                                                                                loadGcSubTotal();
                                                                                 gcLoadBu();
                                                                                 getTotal();
 
@@ -961,7 +954,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                                                                             Future.delayed(const Duration(milliseconds: 200), () {
                                                                               setState(() {
                                                                                 gcLoadPriceGroup();
-                                                                                loadGcSubTotal();
                                                                                 gcLoadBu();
                                                                                 getTotal();
                                                                               });

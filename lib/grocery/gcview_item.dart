@@ -169,7 +169,7 @@ class _ViewItem extends State<ViewItem>  {
             IconButton(
               icon: Icon(Icons.search_outlined, color: Colors.black),
               onPressed: () async {
-                Navigator.of(context).push(_search());
+                Navigator.of(context).push(_search(widget.buCode));
               }
             ),
           ],
@@ -432,9 +432,9 @@ Route _signIn() {
   );
 }
 
-Route _search() {
+Route _search(bunitCode) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(),
+    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(bunitCode: bunitCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

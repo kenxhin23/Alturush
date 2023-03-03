@@ -6,6 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'gcview_item.dart';
 
 class GcSearch extends StatefulWidget {
+
+  final bunitCode;
+  GcSearch({Key key, @required this.bunitCode}) : super(key: key);
   @override
   _Search createState() => _Search();
 }
@@ -18,18 +21,22 @@ class _Search extends State<GcSearch> {
 
   Future searchProd() async {
     searchLoading = true;
-    var res = await db.searchProdGc(search.text,unitGroupId);
+    var res = await db.searchProdGc(search.text,unitGroupId, widget.bunitCode);
     if (!mounted) return;
     setState(() {
       load = false;
       searchLoading = false;
       searchProdData = res['user_details'];
     });
+    print('mao ni ag unit group id');
+    print(searchProdData);
   }
 
   @override
   void initState() {
     load = true;
+    print('mao ni ag bunitCode');
+    print(widget.bunitCode);
     super.initState();
   }
 

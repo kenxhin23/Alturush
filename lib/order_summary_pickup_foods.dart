@@ -53,6 +53,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
   String pickupSched, pickupSchedDate;
   String discounted;
   String status;
+  String cancelStatus;
 
 
 
@@ -88,6 +89,8 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
       submitted = DateFormat().format(date);
 
       status = pickupSummary[0]['cancel_status'];
+
+      print('status sa cancel');
       print(status);
       isLoading = false;
     });
@@ -182,7 +185,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
           ),
         ) : Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
 
           Expanded(
@@ -340,144 +343,168 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
             child: SingleChildScrollView(
               physics: ScrollPhysics(),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
 
-                  Divider(thickness: 1, color: Colors.black54),
-
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('ORDER SUMMARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                  Visibility(
+                    visible: status == '1',
+                    child: Column(
+                      children: <Widget>[
+                        OutlinedButton(
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0)),
+                          ),
+                          child: Text("Ticket No. ${widget.ticketNo} has been cancelled.",style: TextStyle(color: Colors.white),),
+                        ),
+                      ],
                     ),
                   ),
 
-                  Divider(thickness: 1, color: Colors.deepOrangeAccent,),
 
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: loadSchedule == null ? 0 : loadSchedule.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      double price;
-                      price = double.parse(loadSchedule[index]['price']);
-                      // if (loadSchedule[index]['cancel_status'] == '1') {
-                      //   price = 0.00;
-                      // } else {
-                      //   price = double.parse(loadSchedule[index]['price']);
-                      // }
-                      return Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  Visibility(
+                    visible: status == '0',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Divider(thickness: 1, color: Colors.black54),
+
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Text('ORDER SUMMARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                          ),
+                        ),
+
+                        Divider(thickness: 1, color: Colors.deepOrangeAccent,),
+
+                        ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: loadSchedule == null ? 0 : loadSchedule.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            double price;
+                            price = double.parse(loadSchedule[index]['price']);
+                            // if (loadSchedule[index]['cancel_status'] == '1') {
+                            //   price = 0.00;
+                            // } else {
+                            //   price = double.parse(loadSchedule[index]['price']);
+                            // }
+                            return Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+
+                                        Text('${loadSchedule[index]['tenant_name']}',
+                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                        ),
+
+                                        Text('₱ ${oCcy.format(price)}',
+                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                  Divider(thickness: 1, color: Colors.deepOrangeAccent),
+
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+
+                        SizedBox(height: 5),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            Row(
+                              children: [
+
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
+                                ),
+
+                                Padding(
+                                  padding: EdgeInsets.only(left: 5),
+                                  child: Text("$discounted", style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(grandTotal).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
+                            )
+                          ],
+                        ),
+
+                        Divider(color: Colors.black54),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                  Text('${loadSchedule[index]['tenant_name']}',
-                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
-                                  ),
-
-                                  Text('₱ ${oCcy.format(price)}',
-                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
-                                  ),
-                                ],
-                              ),
+                              child: Text('AMOUNT TENDER', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
                             ),
 
-                            Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(amountTender).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
+                            ),
                           ],
                         ),
-                      );
-                    },
-                  ),
 
-                  SizedBox(height: 5),
+                        Divider(color: Colors.black54),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
 
-                      Row(
-                        children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('CHANGE', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                            ),
 
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
-                          ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(change).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
+                            ),
+                          ],
+                        ),
 
-                          Padding(
-                            padding: EdgeInsets.only(left: 5),
-                            child: Text("$discounted", style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      ),
+                        Divider(color: Colors.black54),
 
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(grandTotal).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
-                      )
-                    ],
-                  ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 10),
+                                  child: Text('PAYMENT METHOD', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                                ),
+                              ],
+                            ),
 
-                  Divider(color: Colors.black54),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('AMOUNT TENDER', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(amountTender).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
-                      ),
-                    ],
-                  ),
-
-                  Divider(color: Colors.black54),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('CHANGE', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('₱ ${oCcy.format(change).toString()}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
-                      ),
-                    ],
-                  ),
-
-                  Divider(color: Colors.black54),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text('PAYMENT METHOD', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                          ),
-                        ],
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text('CASH', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.normal)),
-                      ),
-                    ],
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('CASH', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.normal)),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

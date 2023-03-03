@@ -1,5 +1,6 @@
 import 'package:arush/order_summary_pickup_foods.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -41,6 +42,8 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
 
   String specialInstruction;
   String icoos;
+  String cancelDetails;
+  String tenantID;
 
   // var delCharge;
   double grandTotal = 0.00;
@@ -55,6 +58,8 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
   Timer timer;
 
   bool val;
+  bool ifCancelled;
+  bool hideCancelButton;
 
   AnimationController controller;
 
@@ -159,12 +164,11 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
     var res = await db.cancelOrderTenant(tenantID, ticketID);
     if (!mounted) return;
     setState(() {
-      loadItems = res['user_details'];
-      isLoading = false;
-      // print(loadItems[0]['ticketId']);
+      print(res);
+      onRefresh();
+      print('cancelling order');
     });
   }
-
 
   Future lookItemsSegregate() async{
     var res = await db.lookItemsSegregate(widget.ticketId);
@@ -224,15 +228,12 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
   }
 
   Future cancelOrderSingle(tomsId,ticketId) async{
-    if(widget.type == '0'){
+
+    await db.cancelOrderSingleFood(tomsId,ticketId);
+
       await db.cancelOrderSingleFood(tomsId,ticketId);
-    }
-    if(widget.type == '1'){
-      await db.cancelOrderSingleGood(tomsId,ticketId);
-    }
 
-
-    lookItemsGood();
+    // lookItemsGood();
     getTotal();
     // getSubTotal();
   }
@@ -240,13 +241,16 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
   Future onRefresh() async{
 
     print('refreshed');
-    setState(() {
-      if(widget.type == '0') {
-        lookItemsFood();
-      }if(widget.type == '1'){
-        lookItemsGood();
-      }
-    });
+
+    lookItemsSegregate();
+    lookItemsFood();
+    // setState(() {
+    //   if(widget.type == '0') {
+    //     lookItemsFood();
+    //   }if(widget.type == '1'){
+    //     lookItemsGood();
+    //   }
+    // });
   }
 
   cancelOrder(tomsId,ticketId) async{
@@ -335,7 +339,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                             shrinkWrap: true,
                             itemCount: loadItems[mainItemIndex]['suggestions'] == null ? 0 : loadItems[mainItemIndex]['suggestions'].length,
                             itemBuilder: (BuildContext context, int index) {
-                              print(loadItems[mainItemIndex]['suggestions']);
+                              // print(loadItems[mainItemIndex]['suggestions']);
                               String price;
                               if (loadItems[mainItemIndex]['suggestions'][index]['addon_price'] == '0.00'){
                                 price = "";
@@ -477,17 +481,18 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
     );
   }
 
-  selectType(){
-    setState(() {
-      if(widget.type == '0') {
-        lookItemsFood();
-        lookItemsSegregate();
-      }if(widget.type == '1'){
-        lookItemsGood();
-      }
-
-    });
-  }
+  // selectType(){
+  //
+  //   setState(() {
+  //     if(widget.type == '0') {
+  //       lookItemsFood();
+  //       lookItemsSegregate();
+  //     }if(widget.type == '1'){
+  //       // lookItemsGood();
+  //     }
+  //
+  //   });
+  // }
 
 
   itemNotYetReady(){
@@ -557,7 +562,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
     // checkIfOnGoing();
     super.initState();
     lookItemsFood();
-    selectType();
+    // selectType();
     getTotal();
     getTotalAmount();
     print(widget.ticketId);
@@ -670,6 +675,8 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                     itemCount: instructions == null || lookItemsSegregateList == null || loadTotalAmount == null ? 0 : lookItemsSegregateList?.length ?? 0,
                     itemBuilder: (BuildContext context, int index0) {
                       String total;
+                      int prepared;
+
                       double sum;
                       if (lookItemsSegregateList[index0]['icoos'] == '0') {
                         icoos = 'Remove it from my order';
@@ -684,6 +691,22 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                       } else {
                         total = lookItemsSegregateList[index0]['sumpertenants'];
                       }
+
+                      if (lookItemsSegregateList[index0]['sumpertenants'] == '0.00') {
+                        cancelDetails = 'Order(s) has been cancelled.';
+                      } else {
+                        cancelDetails = '';
+                      }
+
+                      if (int.parse(lookItemsSegregateList[index0]['sumprepared']) == 0) {
+                        hideCancelButton = true;
+                      } else {
+                        hideCancelButton = false;
+                      }
+
+                      ifCancelled = lookItemsSegregateList[index0]['sumpertenants'] == "0.00" ? true : false;
+
+                      print(lookItemsSegregateList[index0]['sumprepared']);
                       // print(lookItemsSegregateList[index0]['sumpertenants']);
                       String instruction;
                       if (instructions.isEmpty) {
@@ -725,13 +748,15 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                           String acroname = lookItemsSegregateList[index0]['acroname'];
                                           String tenantName = lookItemsSegregateList[index0]['tenant_name'];
                                           String tenantId = lookItemsSegregateList[index0]['tenant_id'];
+                                          bool res = lookItemsSegregateList[index0]['sumpertenants'] == '0.00' ? true : false;
                                           if (widget.mop == 'Pick-up') {
                                             Navigator.of(context).push(_orderTimeFramePickup(
                                                 widget.ticketNo,
                                                 widget.mop,
                                                 acroname,
                                                 tenantName,
-                                                tenantId),
+                                                tenantId,
+                                                res),
                                             );
                                           } else if (widget.mop == 'Delivery') {
                                             Navigator.of(context).push(_orderTimeFrameDelivery(
@@ -740,7 +765,8 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                 widget.mop,
                                                 acroname,
                                                 tenantName,
-                                                tenantId),
+                                                tenantId,
+                                                res),
                                             );
                                           }
                                         }
@@ -1110,7 +1136,32 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              child: Text('$icoos', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text('$icoos', style: TextStyle(fontSize: 13, color: Colors.black54)),
+
+                                  Visibility(
+                                    visible: ifCancelled,
+                                    child: SizedBox(
+                                      height: 20,
+                                      child: OutlinedButton(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0))),
+                                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                          backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                          overlayColor: MaterialStateProperty.all(Colors.black12),
+                                          side: MaterialStateProperty.all(BorderSide(
+                                            color: Colors.redAccent,
+                                            width: 1.0,
+                                            style: BorderStyle.solid,)),
+                                        ),
+                                        child:Text("$cancelDetails", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
                             ),
 
                             Padding(
@@ -1132,6 +1183,61 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                     borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                   ),
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                ),
+                              ),
+                            ),
+
+                            Visibility(
+                              visible: ifCancelled == false && hideCancelButton,
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Flexible(
+                                      child: SizedBox(
+                                        height: 35,
+                                        child: OutlinedButton(
+                                          onPressed: () async {
+                                            print(lookItemsSegregateList[index0]['tenant_id']);
+                                            tenantID = lookItemsSegregateList[index0]['tenant_id'];
+                                            CoolAlert.show(
+                                                context: context,
+                                                showCancelBtn: true,
+                                                type: CoolAlertType.warning,
+                                                text: "Are you sure?",
+                                                confirmBtnColor: Colors.deepOrangeAccent,
+                                                backgroundColor: Colors.deepOrangeAccent,
+                                                barrierDismissible: false,
+                                                confirmBtnText: 'Yes',
+                                                onConfirmBtnTap: () async {
+                                                  Navigator.of(context).pop();
+                                                  setState(() {
+                                                    cancelOrderTenant(tenantID, widget.ticketId);
+                                                  });
+                                                },
+                                                cancelBtnText: 'Cancel',
+                                                onCancelBtnTap: () async {
+                                                  Navigator.of(context).pop();
+                                                }
+                                            );
+                                            // cancelOrderTenant(tenantID, widget.ticketId);
+                                          },
+                                          style: ButtonStyle(
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0))),
+                                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                            backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                            overlayColor: MaterialStateProperty.all(Colors.black12),
+                                            side: MaterialStateProperty.all(BorderSide(
+                                              color: Colors.redAccent,
+                                              width: 1.0,
+                                              style: BorderStyle.solid,)),
+                                          ),
+                                          child:Text("CANCEL ORDER(S)", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -1220,14 +1326,15 @@ Route _signIn() {
   );
 }
 
-Route _orderTimeFramePickup(ticketNo, mop, acroname, tenantName, tenantId) {
+Route _orderTimeFramePickup(ticketNo, mop, acroname, tenantName, tenantId, ifCancelled) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFramePickupFoods(
-        ticketNo:ticketNo,
-        mop:mop,
-        acroname:acroname,
-        tenantName:tenantName,
-        tenantId:tenantId),
+        ticketNo    :ticketNo,
+        mop         :mop,
+        acroname    :acroname,
+        tenantName  :tenantName,
+        tenantId    :tenantId,
+        ifCancelled : ifCancelled),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -1241,15 +1348,16 @@ Route _orderTimeFramePickup(ticketNo, mop, acroname, tenantName, tenantId) {
   );
 }
 
-Route _orderTimeFrameDelivery(ticketNo, ticketId, mop, acroname, tenantName, tenantId) {
+Route _orderTimeFrameDelivery(ticketNo, ticketId, mop, acroname, tenantName, tenantId, ifCancelled) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => OrderTimeFrameDeliveryFoods(
-      ticketNo:ticketNo,
-      ticketId:ticketId,
-      mop:mop,
-      acroname:acroname,
-      tenantName:tenantName,
-      tenantId:tenantId),
+      ticketNo    : ticketNo,
+      ticketId    : ticketId,
+      mop         : mop,
+      acroname    : acroname,
+      tenantName  : tenantName,
+      tenantId    : tenantId,
+      ifCancelled : ifCancelled),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

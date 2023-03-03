@@ -51,9 +51,7 @@ class _GcCategory extends State<GcCategory>{
   bool showBadge;
 
   Future loadProfilePic() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    status  = prefs.getString('s_status');
-    if(status != null) {
+
       var res = await db.loadProfile();
       if (!mounted) return;
       setState(() {
@@ -61,7 +59,7 @@ class _GcCategory extends State<GcCategory>{
         profilePicture = listProfile[0]['d_photo'];
         profileLoading = false;
       });
-    }
+
   }
 
 //   Future loadGcSubTotal() async{
@@ -196,7 +194,7 @@ class _GcCategory extends State<GcCategory>{
                   Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                   // Navigator.of(context).push(_signIn());
                 }
-                Navigator.of(context).push(_search());
+                Navigator.of(context).push(_search(widget.bUnitCode));
               }
             ),
             status == null ? TextButton(
@@ -454,9 +452,9 @@ class _GcCategory extends State<GcCategory>{
   }
 }
 
-Route _search() {
+Route _search(bunitCode) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(),
+    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(bunitCode : bunitCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
