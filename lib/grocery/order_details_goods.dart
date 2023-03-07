@@ -491,7 +491,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                                         width: 1.0,
                                                                         style: BorderStyle.solid,)),
                                                                     ),
-                                                                    child:Text("Paid & Release", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal), textAlign: TextAlign.center,),
+                                                                    child:Text("Paid & Released", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal), textAlign: TextAlign.center,),
                                                                   ),
                                                                 ),
                                                               ),

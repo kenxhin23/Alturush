@@ -172,7 +172,6 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     setState(() {
       getAddress = res['user_details'];
     });
-
   }
 
   Future gcLoadPriceGroup() async {

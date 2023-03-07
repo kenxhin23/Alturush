@@ -70,6 +70,7 @@ class _GcPickUp extends State<GcPickUp> {
   var totalLoading = true;
   var _globalTime,_globalTime2;
   var timeCount;
+  var tCount;
   var bill = 0.0;
   var conFee = 0.0;
   var grandTotal = 0.0;
@@ -78,14 +79,27 @@ class _GcPickUp extends State<GcPickUp> {
   var items = 0;
   var stock = 0;
   var time;
+  var d1;
 
   Future getTrueTime() async{
     var res = await db.getTrueTime();
     if (!mounted) return;
     setState(() {
       trueTime = res['user_details'];
-      time = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
+
+      tCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"15:00:00")).inHours;
+
+      if (tCount > 0) {
+        print('next day');
+        d1 = DateTime.parse(trueTime[0]['next_day']);
+        time = false;
+      } else {
+        d1 = DateTime.parse(trueTime[0]['date_today']);
+        time = true;
+        print('date today');
+      }
       print(time);
+      print(trueTime);
     });
   }
 
@@ -338,7 +352,6 @@ class _GcPickUp extends State<GcPickUp> {
     super.initState();
     onRefresh();
     gcLoadPriceGroup();
-    getTrueTime();
     gcGroupByBu2();
     loadCart2();
     // getConFee();
@@ -699,9 +712,10 @@ class _GcPickUp extends State<GcPickUp> {
                                                       itemCount: 5,
                                                       itemBuilder: (BuildContext context, int index1) {
 
+
                                                         int n = 0;
                                                         n = index1;
-                                                        var d1 = DateTime.parse(trueTime[0]['date_today']);
+
                                                         var d2 = new DateTime(d1.year, d1.month, d1.day + n);
                                                         final DateFormat formatter = DateFormat('yyyy-MM-dd');
                                                         final String formatted = formatter.format(d2);
@@ -717,13 +731,24 @@ class _GcPickUp extends State<GcPickUp> {
                                                             Navigator.of(context).pop();
                                                             if(index1 == 0){
                                                               setState(() {
-                                                                timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"15:00:00")).inHours;
-                                                                timeCount = timeCount.abs();
-                                                                _globalTime = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
-                                                                _globalTime2 = _globalTime.hour;
-                                                                if (_globalTime2 >= 15) {
-                                                                  timeCount = 0;
+                                                                if (time == true) {
+                                                                  timeCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"15:00:00")).inHours;
+                                                                  timeCount = timeCount.abs();
+                                                                  _globalTime = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']);
+                                                                  _globalTime2 = _globalTime.hour;
+                                                                  if (_globalTime2 >= 15) {
+                                                                    timeCount = 0;
+                                                                  }
+                                                                } else {
+                                                                  timeCount = DateTime.parse(trueTime[0]['next_day']+" "+"07:00:00").difference(DateTime.parse(trueTime[0]['next_day']+" "+"15:00:00")).inHours;
+                                                                  timeCount = timeCount.abs();
+                                                                  _globalTime = DateTime.parse(trueTime[0]['next_day']+" "+"07:00:00");
+                                                                  _globalTime2 = _globalTime.hour;
+                                                                  if (_globalTime2 >= 15) {
+                                                                    timeCount = 0;
+                                                                  }
                                                                 }
+
 
                                                               });
                                                             }else{
