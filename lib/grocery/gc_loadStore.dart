@@ -99,20 +99,20 @@ class _GcLoadStore extends State<GcLoadStore> {
       isLoading = true;
 //      cartLoading = true;
     });
-    Map res = await db.getGcStoreCi(offset.toString(), widget.categoryNo);
+    Map res = await db.getGcStoreCi(offset.toString(), widget.categoryNo, widget.groupCode);
     if (!mounted) return;
     setState(() {
       cartLoading = false;
       isLoading = false;
       loadStoreData = res['user_details'];
-      print('amaw ai');
+      print('print load store data');
       print(loadStoreData);
       offset = 0;
     });
   }
 
   Future loadStore1() async{
-    Map res = await db.getGcStoreCi(offset.toString(),widget.categoryNo);
+    Map res = await db.getGcStoreCi(offset.toString(),widget.categoryNo, widget.groupCode);
     if (!mounted) return;
     setState(() {
       cartLoading = false;
@@ -213,8 +213,9 @@ class _GcLoadStore extends State<GcLoadStore> {
       getItemsByCategoriesList = res['user_details'];
       cat = true;
       offset = 0;
+      print(getItemsByCategoriesList);
     });
-    print('ka isa ra dapat');
+
   }
 
   getItemsByCategories1() async{
@@ -267,7 +268,10 @@ class _GcLoadStore extends State<GcLoadStore> {
                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                 // Navigator.of(context).push(_signIn());
               }
-              Navigator.of(context).push(_search(widget.bUnitCode));
+              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
+                  bunitCode : widget.bUnitCode,
+                  groupCode : widget.groupCode))).then((val)=>{onRefresh()});
+              // Navigator.of(context).push(_search(widget.bUnitCode));
             }
         ),
         status == null ? TextButton(
@@ -477,11 +481,7 @@ class _GcLoadStore extends State<GcLoadStore> {
   }
 
   Future onRefresh() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String username = prefs.getString('s_customerId');
-    // if(username == null){
-    //   Navigator.of(context).push(_signIn());
-    // }
+    print('ni refresh na gcloadstore');
     getItemsByCategories();
     loadStore();
     getGcCounter();
@@ -496,6 +496,7 @@ class _GcLoadStore extends State<GcLoadStore> {
     super.initState();
     print(widget.bUnitCode);
     print(widget.groupCode);
+    print(widget.categoryNo);
     bUnitCodeGc = widget.bUnitCode;
     categoryName = widget.categoryName;
     categoryId = widget.categoryNo;
@@ -636,7 +637,6 @@ class _GcLoadStore extends State<GcLoadStore> {
                           itemBuilder: (BuildContext context, int index) {
                             return GestureDetector(
                               onTap: () async{
-                                print('sa loadstore list ni');
 
                                SharedPreferences prefs = await SharedPreferences.getInstance();
                                String username = prefs.getString('s_customerId');
@@ -652,7 +652,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                                      loadStoreData[index]['price'],
                                      loadStoreData[index]['uom'],
                                      loadStoreData[index]['uom_id'],
-                                     widget.bUnitCode
+                                     widget.bUnitCode,
+                                     widget.groupCode
                                  )
                                  );
                                }
@@ -765,7 +766,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                                   getItemsByCategoriesList[index]['price'],
                                   getItemsByCategoriesList[index]['uom'],
                                   getItemsByCategoriesList[index]['uom_id'],
-                                  widget.bUnitCode
+                                  widget.bUnitCode,
+                                  widget.groupCode
                               ));
                             }
 
@@ -900,9 +902,27 @@ class _GcLoadStore extends State<GcLoadStore> {
   }
 }
 
-Route _gcVieItem(prodId,prodName,image,itemCode,price,uom,uomId,buCode){
+Route _gcVieItem(
+    prodId,
+    prodName,
+    image,
+    itemCode,
+    price,
+    uom,
+    uomId,
+    buCode,
+    groupCode){
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ViewItem(prodId:prodId,prodName:prodName,image:image,itemCode:itemCode,price:price,uom:uom,uomId:uomId,buCode:buCode),
+    pageBuilder: (context, animation, secondaryAnimation) => ViewItem(
+        prodId:prodId,
+        prodName:prodName,
+        image:image,
+        itemCode:itemCode,
+        price:price,
+        uom:uom,
+        uomId:uomId,
+        buCode:buCode,
+        groupCode : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;

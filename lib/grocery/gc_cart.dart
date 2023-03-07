@@ -328,6 +328,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                           Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
 
                         } else {
+                          print(subTotalStore);
                           if (subTotalStore.contains(false)) {
 
                             CoolAlert.show(

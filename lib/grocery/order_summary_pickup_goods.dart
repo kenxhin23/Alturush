@@ -103,7 +103,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
       DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(submittedDate);
       submitted = DateFormat().format(date);
 
-      status = pickupSummary[0]['cancel_status'];
+      status = pickupSummary[0]['cancelled_status'];
       print(pickupSummary);
       isLoading = false;
     });

@@ -432,7 +432,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                           children: <Widget>[
 
                                                             Visibility(
-                                                              visible: pending_status && cancelled == false && ready_for_pickup == false,
+                                                              visible: cancelled == false && ready_for_pickup == false,
                                                               child: Padding(
                                                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                                                                 child: Container(height: 25, width: 60,

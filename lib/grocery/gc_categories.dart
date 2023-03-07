@@ -112,7 +112,7 @@ class _GcCategory extends State<GcCategory>{
   Future loadStore() async{
     setState(() {
     });
-    Map res = await db.getGcStoreCi(offset.toString(), widget.categoryNo);
+    Map res = await db.getGcStoreCi(offset.toString(), widget.categoryNo, widget.groupCode);
     if (!mounted) return;
     setState(() {
       loadStoreData.clear();
@@ -123,11 +123,7 @@ class _GcCategory extends State<GcCategory>{
   }
 
   Future onRefresh() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String username = prefs.getString('s_customerId');
-    // if(username == null){
-    //   Navigator.of(context).push(_signIn());
-    // }
+    print('ni refresh na gc catergoy');
     loadStore();
     loadProfilePic();
     // loadGcSubTotal();
@@ -194,7 +190,10 @@ class _GcCategory extends State<GcCategory>{
                   Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                   // Navigator.of(context).push(_signIn());
                 }
-                Navigator.of(context).push(_search(widget.bUnitCode));
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
+                  bunitCode : widget.bUnitCode,
+                  groupCode : widget.groupCode))).then((val)=>{onRefresh()});
+                // Navigator.of(context).push(_search(widget.bUnitCode));
               }
             ),
             status == null ? TextButton(
@@ -399,14 +398,17 @@ class _GcCategory extends State<GcCategory>{
                         onTap:  () {
                           print(categoryData[index]['category_no']);
                           print(categoryData[index]['category_name']);
-                          Navigator.of(context).push(_loadGC(
-                              widget.logo,
-                              categoryData[index]['category_name'],
-                              categoryData[index]['category_no'],
-                              widget.businessUnit,
-                              widget.bUnitCode,
-                              widget.groupCode
-                          ));
+                          // GcLoadStore
+
+
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcLoadStore(
+                              logo          : widget.logo,
+                              categoryName  : categoryData[index]['category_name'],
+                              categoryNo    : categoryData[index]['category_no'],
+                              businessUnit  : widget.businessUnit,
+                              bUnitCode     : widget.bUnitCode,
+                              groupCode     : widget.groupCode
+                          ))).then((val)=>{onRefresh()});
                         },
                         child: Container(
                           height: 120.0,

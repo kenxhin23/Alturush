@@ -53,7 +53,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
       getTime = res['user_details'];
 
       pendingStatus = getTime[0]['pending_status'];
-      status = getTime[0]['cancel_status'];
+      status = getTime[0]['cancelled_status'];
 
       if (pendingStatus == '1') {
         pending = true;
@@ -199,7 +199,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
                         ),
 
                         Visibility(
-                          visible: prep || taggedpickup && cancel == false,
+                          visible: (prep || taggedpickup) && cancel == false,
                           child: Column(
                             children: [
                               Padding(

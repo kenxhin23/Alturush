@@ -22,8 +22,9 @@ class ViewItem extends StatefulWidget {
   final uom;
   final uomId;
   final buCode;
+  final groupCode;
 
-  ViewItem({Key key, @required this.prodId, this.prodName,this.image,this.itemCode,this.price,this.uom,this.uomId,this.buCode}) : super(key: key);
+  ViewItem({Key key, @required this.prodId, this.prodName,this.image,this.itemCode,this.price,this.uom,this.uomId,this.buCode, this.groupCode}) : super(key: key);
   @override
   _ViewItem createState() => _ViewItem();
 }
@@ -49,7 +50,7 @@ class _ViewItem extends State<ViewItem>  {
   String uomPrice;
 
   Future getUom() async{
-    var res = await db.getUom(widget.itemCode);
+    var res = await db.getUom(widget.itemCode, widget.groupCode);
     if (!mounted) return;
     setState(() {
       getUomList = res['user_details'];
@@ -62,10 +63,9 @@ class _ViewItem extends State<ViewItem>  {
           print(uomID);
           print(uom);
         }
-        // print(price);
-        // print(widget.price);
+        print(price);
+        print(widget.price);
       }
-      // print(getUomList);
       isLoading = false;
     });
   }
@@ -128,15 +128,17 @@ class _ViewItem extends State<ViewItem>  {
 
   @override
   void initState(){
-    onRefresh();
+    // onRefresh();
+    getUom();
     isLoading = false;
     imageLoading = false;
-    getUom();
     super.initState();
     uomTemp =  widget.uom;
     priceTemp = widget.price;
-    // print(uomTemp);
+    // print(widget.price);
     print(widget.prodId);
+    print(widget.itemCode);
+    // print(widget.groupCode);
   }
 
   @override
@@ -169,7 +171,10 @@ class _ViewItem extends State<ViewItem>  {
             IconButton(
               icon: Icon(Icons.search_outlined, color: Colors.black),
               onPressed: () async {
-                Navigator.of(context).push(_search(widget.buCode));
+                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
+                    bunitCode : widget.buCode,
+                    groupCode : widget.groupCode))).then((val)=>{onRefresh()});
+                // Navigator.of(context).push(_search(widget.buCode));
               }
             ),
           ],

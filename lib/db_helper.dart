@@ -1308,13 +1308,15 @@ class RapidA {
     return dataUser;
   }
 
-  Future getGcStoreCi(String offset,categoryNo,[itemSearch = ""]) async{
+  Future getGcStoreCi(String offset, categoryNo, groupCode, [itemSearch = ""] ) async{
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/getGcItems_r"),body:{
       'offset'    : offset,
       'categoryNo': categoryNo,
+      'groupCode' : groupCode,
       'itemSearch': itemSearch
+
     });
     dataUser = jsonDecode(response.body);
     client.close();
@@ -1605,11 +1607,12 @@ class RapidA {
     client.close();
   }
 
-  Future getUom(itemCode) async{
+  Future getUom(itemCode, groupCode) async{
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/gc_select_uom_r"),body:{
-      'itemCode' : encrypt(itemCode)
+      'itemCode'  : encrypt(itemCode),
+      'groupCode' : encrypt(groupCode)
     });
     dataUser = jsonDecode(response.body);
     client.close();
@@ -2280,13 +2283,14 @@ class RapidA {
     return dataUser;
   }
 
-  Future searchProdGc(search, unitGroupId, bunitCode) async{
+  Future searchProdGc(search, unitGroupId, bunitCode, groupCode) async{
     var client = http.Client();
     Map dataUser;
     final response = await client.post(Uri.parse("$server/searchGc_item_r"),body:{
-    'search'      : search,
-    'unitGroupId' : '$unitGroupId',
-    'bunitCode'   : bunitCode
+      'search'      : search,
+      'unitGroupId' : '$unitGroupId',
+      'bunitCode'   : bunitCode,
+      'groupCode'   : groupCode
     });
     dataUser = jsonDecode(response.body);
     client.close();

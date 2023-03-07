@@ -8,7 +8,9 @@ import 'gcview_item.dart';
 class GcSearch extends StatefulWidget {
 
   final bunitCode;
-  GcSearch({Key key, @required this.bunitCode}) : super(key: key);
+  final groupCode;
+
+  GcSearch({Key key, @required this.bunitCode, this.groupCode}) : super(key: key);
   @override
   _Search createState() => _Search();
 }
@@ -21,7 +23,8 @@ class _Search extends State<GcSearch> {
 
   Future searchProd() async {
     searchLoading = true;
-    var res = await db.searchProdGc(search.text,unitGroupId, widget.bunitCode);
+    var res = await db.searchProdGc(search.text,unitGroupId, widget.bunitCode, widget.groupCode);
+
     if (!mounted) return;
     setState(() {
       load = false;
@@ -30,6 +33,7 @@ class _Search extends State<GcSearch> {
     });
     print('mao ni ag unit group id');
     print(searchProdData);
+    print(unitGroupId);
   }
 
   @override
@@ -129,7 +133,8 @@ class _Search extends State<GcSearch> {
                     searchProdData[index]['price'],
                     searchProdData[index]['uom'],
                     searchProdData[index]['uom_id'],
-                    bUnitCodeGc)
+                    bUnitCodeGc,
+                    widget.groupCode)
                   );
                 },
                 child:Padding(
@@ -192,9 +197,26 @@ class _Search extends State<GcSearch> {
   }
 }
 
-Route _gcVieItem(prodId,prodName,image,itemCode,price,uom,uomId,buCode){
+Route _gcVieItem(prodId,
+    prodName,
+    image,
+    itemCode,
+    price,
+    uom,
+    uomId,
+    buCode,
+    groupCode){
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => ViewItem(prodId:prodId,prodName:prodName,image:image,itemCode:itemCode,price:price,uom:uom,uomId:uomId,buCode:buCode),
+    pageBuilder: (context, animation, secondaryAnimation) => ViewItem(
+        prodId      : prodId,
+        prodName    : prodName,
+        image       : image,
+        itemCode    : itemCode,
+        price       : price,
+        uom         : uom,
+        uomId       : uomId,
+        buCode      : buCode,
+        groupCode   : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(0.0, 1.0);
       var end = Offset.zero;
