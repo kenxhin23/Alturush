@@ -76,7 +76,9 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
       pickupEnd = DateFormat().add_jm().format(end);
       print(pickupStart);
       print(pickupEnd);
+      isLoading = false;
     });
+
   }
 
   Future getPickupSummary() async {
@@ -105,7 +107,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
       status = pickupSummary[0]['cancelled_status'];
       print(pickupSummary);
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -115,7 +117,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
     setState(() {
       loadSchedule = res['user_details'];
       print(loadSchedule);
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -130,7 +132,7 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
       amountTender = oCcy.parse(loadTotal[0]['amount_tender']);
       change = oCcy.parse(loadTotal[0]['change']);
       print(loadTotal);
-      isLoading = false;
+      // isLoading = false;
     });
   }
 

@@ -78,7 +78,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
       }
 
 
-      if (getTime[0]['paid_at'] == null) {
+      if (getTime[0]['released_at'] == null) {
         taggedPickup = '';
         taggedpickup = false;
       } else {

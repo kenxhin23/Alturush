@@ -84,9 +84,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     setState(() {
       listGetTicketOnFoods = res['user_details'];
       pendingCounter = listGetTicketOnFoods.length.toString();
-      // print(listGetTicket);
     });
-    // print(listGetTicket);
   }
 
   Future getTicketNoOnGoods() async{
@@ -95,7 +93,6 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     setState(() {
       listGetTicketOnGoods = res['user_details'];
     });
-
   }
 
   Future getOrderTicketIfExist(ticketID) async {
@@ -598,7 +595,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                               itemCount: listGetTicketOnGoods == null ? 0 : listGetTicketOnGoods.length,
                               itemBuilder: (BuildContext context, int index) {
                                 String status;
-                                if (listGetTicketOnGoods[index]['cancel_status'] == '1') {
+                                if (listGetTicketOnGoods[index]['cancelled_status'] == '1') {
                                   status ='(Cancelled)';
                                 } else {
                                   status ='';

@@ -454,7 +454,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                             ),
 
                                                             Visibility(
-                                                              visible: ready_for_pickup && cancelled == false && claimed == false && paid == false,
+                                                              visible: ready_for_pickup && cancelled == false && claimed == false,
                                                               child: Padding(
                                                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                                                                 child: Container(height: 30, width: 65,
@@ -476,7 +476,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                             ),
 
                                                             Visibility(
-                                                              visible: (paid || claimed) && cancelled == false,
+                                                              visible: claimed && cancelled == false,
                                                               child: Padding(
                                                                 padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                                                                 child: Container(height: 30, width: 60,

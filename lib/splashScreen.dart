@@ -32,6 +32,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
   String currentVersion;
   String dbVersion;
   String changelog;
+  String version;
 
 
 
@@ -151,7 +152,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
 
   Future getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String version = packageInfo.version;
+    version = packageInfo.version;
 
     print("ang version kay $version");
   }
@@ -190,7 +191,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
       isLoading = false;
 
       if (res != null) {
-        if (dbVersion != currentVersion) {
+        if (dbVersion != version) {
           print('need update');
           CoolAlert.show(
               context: context,

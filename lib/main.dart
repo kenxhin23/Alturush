@@ -75,7 +75,7 @@ class _MyApp extends State<MyApp>{
   void initState(){
     // _logOutUser();
     _initializeTimer();
-    currentVersion = '1.0.3';
+    currentVersion = '1.0.4';
     checkVersion();
     // print(_timerSession);
     // print('timer on');
