@@ -32,6 +32,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
   String prepared, preparedDate;
   String taggedPickup, taggedPickupDate;
+  String release, releaseDate;
   String status;
   String pendingStatus;
 
@@ -39,6 +40,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
   bool cancel;
   bool prep;
   bool taggedpickup;
+  bool released;
 
 
   Future onRefresh() async {
@@ -78,16 +80,26 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
       }
 
 
-      if (getTime[0]['released_at'] == null) {
+      if (getTime[0]['ready_pickup_at'] == null) {
         taggedPickup = '';
         taggedpickup = false;
       } else {
-        taggedPickupDate = getTime[0]['paid_at'];
+        taggedPickupDate = getTime[0]['ready_pickup_at'];
         DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(taggedPickupDate);
         taggedPickup = DateFormat().add_yMMMMd().add_jm().format(date);
         taggedpickup = true;
       }
 
+
+      if (getTime[0]['released_at'] == null) {
+        release = '';
+        released = false;
+      } else {
+        releaseDate = getTime[0]['released_at'];
+        DateTime date = DateFormat('yyyy-MM-dd hh:mm:ss').parse(releaseDate);
+        release = DateFormat().add_yMMMMd().add_jm().format(date);
+        released = true;
+      }
 
       print(getTime);
       print(prepared);
@@ -219,12 +231,7 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Order Submission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                              ),
-
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(Submitted Order)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
+                                child: Text('Picker Assigned & Preparation start', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.green)),
                               ),
 
                               Padding(
@@ -236,19 +243,33 @@ class _OrderTimeFramePickupGoodsState extends State<OrderTimeFramePickupGoods> {
 
                               SizedBox(height: 10),
 
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Order Claimed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                              ),
+                              // Padding(
+                              //   padding:EdgeInsets.symmetric(horizontal: 10),
+                              //   child: Text('Order Claimed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                              // ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(Picked-Up By Customer)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.green)),
+                                child: Text('Tag for Pick-up', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.green)),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
                                 child: Text('$taggedPickup', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                              ),
+
+                              Divider(color: Colors.black54),
+
+                              SizedBox(height: 10),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Released', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.green)),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$release', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
                               ),
 
                             ],

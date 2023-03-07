@@ -196,7 +196,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
           CoolAlert.show(
               context: context,
               type: CoolAlertType.info,
-              text: "New update: ver.$dbVersion \nChangelog: $changelog" ,
+              text: "New update: ver.$dbVersion \nChangelog: $changelog",
               confirmBtnColor: Colors.deepOrangeAccent,
               backgroundColor: Colors.deepOrangeAccent,
               barrierDismissible: false,
@@ -218,7 +218,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
   }
 
   _launchURL() async {
-    const url = 'https://alturush.com/apk/alturush.apk';
+    const url = 'https://play.google.com/store/apps/details?id=com.niones.arush&hl=en';
     if (await canLaunch(url)) {
       await launch(url);
     } else {
