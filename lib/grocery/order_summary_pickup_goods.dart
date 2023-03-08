@@ -29,16 +29,16 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
   List loadTotal;
   List loadPickupTIme;
 
-  String submitted, submittedDate;
-  String firstname;
-  String lastname;
-  String mobileNumber;
+  String submitted = "", submittedDate = "";
+  String firstname = "";
+  String lastname = "";
+  String mobileNumber = "";
   String houseNo;
-  String street;
-  String barangay;
-  String town;
-  String province;
-  String zipcode;
+  String street = "";
+  String barangay ="";
+  String town ="";
+  String province = "";
+  String zipcode ="";
   String pickupStart, pickupTimeStart;
   String pickupEnd, pickupTimeEnd;
   String pickupSched, pickupSchedDate;
@@ -107,7 +107,6 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
       status = pickupSummary[0]['cancelled_status'];
       print(pickupSummary);
-      // isLoading = false;
     });
   }
 
