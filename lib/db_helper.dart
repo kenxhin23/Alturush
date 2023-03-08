@@ -20,8 +20,8 @@ class RapidA {
     return _instance;
   }
 
-  // String server = "https://app1.alturush.com/";
-  String server = "http://172.16.43.147/rapida";
+  String server = "https://app1.alturush.com/";
+  // String server = "http://172.16.43.147/rapida";
   // String server = "http://10.233.1.58/rapida/";
   // String server = "http://172.16.46.130/rapida";
   // String server = "http://192.168.1.2:3333/rapida";

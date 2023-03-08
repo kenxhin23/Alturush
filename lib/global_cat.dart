@@ -216,7 +216,7 @@ class _GlobalCat extends State<GlobalCat>{
           bool result = listBuId[i]['bunitCode'] == widget.buCode;
           buId.add(result);
           print('true or false buid');
-          print(buId);
+          print(result);
         }
       });
       print(listBuId);
@@ -228,6 +228,7 @@ class _GlobalCat extends State<GlobalCat>{
     getCounter();
     loadProfile();
     loadProfilePic();
+    checkBuId();
   }
 
   @override

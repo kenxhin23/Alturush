@@ -125,6 +125,7 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
       //   subTotalStore.add(result);
       // }
       isLoading = false;
+      print(getTotalAmount);
     });
   }
 
