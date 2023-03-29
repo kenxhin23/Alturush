@@ -314,17 +314,25 @@ class _GlobalCat extends State<GlobalCat>{
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.deepOrangeAccent[200], // Status bar
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepOrange[400],
           elevation: 0.1,
-          iconTheme: new IconThemeData(color: Colors.black54),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: <Widget>[
 
             IconButton(
-              icon: Icon(Icons.search_outlined, color: Colors.black54, size: 25,),
+              icon: Icon(Icons.search_outlined, color: Colors.white, size: 25,),
               onPressed: () async {
                 Navigator.of(context).push(_search());
               }
@@ -332,12 +340,14 @@ class _GlobalCat extends State<GlobalCat>{
 
             status == null ? TextButton(
               onPressed: () async {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                // await Navigator.of(context).push(_signIn());
+                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                await Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
                 getCounter();
                 loadProfile();
               },
-              child: Text("Login",style: GoogleFonts.openSans(color:Colors.deepOrange,fontWeight: FontWeight.bold,fontSize: 16.0),),
+              child: Text("Login",
+                style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+              ),
             ) :
             Padding(
               padding: EdgeInsets.all(0),
@@ -347,13 +357,13 @@ class _GlobalCat extends State<GlobalCat>{
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                    // await Navigator.of(context).push(_signIn());
+                    // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    await Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
                     getCounter();
                     loadProfile();
                     loadProfilePic();
                   }else{
-                    await Navigator.of(context).push(profile());
+                    await Navigator.of(context).push(profile()).then((value) => {onRefresh()});
                     getCounter();
                     loadProfile();
                     loadProfilePic();
@@ -365,13 +375,14 @@ class _GlobalCat extends State<GlobalCat>{
                   child: Padding(
                     padding:EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                     child: profileLoading ? CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                     ) : CachedNetworkImage(
                       imageUrl: profilePicture,
                       imageBuilder: (context, imageProvider) => Container(
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.white,
                           image: DecorationImage(
@@ -385,6 +396,7 @@ class _GlobalCat extends State<GlobalCat>{
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.white,
                           image: DecorationImage(
@@ -414,8 +426,9 @@ class _GlobalCat extends State<GlobalCat>{
               animationDuration: Duration(milliseconds: 300),
               animationType: BadgeAnimationType.slide,
               showBadge: showBadge,
+              badgeColor: Colors.white,
               badgeContent: Text('${cartCount.toString()}',
-                style: TextStyle(color: Colors.white, fontSize: 10),
+                style: GoogleFonts.openSans(color: Colors.deepOrange[400], fontSize: 10, fontWeight: FontWeight.bold),
               ),
               child: Padding(
                 padding: EdgeInsets.only(right: 25),
@@ -425,12 +438,12 @@ class _GlobalCat extends State<GlobalCat>{
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if(username == null){
-                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                        // await Navigator.of(context).push(_signIn());
+
+                        await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         getCounter();
                       
-                      }else{
-                        await Navigator.of(context).push(_loadCart());
+                      } else {
+                        await Navigator.of(context).push(_loadCart()).then((val)=>{onRefresh()});
                         getCounter();
 
                       }
@@ -467,9 +480,9 @@ class _GlobalCat extends State<GlobalCat>{
                           )
                         ),
                         child: SizedBox(
-                          height: 150.0,
+                          height: 160.0,
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(25, 30, 25, 30),
+                            padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
                             child: Card(
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
                               color: Colors.transparent,
@@ -483,15 +496,12 @@ class _GlobalCat extends State<GlobalCat>{
                                       width: 50.0,
                                       height: 50.0,
                                       decoration: new BoxDecoration(
+                                        border: Border.all(color: Colors.deepOrange[400]),
                                         image: new DecorationImage(
                                           image: new NetworkImage(widget.buLogo),
                                           fit: BoxFit.cover,
                                         ),
                                         borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                        border: new Border.all(
-                                          color: Colors.black54,
-                                          width: 0.5,
-                                        ),
                                       ),
                                     ),
                                     title: Text(widget.buName,
@@ -499,7 +509,7 @@ class _GlobalCat extends State<GlobalCat>{
                                     ),
                                     subtitle: Text(
                                       'Select Categories',
-                                      style: GoogleFonts.openSans(color: Colors.white, fontStyle: FontStyle.normal, fontSize: 13.0),
+                                      style: GoogleFonts.openSans(color: Colors.white, fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.bold),
                                     ),
                                     dense: true,
                                   ),
@@ -510,15 +520,24 @@ class _GlobalCat extends State<GlobalCat>{
                         ),
                       ),
 
-                      SizedBox(height: 5.0),
 
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
-                        child: Text('CATEGORIES',style: GoogleFonts.openSans(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 18.0)),
+
+                      Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.deepOrange[300],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
+                          child: Text('CATEGORIES',
+                            style: GoogleFonts.openSans(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.normal,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ),
                       ),
 
                       SizedBox(height: 5.0),
@@ -533,24 +552,25 @@ class _GlobalCat extends State<GlobalCat>{
                               SharedPreferences prefs = await SharedPreferences.getInstance();
                               String username = prefs.getString('s_customerId');
                               if(username == null){
-                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                // Navigator.of(context).push(_signIn());
+                                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                               } else {
                                 if (globalCat[index]['id'] != '2'){
-                                  Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadTenants(
-                                      buLogo: widget.buLogo,
-                                      buName: widget.buName,
-                                      buAcroname: widget.buAcroname,
-                                      buCode: widget.buCode,
-                                      globalPic: globalCat[index]['cat_picture'],
-                                      globalCat:globalCat[index]['category'],
-                                      globalID:globalCat[index]['id']
-                                  )),).then((val)=>{onRefresh()});
+
+                                  Navigator.of(context).push(_gotoTenants(
+                                      widget.buLogo,
+                                      widget.buName,
+                                      widget.buAcroname,
+                                      widget.buCode,
+                                      globalCat[index]['cat_picture'],
+                                      globalCat[index]['category'],
+                                      globalCat[index]['id']
+                                  )).then((val)=>{onRefresh()});
                                 } else {
                                   print(widget.buCode);
                                   if(username == null){
-                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                    // Navigator.of(context).push(_signIn());
+                                    // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                    Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                   } else if (widget.buCode == '5') {
 
                                     print('dili pa pwde');
@@ -565,19 +585,17 @@ class _GlobalCat extends State<GlobalCat>{
                                     }
                                     print('unya naka');
 
-                                    Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new GcCategory(
-                                        logo:widget.buLogo,
-                                        categoryName : globalCat[index]['category'],
-                                        categoryNo   : globalCat[index]['id'],
-                                        businessUnit : widget.buName,
-                                        bUnitCode    : widget.buCode,
-                                        groupCode    : widget.groupCode
-                                    )),).then((val)=>{onRefresh()});
+                                    Navigator.of(context).push(_loadGC(
+                                        widget.buLogo,
+                                        globalCat[index]['category'],
+                                        globalCat[index]['id'],
+                                        widget.buName,
+                                        widget.buCode,
+                                        widget.groupCode
+                                    )).then((val)=>{onRefresh()});
                                   }
                                 }
                               }
-
-                              // selectCategory(context,widget.buCode,loadTenants[index]['logo'], loadTenants[index]['tenant_id'], loadTenants[index]['d_tenant_name']);
                             },
                             child:Container(
                               height: 100.0,
@@ -590,21 +608,17 @@ class _GlobalCat extends State<GlobalCat>{
 
                                     ListTile(
                                       leading:Container(
-                                        width: 50.0,
-                                        height: 50.0,
+                                        width: 60.0,
+                                        height: 60.0,
                                         decoration: new BoxDecoration(
                                           image: new DecorationImage(
                                             image: new NetworkImage(globalCat[index]['cat_picture']),
                                             fit: BoxFit.cover,
                                           ),
                                           borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                          border: new Border.all(
-                                            color: Colors.black54,
-                                            width: 0.5,
-                                          ),
                                         ),
                                       ),
-                                      title: Text(globalCat[index]['category'].toString(),style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
+                                      title: Text(globalCat[index]['category'].toString(),style: GoogleFonts.openSans(color: Colors.black54,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
                                     ),
                                   ],
                                 ),
@@ -617,7 +631,7 @@ class _GlobalCat extends State<GlobalCat>{
                       ),
 
                       Divider(
-                        thickness: 1,
+                        thickness: 2, color: Colors.grey[200],
                       ),
 
 
@@ -632,8 +646,8 @@ class _GlobalCat extends State<GlobalCat>{
                               SharedPreferences prefs = await SharedPreferences.getInstance();
                               String username = prefs.getString('s_customerId');
                               if(username == null){
-                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                // Navigator.of(context).push(_signIn());
+                                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                               } else {
                                 if (widget.buCode != '3') {
                                   Future.delayed(const Duration(milliseconds: 500), () async {
@@ -641,21 +655,21 @@ class _GlobalCat extends State<GlobalCat>{
                                       print('pwede');
 
                                       // LoadStore
-                                      Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
-                                          categoryName  : 'All items',
-                                          categoryId    : categoryIdXmas,
-                                          buCode        : widget.buCode,
-                                          buAcroname    : widget.buAcroname,
-                                          storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
-                                          tenantCode    : tenantIdXmas,
-                                          tenantName    : 'CHRISTMAS BASKETS',
-                                          globalID      : widget.groupCode
-                                      )),).then((val)=>{onRefresh()});
+
+                                      Navigator.of(context).push(_loadStore(
+                                          'All items',
+                                          categoryIdXmas,
+                                          widget.buCode,
+                                          widget.buAcroname,
+                                          'https://apanel.alturush.com/images/tenants/tenant_1668395602.jpeg',
+                                          tenantIdXmas,
+                                          'CHRISTMAS BASKETS',
+                                          widget.groupCode
+                                      )).then((val)=>{onRefresh()});
                                     }
                                   });
                                 }
                               }
-
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -685,40 +699,29 @@ class _GlobalCat extends State<GlobalCat>{
                               String username = prefs.getString('s_customerId');
                               if(username == null){
                                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                // Navigator.of(context).push(_signIn());
+                                Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                               } else {
                                 if (widget.buCode == '1') {
                                   setState(() {
                                     Future.delayed(const Duration(milliseconds: 500), () async {
                                       if (getTenantStatusMedPlus == '1') {
                                         print('pwede');
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
-                                            categoryName  : 'Promotional Items',
-                                            categoryId    : '500',
-                                            buCode        : '1',
-                                            buAcroname    : 'ICM',
-                                            storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
-                                            tenantCode    : '39',
-                                            tenantName    : 'MEDICINE PLUS',
-                                            globalID      : '4'
-                                        )),).then((val)=>{onRefresh()});
+                                        Navigator.of(context).push(_loadStore(
+                                            'Promotional Items',
+                                            '500',
+                                            '1',
+                                            'ICM',
+                                            'https://apanel.alturush.com/images/tenants/tenant_1659425607.png',
+                                            '39',
+                                            'MEDICINE PLUS',
+                                            '4'
+                                        )).then((val)=>{onRefresh()});
+
                                       }
-                                      // else {
-                                      //   Fluttertoast.showToast(
-                                      //     msg: "This promo is currently unavailable",
-                                      //     toastLength: Toast.LENGTH_SHORT,
-                                      //     gravity: ToastGravity.BOTTOM,
-                                      //     timeInSecForIosWeb: 2,
-                                      //     backgroundColor: Colors.black.withOpacity(0.7),
-                                      //     textColor: Colors.white,
-                                      //     fontSize: 16.0
-                                      //   );
-                                      // }
                                     });
                                   });
                                 }
                               }
-
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -741,56 +744,45 @@ class _GlobalCat extends State<GlobalCat>{
                         Padding(
                           padding: EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 30),
                           child: GestureDetector(
-                              onTap: () async {
-                                SharedPreferences prefs = await SharedPreferences.getInstance();
-                                String username = prefs.getString('s_customerId');
-                                if(username == null){
-                                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                  // Navigator.of(context).push(_signIn());
-                                } else {
-                                  if (widget.buCode != '3') {
-                                    setState(() {
-                                      Future.delayed(const Duration(milliseconds: 500), () async {
-                                        if (getTenantStatusValentines == '1') {
-                                          print('pwede');
+                            onTap: () async {
+                              SharedPreferences prefs = await SharedPreferences.getInstance();
+                              String username = prefs.getString('s_customerId');
+                              if(username == null){
+                                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+                              } else {
+                                if (widget.buCode != '3') {
+                                  setState(() {
+                                    Future.delayed(const Duration(milliseconds: 500), () async {
+                                      if (getTenantStatusValentines == '1') {
+                                        print('pwede');
 
-                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new LoadStore(
-                                              categoryName  : 'All items',
-                                              categoryId    : categoryIdValentines,
-                                              buCode        : widget.buCode,
-                                              buAcroname    : widget.buAcroname,
-                                              storeLogo     : 'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
-                                              tenantCode    : tenantIdValentines,
-                                              tenantName    : 'VALENTINE BOUQUETS',
-                                              globalID      : widget.groupCode
-                                          )),).then((val)=>{onRefresh()});
-                                        }
-                                        // else {
-                                        //   Fluttertoast.showToast(
-                                        //       msg: "This promo is currently unavailable",
-                                        //       toastLength: Toast.LENGTH_SHORT,
-                                        //       gravity: ToastGravity.BOTTOM,
-                                        //       timeInSecForIosWeb: 2,
-                                        //       backgroundColor: Colors.black.withOpacity(0.7),
-                                        //       textColor: Colors.white,
-                                        //       fontSize: 16.0
-                                        //   );
-                                        // }
-                                      });
+                                        Navigator.of(context).push(_loadStore(
+                                            'All items',
+                                            categoryIdValentines,
+                                            widget.buCode,
+                                            widget.buAcroname,
+                                            'https://apanel.alturush.com/images/tenants/tenant_1675296034.jpeg',
+                                            tenantIdValentines,
+                                            'VALENTINE BOUQUETS',
+                                            widget.groupCode
+                                        )).then((val)=>{onRefresh()});
+                                      }
                                     });
-                                  }
+                                  });
                                 }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.grey)
-                                ),
-                                child: Image.asset(
-                                  'assets/png/valentines_2023_2.png',
-                                  fit: BoxFit.contain,
-                                  height: 200,
-                                ),
-                              )
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey)
+                              ),
+                              child: Image.asset(
+                                'assets/png/valentines_2023_2.png',
+                                fit: BoxFit.contain,
+                                height: 200,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -821,11 +813,12 @@ Route _search() {
     },
   );
 }
+
 Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -841,7 +834,7 @@ Route _profilePage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => TrackOrder(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -857,7 +850,7 @@ Route _loadCart() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoadCart(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -869,9 +862,23 @@ Route _loadCart() {
   );
 }
 
-Route _gotoTenants(buLogo, buName, buAcroname, buCode, globalPic, globalCat, globalID) {
+Route _gotoTenants(
+    buLogo,
+    buName,
+    buAcroname,
+    buCode,
+    globalPic,
+    globalCat,
+    globalID) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => LoadTenants(buLogo:buLogo, buName:buName, buAcroname:buAcroname, buCode:buCode, globalPic:globalPic, globalCat:globalCat, globalID:globalID),
+    pageBuilder: (context, animation, secondaryAnimation) => LoadTenants(
+        buLogo      : buLogo,
+        buName      : buName,
+        buAcroname  : buAcroname,
+        buCode      : buCode,
+        globalPic   : globalPic,
+        globalCat   : globalCat,
+        globalID    : globalID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -905,7 +912,7 @@ Route _groceryRoute(_groceryRoute) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GroceryMain(groceryRoute:_groceryRoute),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -926,14 +933,14 @@ Route _loadGC(
     groupCode){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcCategory(
-        logo:logo,
-        categoryName:categoryName,
-        categoryNo:categoryNo,
-        businessUnit:businessUnit,
-        bUnitCode:bUnitCode,
-        groupCode:groupCode),
+        logo          : logo,
+        categoryName  : categoryName,
+        categoryNo    : categoryNo,
+        businessUnit  : businessUnit,
+        bUnitCode     : bUnitCode,
+        groupCode     : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -949,16 +956,16 @@ Route _loadGC(
 Route _loadStore(categoryName,categoryId,buCode, buAcroname, storeLogo, tenantCode, tenantName, globalID) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoadStore(
-        categoryName:categoryName,
-        categoryId:categoryId,
-        buCode:buCode,
-        buAcroname:buAcroname,
-        storeLogo:storeLogo,
-        tenantCode:tenantCode,
-        tenantName:tenantName,
-        globalID:globalID),
+        categoryName  : categoryName,
+        categoryId    : categoryId,
+        buCode        : buCode,
+        buAcroname    : buAcroname,
+        storeLogo     : storeLogo,
+        tenantCode    : tenantCode,
+        tenantName    : tenantName,
+        globalID      : globalID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

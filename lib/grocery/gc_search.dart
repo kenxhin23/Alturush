@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../create_account_signin.dart';
 import '../db_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'gcview_item.dart';
@@ -123,19 +125,25 @@ class _Search extends State<GcSearch> {
             itemCount: searchProdData == null ? 0 : searchProdData.length,
             itemBuilder: (BuildContext context, int index){
               return InkWell(
-                onTap: (){
+                onTap: () async {
                   FocusScope.of(context).unfocus();
-                  Navigator.of(context).push(_gcVieItem(
-                    searchProdData[index]['prod_id'],
-                    searchProdData[index]['product_name'],
-                    searchProdData[index]['image'],
-                    searchProdData[index]['itemcode'],
-                    searchProdData[index]['price'],
-                    searchProdData[index]['uom'],
-                    searchProdData[index]['uom_id'],
-                    bUnitCodeGc,
-                    widget.groupCode)
-                  );
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  String username = prefs.getString('s_customerId');
+                  if(username == null){
+                    await Navigator.of(context).push(_signIn());
+                  } else {
+                    Navigator.of(context).push(_gcVieItem(
+                        searchProdData[index]['prod_id'],
+                        searchProdData[index]['product_name'],
+                        searchProdData[index]['image'],
+                        searchProdData[index]['itemcode'],
+                        searchProdData[index]['price'],
+                        searchProdData[index]['uom'],
+                        searchProdData[index]['uom_id'],
+                        bUnitCodeGc,
+                        widget.groupCode)
+                    );
+                  }
                 },
                 child:Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
@@ -218,7 +226,23 @@ Route _gcVieItem(prodId,
         buCode      : buCode,
         groupCode   : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

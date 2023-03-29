@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:arush/db_helper.dart';
 import 'dart:async';
+
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../create_account_signin.dart';
 
 
 class Chat extends StatefulWidget {
@@ -62,21 +67,26 @@ class _Chat extends State<Chat> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("${widget.firstName} ${widget.lastName}" ,style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+        title: Text("${widget.firstName} ${widget.lastName}",
+          style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+        ),
       ),
       body: isLoading
           ? Center(
         child: CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrangeAccent),
         ),
-      ): Column(
+      ) : Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
 
@@ -96,7 +106,7 @@ class _Chat extends State<Chat> {
                       Color chatColor = Colors.blueAccent;
                       if(loadChatData[index]['isSender'] == 'true'){
                          isSender = true;
-                         chatColor = Colors.deepOrange;
+                         chatColor = Colors.deepOrange[300];
                         }
                       return Column(
                         children: [
@@ -129,14 +139,14 @@ class _Chat extends State<Chat> {
             height: 60.0,
             width: screenWidth,
             child: Padding(
-              padding: EdgeInsets.only(left: 10,right: 10.0,bottom: 10.0),
+              padding: EdgeInsets.only(left: 10, right: 10.0, bottom: 10.0),
               child: CupertinoTextField(
                 padding: EdgeInsets.only(left: 10),
                 // autofocus: true,
                 style: TextStyle(fontSize: 15.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: Colors.deepOrange[200],
+                    color: Colors.deepOrange[300],
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(30),
@@ -149,10 +159,15 @@ class _Chat extends State<Chat> {
                   child: Padding(
                     padding: EdgeInsets.all(1.0),
                     child: GestureDetector(
-                      onTap: (){
+                      onTap: () async {
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          await Navigator.of(context).push(_signIn());
+                        }
                           sendMessage();
                       },
-                        child: Icon(Icons.send,color: Colors.deepOrangeAccent,size: 32.0),
+                        child: Icon(Icons.send, color: Colors.deepOrangeAccent, size: 32.0),
                     ),
                   ),
                 ),
@@ -165,4 +180,20 @@ class _Chat extends State<Chat> {
       ),
     );
   }
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }

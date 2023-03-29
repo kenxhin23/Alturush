@@ -103,7 +103,6 @@ class _GcLoadStore extends State<GcLoadStore> {
     if (!mounted) return;
     setState(() {
       cartLoading = false;
-      isLoading = false;
       loadStoreData = res['user_details'];
       print('print load store data');
       print(loadStoreData);
@@ -116,7 +115,6 @@ class _GcLoadStore extends State<GcLoadStore> {
     if (!mounted) return;
     setState(() {
       cartLoading = false;
-      isLoading = false;
       loadStoreDataTemp = res['user_details'];
       // loadStoreData.clear();
       for(int q = 0;q < loadStoreDataTemp.length;q++){
@@ -214,6 +212,7 @@ class _GcLoadStore extends State<GcLoadStore> {
       cat = true;
       offset = 0;
       print(getItemsByCategoriesList);
+      isLoading = false;
     });
 
   }
@@ -238,50 +237,57 @@ class _GcLoadStore extends State<GcLoadStore> {
     return AppBar(
       titleSpacing: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.green[300], // Status bar
+        statusBarColor: Colors.green[400], // Status bar
+        statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.green[400],
       elevation: 0.1,
-      iconTheme: new IconThemeData(color: Colors.black),
-//          title: Text("Menu",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 18.0),),
-//       title:  Row(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: [
-//           Image.asset(
-//             'assets/png/alturush_text_logo.png',
-//             fit: BoxFit.contain,
-//             height: 30,
-//           ),
-//         ],
-//       ),
+      iconTheme: new IconThemeData(color: Colors.white),
       leading: IconButton(
-        icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+        icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,
+          shadows: [
+            Shadow(
+              blurRadius: 1.0,
+              color: Colors.black54,
+              offset: Offset(1.0, 1.0),
+            ),
+          ],
+        ),
         onPressed: () => Navigator.of(context).pop(),
       ),
       actions: <Widget>[
         IconButton(
-            icon: Icon(Icons.search_outlined, color: Colors.black, size: 25),
+            icon: Icon(Icons.search_outlined, color: Colors.white, size: 25,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () async {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String username = prefs.getString('s_customerId');
               if(username == null){
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                // Navigator.of(context).push(_signIn());
+                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
               }
-              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
-                  bunitCode : widget.bUnitCode,
-                  groupCode : widget.groupCode))).then((val)=>{onRefresh()});
-              // Navigator.of(context).push(_search(widget.bUnitCode));
+              // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
+              //     bunitCode : widget.bUnitCode,
+              //     groupCode : widget.groupCode))).then((val)=>{onRefresh()});
+              Navigator.of(context).push(_search(widget.bUnitCode , widget.groupCode)).then((val)=>{onRefresh()});
             }
         ),
         status == null ? TextButton(
           onPressed: () async {
-            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-            // await Navigator.of(context).push(_signIn());
+            // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+            await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
             loadProfile();
             getGcCounter();
           },
-          child: Text("Login",style: GoogleFonts.openSans(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 18.0),),
+          child: Text("Login",style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),
+          ),
         ):
         Padding(
           padding: EdgeInsets.all(0),
@@ -291,13 +297,13 @@ class _GcLoadStore extends State<GcLoadStore> {
               SharedPreferences prefs = await SharedPreferences.getInstance();
               String username = prefs.getString('s_customerId');
               if(username == null){
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                // await Navigator.of(context).push(_signIn());
+                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                 loadProfile();
                 getGcCounter();
                 loadProfilePic();
               }else{
-                await Navigator.of(context).push(_profilePage());
+                await Navigator.of(context).push(_profilePage()).then((val)=>{onRefresh()});
                 loadProfile();
                 getGcCounter();
                 loadProfilePic();
@@ -309,7 +315,7 @@ class _GcLoadStore extends State<GcLoadStore> {
               child: Padding(
                 padding:EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                 child: profileLoading ? CircularProgressIndicator(
-                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                  valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                 ) : CachedNetworkImage(
                   imageUrl: profilePicture,
                   imageBuilder: (context, imageProvider) => Container(
@@ -318,19 +324,21 @@ class _GcLoadStore extends State<GcLoadStore> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: Colors.white,
+                      border: Border.all(color: Colors.white),
                       image: DecorationImage(
                         image: imageProvider,
                         fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                  placeholder: (context, url) => const CircularProgressIndicator(color: Colors.deepOrangeAccent,),
+                  placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
                   errorWidget: (context, url, error) => Container(
                     height: 50,
                     width: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       color: Colors.white,
+                      border: Border.all(color: Colors.white),
                       image: DecorationImage(
                         image: AssetImage("assets/jpg/no_photo.jpg"),
                         fit: BoxFit.fill,
@@ -356,31 +364,40 @@ class _GcLoadStore extends State<GcLoadStore> {
           animationDuration: Duration(milliseconds: 300),
           animationType: BadgeAnimationType.slide,
           showBadge: showBadge,
-          badgeColor: Colors.green,
+          badgeColor: Colors.white,
           badgeContent: Text('${cartCount.toString()}',
-            style: TextStyle(color: Colors.white, fontSize: 10),
+            style: TextStyle(color: Colors.green[400], fontSize: 11, fontWeight: FontWeight.bold,
+            ),
           ),
           child: Padding(
             padding: EdgeInsets.only(right: 25),
             child: SizedBox(width: 25,
-              child: IconButton(icon: Icon(CupertinoIcons.cart,),
+              child: IconButton(icon: Icon(CupertinoIcons.cart,
+                shadows: [
+                  Shadow(
+                    blurRadius: 1.0,
+                    color: Colors.black54,
+                    offset: Offset(1.0, 1.0),
+                  ),
+                ],
+              ),
                 onPressed: () async {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                    // await Navigator.of(context).push(_signIn());
+                    // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                     getGcCounter();
 
-                  }else{
-                    await Navigator.of(context).push(_gcViewCart());
+                  } else {
+                    await Navigator.of(context).push(_gcViewCart()).then((val)=>{onRefresh()});
                     getGcCounter();
                   }
-                }
-              )
+                },
+              ),
             ),
-          )
-        )
+          ),
+        ),
       ],
     );
   }
@@ -423,12 +440,18 @@ class _GcLoadStore extends State<GcLoadStore> {
                             itemCount: categoryData.length,
                             itemBuilder: (BuildContext context, int index) {
                               return GestureDetector(
-                                onTap: () async{
-                                  categoryId = categoryData[index]['category_no'];
-                                  categoryName = categoryData[index]['category_name'];
-                                  getItemsByCategories();
-                                  Navigator.pop(context);
-                                  loadProfile();
+                                onTap: () async {
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  String username = prefs.getString('s_customerId');
+                                  if(username == null){
+                                    await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+                                  } else {
+                                    categoryId = categoryData[index]['category_no'];
+                                    categoryName = categoryData[index]['category_name'];
+                                    getItemsByCategories();
+                                    Navigator.pop(context);
+                                    loadProfile();
+                                  }
                                 },
                                 child:Container(
                                   height: 100.0,
@@ -551,7 +574,6 @@ class _GcLoadStore extends State<GcLoadStore> {
         body: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-
             Expanded(
               child: RefreshIndicator(
                 color: Colors.green,
@@ -569,7 +591,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                           ),
                         ),
                         child: SizedBox(
-                          height: 150.0,
+                          height: 160.0,
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(25, 30, 25, 30),
                             child: Card(
@@ -590,8 +612,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                                         ),
                                         borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                         border: new Border.all(
-                                          color: Colors.black54,
-                                          width: 0.5,
+                                          color: Colors.green[400],
+                                          width: 1,
                                         ),
                                       ),
                                     ),
@@ -602,7 +624,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                         fontStyle: FontStyle.normal,
-                                        fontSize: 15.0
+                                        fontSize: 20.0
                                       )
                                     ),
                                     dense: true,
@@ -614,12 +636,19 @@ class _GcLoadStore extends State<GcLoadStore> {
                         ),
                       ),
 
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                        child: new Text(categoryName, style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 18.0),),
+                      Container(
+                        height: 45,
+                        decoration: BoxDecoration(
+                          color: Colors.green[300],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 5, 15),
+                          child: new Text(categoryName,
+                            style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 18.0, color: Colors.white),
+                          ),
+                        ),
                       ),
 
-                      SizedBox(height: 10.0),
                       isLoading
                           ? Center(
                         child: CircularProgressIndicator(
@@ -641,8 +670,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                                SharedPreferences prefs = await SharedPreferences.getInstance();
                                String username = prefs.getString('s_customerId');
                                if(username == null){
-                                 Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                 // Navigator.of(context).push(_signIn());
+                                 // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                 Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                } else {
                                  await Navigator.of(context).push(_gcVieItem(
                                      loadStoreData[index]['prod_id'],
@@ -654,8 +683,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                                      loadStoreData[index]['uom_id'],
                                      widget.bUnitCode,
                                      widget.groupCode
-                                 )
-                                 );
+                                 )).then((val)=>{onRefresh()});
                                }
 
                                getGcCounter();
@@ -667,10 +695,10 @@ class _GcLoadStore extends State<GcLoadStore> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border(
-                                    top: BorderSide(width: 1.0, color: Colors.black12),
-                                    right: BorderSide(width: 1.0, color: Colors.black12),
-                                    left: BorderSide(width: 1.0, color: Colors.black12),
-                                    bottom: BorderSide(width: 1.0, color: Colors.black12)
+                                    top: BorderSide(width: 1.0, color: Colors.green[100]),
+                                    right: BorderSide(width: 1.0, color: Colors.green[300]),
+                                    left: BorderSide(width: 1.0, color: Colors.green[100]),
+                                    bottom: BorderSide(width: 1.0, color: Colors.green[300])
                                   ),
                                   color: Colors.transparent,
                                 ),
@@ -720,9 +748,7 @@ class _GcLoadStore extends State<GcLoadStore> {
 
                                     ListTile(
                                       title: Text(loadStoreData[index]['product_name'],
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black87),
+                                        style: GoogleFonts.openSans(fontSize: 15, color: Colors.black54),
                                       ),
                                       subtitle: Text('₱ ${loadStoreData[index]['price']}',
                                         style: TextStyle(
@@ -755,8 +781,8 @@ class _GcLoadStore extends State<GcLoadStore> {
                             SharedPreferences prefs = await SharedPreferences.getInstance();
                             String username = prefs.getString('s_customerId');
                             if(username == null){
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                              // Navigator.of(context).push(_signIn());
+                              // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                              Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                             } else {
                               await Navigator.of(context).push(_gcVieItem(
                                   getItemsByCategoriesList[index]['product_id'],
@@ -768,7 +794,7 @@ class _GcLoadStore extends State<GcLoadStore> {
                                   getItemsByCategoriesList[index]['uom_id'],
                                   widget.bUnitCode,
                                   widget.groupCode
-                              ));
+                              )).then((val)=>{onRefresh()});
                             }
 
                               getGcCounter();
@@ -780,10 +806,10 @@ class _GcLoadStore extends State<GcLoadStore> {
                             child: Container(
                               decoration: BoxDecoration(
                                 border: Border(
-                                  top: BorderSide(width: 1.0, color: Colors.black12),
-                                  right: BorderSide(width: 1.0, color: Colors.black12),
-                                    left: BorderSide(width: 1.0, color: Colors.black12),
-                                    bottom: BorderSide(width: 1.0, color: Colors.black12)
+                                  top: BorderSide(width: 1.0, color: Colors.green[100]),
+                                  right: BorderSide(width: 1.0, color: Colors.green[300]),
+                                  left: BorderSide(width: 1.0, color: Colors.green[100]),
+                                  bottom: BorderSide(width: 1.0, color: Colors.green[300]),
                                 ),
                                 color: Colors.transparent,
                               ),
@@ -877,21 +903,30 @@ class _GcLoadStore extends State<GcLoadStore> {
                       onTap:(){
                         selectGcCategory(context);
                       },
-                      style: SleekButtonStyle.outlined(
-                        color: Colors.green,
+                      style: SleekButtonStyle.flat(
+                        color: Colors.green[400],
                         inverted: false,
-                        rounded: true,
+                        rounded: false,
                         size: SleekButtonSize.normal,
                         context: context,
                       ),
                       child: Center(
                         child: Center(
-                            child:Text("CATEGORIES",style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                          child:Text("CATEGORIES",
+                            style: GoogleFonts.openSans(fontSize: 16.0, fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -914,17 +949,17 @@ Route _gcVieItem(
     groupCode){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ViewItem(
-        prodId:prodId,
-        prodName:prodName,
-        image:image,
-        itemCode:itemCode,
-        price:price,
-        uom:uom,
-        uomId:uomId,
-        buCode:buCode,
+        prodId    : prodId,
+        prodName  : prodName,
+        image     : image,
+        itemCode  : itemCode,
+        price     : price,
+        uom       : uom,
+        uomId     : uomId,
+        buCode    : buCode,
         groupCode : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -940,7 +975,7 @@ Route _gcViewCart(){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcLoadCart(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -956,7 +991,7 @@ Route _profilePage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ProfilePage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -967,28 +1002,12 @@ Route _profilePage() {
     },
   );
 }
-//
-// Route _loadFood(){
-//   return PageRouteBuilder(
-//     pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(),
-//     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//       var begin = Offset(0.0, 1.0);
-//       var end = Offset.zero;
-//       var curve = Curves.decelerate;
-//       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-//       return SlideTransition(
-//         position: animation.drive(tween),
-//         child: child,
-//       );
-//     },
-//   );
-// }
 
 Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1000,9 +1019,11 @@ Route _signIn() {
   );
 }
 
-Route _search(bunitCode) {
+Route _search(bunitCode, groupCode) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(bunitCode: bunitCode),
+    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(
+      bunitCode : bunitCode,
+      groupCode : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

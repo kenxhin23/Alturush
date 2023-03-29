@@ -141,10 +141,26 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(25.0, 20.0, 20.0, 20.0),
-                  child:Text("Category",style: TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold),),
+                Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrange[400],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10), topLeft: Radius.circular(10),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(25.0, 10.0, 20.0, 10.0),
+                        child:Text("Category",style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+
+
                 Expanded(
                   child: ListView(
                     children: <Widget>[
@@ -159,30 +175,40 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                               return InkWell(
                                 onTap: () async{
                                   print(buAcroname);
-                                  if (index == 0) {
-                                    await Navigator.of(context).push(_loadStore(
-                                        'All items',
-                                        categoryData[index]['category_id'],
-                                        buCode,
-                                        buAcroname,
-                                        logo,
-                                        tenantId,
-                                        tenantName,
-                                        globalID));
+
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  String username = prefs.getString('s_customerId');
+                                  if(username == null){
+
+                                    await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                     getCounter();
-                                    loadProfile();
+
                                   } else {
-                                    await Navigator.of(context).push(_loadStore(
-                                        categoryData[index]['category'],
-                                        categoryData[index]['category_id'],
-                                        buCode,
-                                        buAcroname,
-                                        logo,
-                                        tenantId,
-                                        tenantName,
-                                        globalID));
-                                    getCounter();
-                                    loadProfile();
+                                    if (index == 0) {
+                                      await Navigator.of(context).push(_loadStore(
+                                          'All items',
+                                          categoryData[index]['category_id'],
+                                          buCode,
+                                          buAcroname,
+                                          logo,
+                                          tenantId,
+                                          tenantName,
+                                          globalID)).then((val)=>{onRefresh()});
+                                      getCounter();
+                                      loadProfile();
+                                    } else {
+                                      await Navigator.of(context).push(_loadStore(
+                                          categoryData[index]['category'],
+                                          categoryData[index]['category_id'],
+                                          buCode,
+                                          buAcroname,
+                                          logo,
+                                          tenantId,
+                                          tenantName,
+                                          globalID)).then((val)=>{onRefresh()});
+                                      getCounter();
+                                      loadProfile();
+                                    }
                                   }
                                 },
                                 child:Container(
@@ -194,43 +220,47 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: <Widget>[index == 0 ?
 
-                                      ListTile(
-                                        leading:Container(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          decoration: new BoxDecoration(
-                                            image: new DecorationImage(
-                                              image: new NetworkImage(categoryData[index]['image']),
-                                              fit: BoxFit.cover,
-                                            ),
-                                            borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                            border: new Border.all(
-                                              color: Colors.black54,
-                                              width: 0.5,
+                                        ListTile(
+                                          leading:Container(
+                                            width: 55.0,
+                                            height: 55.0,
+                                            decoration: new BoxDecoration(
+                                              image: new DecorationImage(
+                                                image: new NetworkImage(categoryData[index]['image']),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                                              border: new Border.all(
+                                                color: Colors.deepOrange[300],
+                                                width: 2,
+                                              ),
                                             ),
                                           ),
-                                        ),
 
-                                        title: Text("All items",style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
-                                      ) :
-                                      ListTile(
-                                        leading:Container(
-                                          width: 50.0,
-                                          height: 50.0,
-                                          decoration: new BoxDecoration(
-                                            image: new DecorationImage(
-                                              image: new NetworkImage(categoryData[index]['image']),
-                                              fit: BoxFit.cover,
-                                            ),
-                                            borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                            border: new Border.all(
-                                              color: Colors.black54,
-                                              width: 0.5,
+                                          title: Text("All items",
+                                            style: GoogleFonts.openSans(color: Colors.black54, fontStyle: FontStyle.normal, fontWeight:FontWeight.bold, fontSize: 18.0),
+                                          ),
+                                        ) :
+                                        ListTile(
+                                          leading:Container(
+                                            width: 55.0,
+                                            height: 55.0,
+                                            decoration: new BoxDecoration(
+                                              image: new DecorationImage(
+                                                image: new NetworkImage(categoryData[index]['image']),
+                                                fit: BoxFit.cover,
+                                              ),
+                                              borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                                              border: new Border.all(
+                                                color: Colors.deepOrange[300],
+                                                width: 2,
+                                              ),
                                             ),
                                           ),
+                                          title: Text(categoryData[index]['category'].toString(),
+                                            style: GoogleFonts.openSans(color: Colors.black54, fontStyle: FontStyle.normal, fontWeight:FontWeight.bold, fontSize: 18.0),
+                                          ),
                                         ),
-                                        title: Text(categoryData[index]['category'].toString(),style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
-                                      ),
                                       ],
                                     ),
                                     elevation: 0,
@@ -313,41 +343,36 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepOrange[400],
           elevation: 0.1,
-          iconTheme: new IconThemeData(color: Colors.black54),
-          // title: Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Image.asset(
-          //       'assets/png/alturush_text_logo.png',
-          //       fit: BoxFit.contain,
-          //       height: 30,
-          //     ),
-          //     // Container(
-          //     //   padding: const EdgeInsets.all(8.0), child: Text("Participating Businesses",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 18.0),),)
-          //   ],
-          // ),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.search_outlined, color: Colors.black54, size: 25,),
+                icon: Icon(Icons.search_outlined, color: Colors.white, size: 25,),
                 onPressed: () async {
                   Navigator.of(context).push(_search());
                   }
             ),
             status == null ? TextButton(
               onPressed: () async {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                // await Navigator.of(context).push(_signIn());
+                // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                 getCounter();
                 loadProfile();
               },
-              child: Text("Login",style: GoogleFonts.openSans(color:Colors.deepOrange,fontWeight: FontWeight.bold,fontSize: 16.0),),
+              child: Text("Login",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),),
             ): Padding(
               padding: EdgeInsets.all(0),
               child: InkWell(
@@ -356,12 +381,12 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                     getCounter();
                     loadProfile();
                     loadProfilePic();
                   }else{
-                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ProfilePage())).then((val)=>{onRefresh()});
+                    await Navigator.of(context).push(profile()).then((val)=>{onRefresh()});
                     getCounter();
                     loadProfile();
                     loadProfilePic();
@@ -373,13 +398,14 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                   child: Padding(
                     padding:EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                     child: profileLoading ? CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                     ) : CachedNetworkImage(
                       imageUrl: profilePicture,
                       imageBuilder: (context, imageProvider) => Container(
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.white,
                           image: DecorationImage(
@@ -388,11 +414,12 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                           ),
                         ),
                       ),
-                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.deepOrangeAccent,),
+                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
                       errorWidget: (context, url, error) => Container(
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.white,
                           image: DecorationImage(
@@ -420,8 +447,9 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
               animationDuration: Duration(milliseconds: 300),
               animationType: BadgeAnimationType.slide,
               showBadge: showBadge,
+              badgeColor: Colors.white,
               badgeContent: Text('${cartCount.toString()}',
-                style: TextStyle(color: Colors.white, fontSize: 10),
+                style: GoogleFonts.openSans(color: Colors.deepOrange[400], fontSize: 10, fontWeight: FontWeight.bold),
               ),
               child: Padding(
                 padding: EdgeInsets.only(right: 25),
@@ -431,19 +459,19 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if(username == null){
-                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                        // await Navigator.of(context).push(_signIn());
+                        // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                        await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         getCounter();
                       } else {
-                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new LoadCart())).then((val)=>{onRefresh()});
-                        // await Navigator.of(context).push(_loadCart());
+                        // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new LoadCart())).then((val)=>{onRefresh()});
+                        await Navigator.of(context).push(_loadCart()).then((val)=>{onRefresh()});
                         getCounter();
                       }
                     }
-                  )
+                  ),
                 ),
-              )
-            )
+              ),
+            ),
           ],
         ),
         body: isLoading ?
@@ -464,7 +492,7 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                 ),
               ),
               child: SizedBox(
-                height: 150.0,
+                height: 160.0,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(25, 30, 25, 30),
                   child: Card(
@@ -485,8 +513,8 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                               ),
                               borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                               border: new Border.all(
-                                color: Colors.white,
-                                width: 0.5,
+                                color: Colors.deepOrange[400],
+                                width: 1,
                               ),
                             ),
                           ),
@@ -497,12 +525,13 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                                 fontStyle: FontStyle.normal,
                                 fontSize: 20.0),
                           ),
-                          subtitle: Text(
-                            'Select from our participating businesses',
+                          subtitle: Text('Select from our participating businesses',
                             style: GoogleFonts.openSans(
-                                color: Colors.white,
-                                fontStyle: FontStyle.normal,
-                                fontSize: 13.0),
+                              color: Colors.white,
+                              fontStyle: FontStyle.normal,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           dense: true,
                         ),
@@ -512,19 +541,27 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
-              child: Text('PARTICIPATING BUSINESSES',style: GoogleFonts.openSans(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.normal,
-                  fontSize: 18.0)),
-            ),
-            SizedBox(
-              height: 5.0,
+
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.deepOrange[300],
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
+                    child: Text('PARTICIPATING BUSINESSES',
+                      style: GoogleFonts.openSans(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
 
             Expanded(
@@ -552,8 +589,8 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                               children: <Widget>[
                                 ListTile(
                                   leading:Container(
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 55.0,
+                                    height: 55.0,
                                     decoration: new BoxDecoration(
                                       image: new DecorationImage(
                                         image: new NetworkImage(loadTenants[index]['logo']),
@@ -561,12 +598,14 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                                       ),
                                       borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                       border: new Border.all(
-                                        color: Colors.black54,
-                                        width: 0.5,
+                                        color: Colors.deepOrange[400],
+                                        width: 2,
                                       ),
                                     ),
                                   ),
-                                  title: Text(loadTenants[index]['d_tenant_name'].toString(),style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
+                                  title: Text(loadTenants[index]['d_tenant_name'].toString(),
+                                    style: GoogleFonts.openSans(color: Colors.black54, fontWeight:FontWeight.bold, fontSize: 18.0),
+                                  ),
                                 ),
                               ],
                             ),
@@ -580,78 +619,6 @@ class _LoadTenants extends State<LoadTenants> with TickerProviderStateMixin {
                 ),
               ),
             ),
-  //           Visibility(
-  //             visible: cartCount == 0 ? false : true,
-  //             child: Padding(
-  //               padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-  //               child: Row(
-  //                 children: <Widget>[
-  //                   Flexible(
-  //                     child: SleekButton(
-  //                       onTap: () async {
-  //                         SharedPreferences prefs = await SharedPreferences.getInstance();
-  //                         String username = prefs.getString('s_customerId');
-  //                         if(username == null){
-  //                           await Navigator.of(context).push(_signIn());
-  //                           getCounter();
-  //                         }else{
-  //                           await Navigator.of(context).push(_loadCart());
-  //                           getCounter();
-  //                         }
-  //                       },
-  //                       style: SleekButtonStyle.flat(
-  //                         color: Colors.deepOrange,
-  //                         inverted: false,
-  //                         rounded: true,
-  //                         size: SleekButtonSize.big,
-  //                         context: context,
-  //                       ),
-  //                       child: Center(
-  //                         child: cartLoading
-  //                             ? Center(
-  //                           child:Container(
-  //                             height:16.0 ,
-  //                             width: 16.0,
-  //                             child: CircularProgressIndicator(
-  // //                                          strokeWidth: 1,
-  //                               valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-  //                             ),
-  //                           ),
-  //                         ) :  Row(
-  //                           crossAxisAlignment: CrossAxisAlignment.start,
-  //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                           children: [
-  //                             Text("View cart  ${cartCount.toString()}",style: TextStyle(
-  //                                 shadows: [
-  //                                   Shadow(
-  //                                     blurRadius: 1.0,
-  //                                     color: Colors.black54,
-  //                                     offset: Offset(1.0, 1.0),
-  //                                   ),
-  //                                 ],
-  //                                 fontStyle: FontStyle.normal,
-  //                                 fontWeight: FontWeight.bold,
-  //                                 fontSize: 13.0),),
-  // //                            Text("₱ ${oCcy.format(num.parse(subtotal.toString()))}",style: TextStyle(
-  // //                                shadows: [
-  // //                                  Shadow(
-  // //                                    blurRadius: 1.0,
-  // //                                    color: Colors.black54,
-  // //                                    offset: Offset(1.0, 1.0),
-  // //                                  ),
-  // //                                ],
-  // //                                fontStyle: FontStyle.normal,
-  // //                                fontWeight: FontWeight.bold,
-  // //                                fontSize: 13.0),),
-  //                           ],
-  //                         ),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
           ],
         ),
       ),
@@ -664,7 +631,7 @@ Route _loadCart() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoadCart(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -681,7 +648,7 @@ Route _profilePage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => TrackOrder(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -697,7 +664,7 @@ Route _loadStore(categoryName,categoryId,buCode, buAcroname, storeLogo, tenantCo
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoadStore(categoryName:categoryName,categoryId:categoryId, buCode:buCode, buAcroname:buAcroname, storeLogo:storeLogo, tenantCode:tenantCode, tenantName:tenantName, globalID:globalID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -713,7 +680,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

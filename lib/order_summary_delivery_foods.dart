@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -94,7 +95,7 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
 
       pickupDate = orderSummary[0]['pickup_at'];
       DateTime date2 = DateFormat('yyyy-MM-dd hh:mm:ss').parse(pickupDate);
-      pickupD = DateFormat().add_yMMMMd().format(date2);
+      pickupD = DateFormat().add_yMMMMd().add_EEEE().format(date2);
       pickupT = DateFormat().add_jm().format(date2);
 
       _deliveryDate.text = pickupD;
@@ -199,15 +200,26 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         titleSpacing: 0,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Summary (Delivery)', style: GoogleFonts.openSans(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 16.0),
+        title: Text('Summary (Delivery)', style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
       ),
       body: isLoading ?
@@ -232,63 +244,87 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
                     children: [
 
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('TICKET NO.', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Text('TICKET NO.',
+                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text(widget.ticketNo, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
+                        child: Text(widget.ticketNo,
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                        ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('ORDER SUBMITTED', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("$submitted", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('CUSTOMER INFORMATION', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Text('ORDER SUBMITTED',
+                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("$firstname $lastname", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
+                        child: Text("$submitted",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Text('CUSTOMER INFORMATION',
+                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("$mobileNumber", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('DELIVERY ADDRESS', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("$houseNo$street, $barangay, $town, $province $zipcode", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('NEAREST LAND MARK', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+                        child: Text("$firstname $lastname",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                        ),
                       ),
 
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("$landmark", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black)),
+                        child: Text("$mobileNumber",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                        ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                        child: Text('SCHEDULE FOR DELIVERY', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Text('DELIVERY ADDRESS',
+                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text("$houseNo$street, $barangay, $town, $province $zipcode",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Text('NEAREST LAND MARK',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Text("$landmark",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Text('SCHEDULE FOR DELIVERY',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       Padding(
@@ -296,17 +332,19 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Date*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black)),
-                            SizedBox(width: 200,height: 35,
+                            Text("Date*",
+                              style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
+                            SizedBox(width: 220, height: 35,
                               child: TextFormField(
                                 enabled: false,
                                 textInputAction: TextInputAction.done,
-                                style: TextStyle(fontSize: 14),
+                                style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                 cursorColor: Colors.deepOrange,
                                 controller: _deliveryDate,
                                 textAlign: TextAlign.end,
                                 decoration: InputDecoration(
-                                  prefixIcon: Icon(Icons.date_range,color: Colors.deepOrangeAccent,),
+                                  prefixIcon: Icon(Icons.date_range,color: Colors.deepOrangeAccent),
                                   contentPadding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 10.0),
                                   focusedBorder:OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
@@ -324,12 +362,13 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Time*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black)),
-                            SizedBox(width: 200,height: 35,
+                            Text("Time*", style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
+                            SizedBox(width: 220,height: 35,
                               child: TextFormField(
                                 enabled: false,
                                 textInputAction: TextInputAction.done,
-                                style: TextStyle(fontSize: 14),
+                                style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                 cursorColor: Colors.deepOrange,
                                 controller: _deliveryTime,
                                 textAlign: TextAlign.end,
@@ -379,16 +418,19 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
                     visible: status == '0',
                     child: Column(
                       children: [
-                        Divider(thickness: 1, color: Colors.black54),
 
-                        Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text('ORDER SUMMARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('ORDER SUMMARY',
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                              ),
+                            ),
                           ),
                         ),
-
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
                         ListView.builder(
                           shrinkWrap: true,
@@ -409,186 +451,230 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
 
-                                  Padding(
+                                  Container(
+                                    height: 30,
+                                    color: Colors.deepOrange[300],
                                     padding: EdgeInsets.symmetric(horizontal: 10),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
 
                                         Text('${loadSchedule[index]['tenant_name']}',
-                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                            style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.white)
                                         ),
 
                                         Text('₱ ${oCcy.format(price)}',
-                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)
+                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.white)
                                         ),
                                       ],
                                     ),
                                   ),
-
-                                  Divider(thickness: 1, color: Colors.deepOrangeAccent,),
                                 ],
                               ),
                             );
                           },
                         ),
 
-                        SizedBox(height: 5),
+                        SizedBox(
+                          height: 5,
+                        ),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('SUBTOTAL', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('SUBTOTAL',
+                                style: TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
                             ),
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(subTotal)}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
-                            )
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('₱ ${oCcy.format(subTotal)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
+                            ),
                           ],
                         ),
-
-                        Divider(color: Colors.black54),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text("RIDER'S FEE", style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text("RIDER'S FEE",
+                                style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
                             ),
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(deliveryFee)}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('₱ ${oCcy.format(deliveryFee)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
                             )
                           ],
                         ),
 
-                        Divider(color: Colors.black54),
+                        Container(
+                          height: 30,
+                          color: Colors.grey[200],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-
-                            Row(
-                              children: [
-
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
-                                ),
-
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Text("$discounted", style: TextStyle(fontSize: 13, color: Colors.orangeAccent, fontWeight: FontWeight.bold)),
-                                ),
-                              ],
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(grandTotal)}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold)),
-                            )
-                          ],
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('AMOUNT TENDER', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(amountTender)}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
-                            )
-                          ],
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('CHANGE', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(change)}', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent)),
-                            )
-                          ],
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text('PAYMENT METHOD', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
-                                ),
-                              ],
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('$paymentMethod', style: TextStyle(fontSize: 13, color: Colors.deepOrangeAccent, fontWeight: FontWeight.normal)),
-                            )
-                          ],
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.only(left: 10, top: 15),
-                          child: Text('SUGGESTED VEHICLE FOR DELIVERY', style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold)),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: IntrinsicHeight(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Row(
                                 children: [
 
-                                  SizedBox(width: 25,
-                                      child: Text('No.', style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black))
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                    child: Text('TOTAL AMOUNT',
+                                      style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                                    ),
                                   ),
 
-                                  VerticalDivider(color: Colors.black54),
-
-                                  SizedBox(width: 100,
-                                      child: Text('Vehicle Type', style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black))
-                                  ),
-
-                                  VerticalDivider(color: Colors.black54),
-
-                                  SizedBox(width: 70,
-                                      child: Text("Delivery Fee", style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black))
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                                    child: Text("$discounted",
+                                      style: TextStyle(fontSize: 13, color: Colors.orangeAccent, fontWeight: FontWeight.bold),
+                                    ),
                                   ),
                                 ],
                               ),
-                            )
+
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                child: Text('₱ ${oCcy.format(grandTotal)}',
+                                  style: TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('AMOUNT TENDER',
+                                style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('₱ ${oCcy.format(amountTender)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('CHANGE',
+                                style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('₱ ${oCcy.format(change)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                  child: Text('PAYMENT METHOD',
+                                    style: TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text('$paymentMethod',
+                                style: TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.normal),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(
+                          height: 5,
+                        ),
+
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('SUGGESTED VEHICLE FOR DELIVERY',
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 5,
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                SizedBox(
+                                  width: 25,
+                                  child: Text('No.',
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  ),
+                                ),
+
+                                VerticalDivider(color: Colors.black54),
+
+                                SizedBox(
+                                  width: 100,
+                                  child: Text('Vehicle Type',
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  ),
+                                ),
+
+                                VerticalDivider(color: Colors.black54),
+
+                                SizedBox(
+                                  width: 75,
+                                  child: Text("Delivery Fee",
+                                    style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
 
                         Divider(color: Colors.black54),
@@ -626,7 +712,7 @@ class _OrderSummaryDeliveryFoodsState extends State<OrderSummaryDeliveryFoods> {
 
                                               VerticalDivider(color: Colors.black54),
 
-                                              SizedBox(width: 70,
+                                              SizedBox(width: 75,
                                                   child: Text("${loadVehicle[index]['riders_fee']}", style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black))
                                               ),
                                             ],
@@ -656,7 +742,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

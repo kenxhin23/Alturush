@@ -192,14 +192,19 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Rider detail",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0)),
+        title: Text("Rider detail",
+          style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+        ),
         // actions: [
         //   IconButton(
         //       icon: Icon(Icons.chat_bubble, color: Colors.black54),
@@ -264,22 +269,10 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                         ),
                       ),
 
-                      // Center(
-                      //   child: Padding(
-                      //     padding: EdgeInsets.only(top: 10, bottom: 10),
-                      //     child: Container(
-                      //       height: 120.0,
-                      //       width: 120.0,
-                      //       child: CircleAvatar(
-                      //         radius: 30.0,
-                      //         backgroundImage: NetworkImage(riderPhoto),
-                      //       ),
-                      //     ),
-                      //   )
-                      // ),
-
                       Center(
-                        child: Text("$firstName $lastName",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 16.0),),
+                        child: Text("$firstName $lastName",
+                          style: GoogleFonts.openSans(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 16.0),
+                        ),
                       ),
 
                       Row(
@@ -294,10 +287,20 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                                 primary: Colors.black,
                                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                               ),
-                              onPressed: (){
-                                launch("tel://$riderMobileNo");
+                              onPressed: () async {
+
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                String username = prefs.getString('s_customerId');
+                                if(username == null){
+                                  await Navigator.of(context).push(_signIn());
+                                } else {
+                                  launch("tel://$riderMobileNo");
+                                }
+
                               },
-                              label:Text("Call rider",style: GoogleFonts.openSans(color:Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),),
+                              label:Text("Call rider",
+                                style: GoogleFonts.openSans(color:Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
+                              ),
                             ),
                           ),
 
@@ -309,27 +312,40 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                                 primary: Colors.black,
                                 shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                               ),
-                              onPressed: (){
-                                if (deliveredStatus == '1') {
+                              onPressed: () async {
 
+                                SharedPreferences prefs = await SharedPreferences.getInstance();
+                                String username = prefs.getString('s_customerId');
+                                if(username == null){
+                                  await Navigator.of(context).push(_signIn());
                                 } else {
-                                  Navigator.of(context).push(chartRoute(firstName,lastName,riderId,widget.ticketId));
-                                }
+                                  if (deliveredStatus == '1') {
 
+                                  } else {
+                                    Navigator.of(context).push(chatRoute(firstName,lastName,riderId,widget.ticketId));
+                                  }
+                                }
                               },
-                              label:Text("Chat rider",style: GoogleFonts.openSans(color:Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),),
+                              label:Text("Chat rider",
+                                style: GoogleFonts.openSans(color:Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
+                              ),
                             ),
                           ),
                         ],
                       ),
 
-                      Divider(thickness: 1),
-
-                      Center(
-                        child:Text("Mobile Number(s)",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 16.0),),
+                      Container(
+                        height: 40,
+                        color: Colors.grey[200],
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            child: Text('Mobile Number(s)',
+                              style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black54),
+                            ),
+                          ),
+                        ),
                       ),
-
-                      Divider(thickness: 1),
 
                       Scrollbar(
                         child: ListView.builder(
@@ -356,8 +372,12 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text('$status',style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 14.0),),
-                                      Text('$number',style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 14.0),),
+                                      Text('$status',
+                                        style: GoogleFonts.openSans(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 14.0),
+                                      ),
+                                      Text('$number',
+                                        style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 14.0),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -367,8 +387,6 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                         ),
                       ),
 
-                      Divider(thickness: 1),
-
                       Padding(
                         padding: EdgeInsets.only(left: 15, right: 5, bottom: 10),
                         child: SizedBox(
@@ -376,16 +394,20 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                           child:Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Messenger link: ',style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 14.0),),
+                              Text('Messenger link: ',
+                                style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 14.0),
+                              ),
                               TextButton(
-                                  style: TextButton.styleFrom(
-                                    primary: Colors.white,
-                                  ),
-                                  onPressed: (){
-                                    // _makeSocialMediaRequest("http://pratikbutani.com");
-                                    _launchURL();
-                                  },
-                                  child: Text("m.me/alturush",style: TextStyle(color: Colors.blue),)
+                                style: TextButton.styleFrom(
+                                  primary: Colors.white,
+                                ),
+                                onPressed: (){
+                                  // _makeSocialMediaRequest("http://pratikbutani.com");
+                                  _launchURL();
+                                },
+                                child: Text("m.me/alturush",
+                                  style: TextStyle(color: Colors.blue),
+                                ),
                               ),
                             ],
                           ),
@@ -441,30 +463,22 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
                         ),
                       ),
 
-                      // Padding(
-                      //   padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
-                      //   child: Container(
-                      //     height: 110.0,
-                      //     width: 120.0,
-                      //     child: CircleAvatar(
-                      //       radius: 30.0,
-                      //       backgroundImage: NetworkImage(riderVehiclePhoto),
-                      //     ),
-                      //   ),
-                      // ),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
-                            child: Text("Vehicle",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 15.0),),
+                            child: Text("Vehicle",
+                              style: GoogleFonts.openSans(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15.0),
+                            ),
                           ),
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
-                            child: Text("$motorBrand",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 15.0),),
+                            child: Text("$motorBrand",
+                              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
+                            ),
                           ),
                         ],
                       ),
@@ -475,12 +489,16 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
-                            child: Text("Plate No.",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 14.0),),
+                            child: Text("Plate No.",
+                              style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15.0),
+                            ),
                           ),
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
-                            child: Text("$riderPlateNo",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 15.0),),
+                            child: Text("$riderPlateNo",
+                              style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 15.0),
+                            ),
                           ),
                         ],
                       ),
@@ -491,7 +509,9 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                            child:Text("Vehicle description",style: TextStyle(color: Colors.black87,fontWeight: FontWeight.bold,fontSize: 14.0),),
+                            child:Text("Vehicle description",
+                              style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontSize: 15.0),
+                            ),
                           ),
 
                           Padding(
@@ -512,7 +532,7 @@ class _ViewOrderStatus extends State<ViewOrderStatus>{
   }
 }
 
-Route chartRoute(firstName,lastName,riderId,ticketId) {
+Route chatRoute(firstName,lastName,riderId,ticketId) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => Chat(firstName:firstName,lastName:lastName,riderId:riderId,ticketId:ticketId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -532,7 +552,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

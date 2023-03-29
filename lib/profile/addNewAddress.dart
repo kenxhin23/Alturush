@@ -859,15 +859,17 @@ class _AddNewAddress extends State<AddNewAddress> {
       appBar: AppBar(
         titleSpacing: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.deepOrangeAccent[200], // Status bar
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("New Address",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+        title: Text("Add New Address",style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -885,17 +887,18 @@ class _AddNewAddress extends State<AddNewAddress> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
                         child: new Text("Firstname",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child:TextFormField(
                           textCapitalization: TextCapitalization.words,
                           textInputAction: TextInputAction.done,
                           cursorColor: Colors.deepOrange.withOpacity(0.8),
                           controller: firstName,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter some value';
@@ -904,31 +907,33 @@ class _AddNewAddress extends State<AddNewAddress> {
                           },
                           decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
                                   color: Colors.deepOrange.withOpacity(0.8),
                                   width: 2.0),
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Lastname",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child:TextFormField(
                           textCapitalization: TextCapitalization.words,
                           textInputAction: TextInputAction.done,
                           cursorColor: Colors.deepOrange.withOpacity(0.8),
                           controller: lastName,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter some value';
@@ -937,32 +942,34 @@ class _AddNewAddress extends State<AddNewAddress> {
                           },
                           decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
                                   color: Colors.deepOrange
                                       .withOpacity(0.8),
                                   width: 2.0),
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Mobile number",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child:TextFormField(
                           maxLength: 11,
                           keyboardType: TextInputType.number,
                           cursorColor: Colors.deepOrange.withOpacity(0.8),
                           controller: mobileNum,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter some value';
@@ -974,15 +981,16 @@ class _AddNewAddress extends State<AddNewAddress> {
                           },
                           decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                             hintText: "Ex.(09506122842)",
-                            hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+                            hintStyle: GoogleFonts.openSans(color: Colors.black38, fontSize: 14),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
                                   color: Colors.deepOrange.withOpacity(0.8),
                                   width: 2.0),
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
@@ -990,7 +998,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                       Padding(
                         padding: EdgeInsets.fromLTRB(35, 0, 5, 5),
                         child: new Text("Other Notes",
-                          style: TextStyle(fontStyle: FontStyle.normal,fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black)
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
                         ),
                       ),
 
@@ -1001,26 +1009,28 @@ class _AddNewAddress extends State<AddNewAddress> {
                           textInputAction: TextInputAction.done,
                           cursorColor: Colors.deepOrange,
                           controller: otherNotes,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           maxLines: 4,
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 10.0),
                             focusedBorder:OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                             ),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0)),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Province",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child: GestureDetector(
                           onTap: (){
@@ -1034,6 +1044,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                                 keyboardType: TextInputType.number,
                                 cursorColor: Colors.deepOrange.withOpacity(0.8),
                                 controller: province,
+                                style: GoogleFonts.openSans(fontSize: 14),
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Please enter some value';
@@ -1042,15 +1053,16 @@ class _AddNewAddress extends State<AddNewAddress> {
                                 },
                                 decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                   hintText: "Select Province",
-                                  hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+                                  hintStyle: GoogleFonts.openSans(color: Colors.black38, fontSize: 14),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                     borderSide: BorderSide(
                                         color: Colors.deepOrange.withOpacity(0.8),
                                         width: 2.0),
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -1059,13 +1071,13 @@ class _AddNewAddress extends State<AddNewAddress> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("City/Municipality",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child: GestureDetector(
                           onTap: (){
@@ -1091,6 +1103,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                                 keyboardType: TextInputType.number,
                                 cursorColor: Colors.deepOrange.withOpacity(0.8),
                                 controller: town,
+                                style: GoogleFonts.openSans(fontSize: 14),
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Please enter some value';
@@ -1099,15 +1112,15 @@ class _AddNewAddress extends State<AddNewAddress> {
                                 },
                                 decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                   hintText: 'City/Municipality',
-                                  hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+                                  hintStyle: GoogleFonts.openSans(color: Colors.black38, fontSize: 14),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                     borderSide: BorderSide(
                                         color: Colors.deepOrange.withOpacity(0.8),
                                         width: 2.0),
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(250),
+                                    borderRadius: BorderRadius.circular(15.0),
                                   ),
                                 ),
                               ),
@@ -1117,13 +1130,13 @@ class _AddNewAddress extends State<AddNewAddress> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Zipcode",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child: Container(
                           color: Colors.transparent,
@@ -1131,17 +1144,18 @@ class _AddNewAddress extends State<AddNewAddress> {
                             child: TextFormField(
                               cursorColor: Colors.deepOrange.withOpacity(0.8),
                               controller: zipcode,
+                              style: GoogleFonts.openSans(fontSize: 14),
                               enabled: false,
                               decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
-                                hintStyle: TextStyle(color: Colors.black38),
+                                hintStyle: GoogleFonts.openSans(color: Colors.black38),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                   borderSide: BorderSide(
                                       color: Colors.deepOrange.withOpacity(0.8),
                                       width: 2.0),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(250),),
+                                  borderRadius: BorderRadius.circular(15.0),),
                               ),
                             ),
                           ),
@@ -1149,13 +1163,13 @@ class _AddNewAddress extends State<AddNewAddress> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Barangay",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child:GestureDetector(
                           onTap: (){
@@ -1181,6 +1195,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                                 keyboardType: TextInputType.number,
                                 cursorColor: Colors.deepOrange.withOpacity(0.8),
                                 controller: barangay,
+                                style: GoogleFonts.openSans(fontSize: 14),
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Please enter some value';
@@ -1189,15 +1204,16 @@ class _AddNewAddress extends State<AddNewAddress> {
                                 },
                                 decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                   hintText: "Select Barangay",
-                                  hintStyle: TextStyle(color: Colors.black38, fontSize: 14),
+                                  hintStyle: GoogleFonts.openSans(color: Colors.black38, fontSize: 14),
                                   focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),
+                                    borderRadius: BorderRadius.circular(15.0),
                                     borderSide: BorderSide(
                                         color: Colors.deepOrange.withOpacity(0.8),
                                         width: 2.0),
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(25.0),),
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                 ),
                               ),
                             ),
@@ -1206,44 +1222,47 @@ class _AddNewAddress extends State<AddNewAddress> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("House/Unit #, Bldg Name, Blk or Lot #.",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child:TextFormField(
                           textCapitalization: TextCapitalization.words,
                           cursorColor: Colors.deepOrange.withOpacity(0.8),
                           controller: houseUnit,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
                                   color: Colors.deepOrange.withOpacity(0.8),
                                   width: 2.0),
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Street/Road Name",
-                          style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child:TextFormField(
                           textCapitalization: TextCapitalization.words,
                           cursorColor: Colors.deepOrange.withOpacity(0.8),
                           controller: streetPurok,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter some value';
@@ -1252,25 +1271,26 @@ class _AddNewAddress extends State<AddNewAddress> {
                           },
                           decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
                                   color: Colors.deepOrange.withOpacity(0.8),
                                   width: 2.0),
                             ),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0)),
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Nearest Land Mark",
-                          style: TextStyle(fontStyle: FontStyle.normal,fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold)
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold)
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                         child: new TextFormField(
                           textCapitalization: TextCapitalization.words,
@@ -1278,6 +1298,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                           textInputAction: TextInputAction.done,
                           cursorColor: Colors.deepOrange,
                           controller: landMark,
+                          style: GoogleFonts.openSans(fontSize: 14),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter some value';
@@ -1288,30 +1309,29 @@ class _AddNewAddress extends State<AddNewAddress> {
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                             focusedBorder:OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25.0),
+                              borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                             ),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0)),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
+                        padding: EdgeInsets.fromLTRB(35, 5, 5, 0),
                         child: new Text("Select a label of your address",
-                          style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold)
+                          style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold)
                         ),
                       ),
 
-                      Padding(
+                      Container(
                         padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(
-                            //Add isDense true and zero Padding.
-                            //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                            // isDense: true,
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
                             ),
                             contentPadding: const EdgeInsets.symmetric(
@@ -1319,7 +1339,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                               vertical: 10,
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             //Add more decoration as you want here
                             //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
@@ -1328,7 +1348,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                           hint: Padding(
                             padding:EdgeInsets.only(left: 10, right: 10),
                             child: Text('Home',
-                              style: TextStyle(fontStyle: FontStyle.normal,fontSize: 15.0, fontWeight: FontWeight.normal, color: Colors.black)
+                              style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black)
                             ),
                           ),
                           icon: const Icon(
@@ -1344,7 +1364,7 @@ class _AddNewAddress extends State<AddNewAddress> {
                                   width: 100,
                                   padding: EdgeInsets.symmetric(horizontal: 10),
                                   child: Text(item,
-                                    style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.normal, color: Colors.black),
+                                    style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black),
                                   ),
                                 )
                               )
@@ -1363,50 +1383,6 @@ class _AddNewAddress extends State<AddNewAddress> {
                           },
                         ),
                       ),
-                      // Padding(
-                      //   padding: EdgeInsets.fromLTRB(35, 15, 5, 0),
-                      //   child: new Text(
-                      //     "Building type",
-                      //     style: GoogleFonts.openSans(
-                      //         fontStyle: FontStyle.normal, fontSize: 15.0),
-                      //   ),
-                      // ),
-
-                      // Padding(
-                      //   padding:EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
-                      //   child:GestureDetector(
-                      //     onTap: (){
-                      //       FocusScope.of(context).requestFocus(FocusNode());
-                      //       selectBuildingType();
-                      //     },
-                      //     child: Container(
-                      //       color: Colors.transparent,
-                      //       child: IgnorePointer(
-                      //         child: TextFormField(
-                      //           keyboardType: TextInputType.number,
-                      //           cursorColor: Colors.deepOrange.withOpacity(0.8),
-                      //           controller: buildingType,
-                      //           validator: (value) {
-                      //             if (value.isEmpty) {
-                      //               return 'Please enter some value';
-                      //             }
-                      //             return null;
-                      //           },
-                      //           decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
-                      //             focusedBorder: OutlineInputBorder(
-                      //               borderRadius: BorderRadius.circular(25.0),
-                      //               borderSide: BorderSide(
-                      //                   color: Colors.deepOrange.withOpacity(0.8),
-                      //                   width: 2.0),
-                      //             ),
-                      //             border: OutlineInputBorder(
-                      //               borderRadius: BorderRadius.circular(25.0),),
-                      //           ),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),
@@ -1415,12 +1391,9 @@ class _AddNewAddress extends State<AddNewAddress> {
           ),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
             child: Row(
               children: <Widget>[
-                SizedBox(
-                  width: 2.0,
-                ),
                 Flexible(
                   child: SleekButton(
                     onTap: () async {
@@ -1441,12 +1414,35 @@ class _AddNewAddress extends State<AddNewAddress> {
                     style: SleekButtonStyle.flat(
                       color: Colors.deepOrange,
                       inverted: false,
-                      rounded: true,
-                      size: SleekButtonSize.big,
+                      rounded: false,
+                      size: SleekButtonSize.normal,
                       context: context,
                     ),
                     child: Center(
-                      child: Text("SUBMIT", style:TextStyle(fontStyle: FontStyle.normal,fontSize: 18.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(CupertinoIcons.paperplane, size: 20,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
+                          Text(" SUBMIT",
+                            style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 16.0,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -1475,7 +1471,7 @@ Route _signIn() {
     pageBuilder: (context, animation, secondaryAnimation) =>
         CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

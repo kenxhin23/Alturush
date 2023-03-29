@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sleek_button/sleek_button.dart';
 import 'uploadSrId.dart';
@@ -27,14 +28,19 @@ class _ShowDpn extends State<ShowDpn2> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         automaticallyImplyLeading: false,
         title: Padding(
           padding: EdgeInsets.only(left: 15),
-          child: Text("Privacy Notice",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0)),
-        )
+          child: Text("Privacy Notice",
+            style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold, fontSize: 16.0),
+          ),
+        ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -580,15 +586,23 @@ class _ShowDpn extends State<ShowDpn2> {
                 Navigator.of(context).pop();
               },
               style: SleekButtonStyle.flat(
-                color:Colors.deepOrange,
+                color:Colors.deepOrange[400],
                 inverted: false,
-                rounded: true,
-                size: SleekButtonSize.big,
+                rounded: false,
+                size: SleekButtonSize.normal,
                 context: context,
               ),
               child: Center(
                 child: Text("BACK",
-                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16.0, fontWeight: FontWeight.bold),
+                  style: GoogleFonts.openSans(fontSize: 16.0, fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 1.0,
+                        color: Colors.black54,
+                        offset: Offset(1.0, 1.0),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

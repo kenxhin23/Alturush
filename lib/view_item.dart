@@ -797,17 +797,27 @@ class _ViewItem extends State<ViewItem>{
         appBar: AppBar(
           titleSpacing: 0,
           brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepOrange[400],
           elevation: 0.1,
-          iconTheme: new IconThemeData(color: Colors.black),
-          title: Text("Product Detail(s)",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 18.0),),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+          title: Text("Product Detail(s)",
+            style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+          ),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.search_outlined, color: Colors.black),
+              icon: Icon(Icons.search_outlined, color: Colors.white),
               onPressed: () async {
                 Navigator.of(context).push(_search());
               }
@@ -889,36 +899,46 @@ class _ViewItem extends State<ViewItem>{
 
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
-                                  child: new Text(loadItemData[index]['product_name'].toString(), style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                                  child: new Text(loadItemData[index]['product_name'].toString(),
+                                    style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0, color: Colors.black54),
+                                  ),
                                 ),
 
                                 Visibility(
                                   visible: grams,
                                   child: Padding(
                                       padding:EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
-                                      child: Text('₱ ${loadItemData[index]['price_per_gram'].toString()} / per gram', style: TextStyle(fontSize: 15,color: Colors.deepOrange,),)
+                                      child: Text('₱ ${loadItemData[index]['price_per_gram'].toString()} / per gram', style: TextStyle(fontSize: 15,color: Colors.deepOrange,)
+                                        ,)
                                   ),
                                 ),
 
                                 Visibility(
                                   visible: price,
                                   child: Padding(
-                                      padding:EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
-                                      child: Text('₱ $uomPrice', style: TextStyle(fontSize: 15,color: Colors.deepOrange,),)
+                                    padding:EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
+                                    child: Text('₱ $uomPrice',
+                                      style: TextStyle(fontSize: 15,color: Colors.deepOrange),
+                                    ),
                                   ),
                                 ),
 
                                 Padding(
-                                    padding:EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
-                                    child: Text(variation, style: TextStyle(fontSize: 15),)
+                                  padding:EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
+                                  child: Text(variation,
+                                    style: GoogleFonts.openSans(fontSize: 15),
+                                  ),
                                 ),
 
                                 Padding(
                                   padding: EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
-                                  child: new Text(loadItemData[index]['description'], style: GoogleFonts.openSans( fontStyle: FontStyle.normal,fontSize: 14.0), textAlign: TextAlign.center),
+                                  child: new Text(loadItemData[index]['description'],
+                                    style: GoogleFonts.openSans( fontStyle: FontStyle.normal,fontSize: 14.0),
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
 
-                                Divider(color: Colors.deepOrangeAccent,),
+                                Divider(thickness: 2, color: Colors.grey[200]),
 
 
                                 ///grams
@@ -935,7 +955,7 @@ class _ViewItem extends State<ViewItem>{
                                             children: [
                                               Padding(
                                                 padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
-                                                child: Text('Grams',  style: TextStyle(fontSize: 17.0,fontWeight: FontWeight.bold)),
+                                                child: Text('Grams',  style: GoogleFonts.openSans(fontSize: 17.0,fontWeight: FontWeight.bold)),
                                               ),
 
                                               Padding(
@@ -950,7 +970,7 @@ class _ViewItem extends State<ViewItem>{
                                                     textInputAction: TextInputAction.done,
                                                     cursorColor: Colors.deepOrange,
                                                     controller: amountPerGram,
-                                                    style: TextStyle(fontSize: 13),
+                                                    style: GoogleFonts.openSans(fontSize: 13),
                                                     onChanged: (value)  => change(value),
                                                     keyboardType: TextInputType.number,
                                                     decoration: InputDecoration(
@@ -964,7 +984,7 @@ class _ViewItem extends State<ViewItem>{
                                                         horizontal: 10,
                                                         vertical: 10,
                                                       ),
-                                                      labelStyle: TextStyle(color: Colors.black12, fontSize: 14),
+                                                      labelStyle: GoogleFonts.openSans(color: Colors.black12, fontSize: 14),
                                                       hintStyle: const TextStyle(fontStyle: FontStyle
                                                           .normal,
                                                           fontSize: 14,
@@ -1015,7 +1035,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                                        child: Text("Change size", style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Change size", style: GoogleFonts.openSans(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1055,7 +1075,8 @@ class _ViewItem extends State<ViewItem>{
                                                               children: [
 
                                                                 Expanded(
-                                                                  child: Text('$uomName', overflow: TextOverflow.ellipsis, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                  child: Text('$uomName', overflow: TextOverflow.ellipsis,
+                                                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                 ),
                                                                 Text('₱ ${uomData[index2]['price']}', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                               ],
@@ -1085,88 +1106,6 @@ class _ViewItem extends State<ViewItem>{
                                   ),
                                 ),
 
-                                ///flavor
-                                // Visibility(
-                                //   visible:flavorDataVisible,
-                                //   child: Column(
-                                //     crossAxisAlignment: CrossAxisAlignment.start,
-                                //     children: [
-                                //
-                                //       Padding(
-                                //         padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                                //         child: Text("Select Flavor",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold),),
-                                //       ),
-                                //
-                                //       Padding(
-                                //         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
-                                //         child: ListView.builder(
-                                //           physics: NeverScrollableScrollPhysics(),
-                                //           shrinkWrap: true,
-                                //           itemCount:flavorData == null ? 0 : flavorData.length,
-                                //           itemBuilder: (BuildContext context, int index3) {
-                                //             String uomName = "";
-                                //             String flavorPriceD;
-                                //             if(flavorData[index3]['price'] == '0.00') {
-                                //               flavorPriceD = "";
-                                //             } else {
-                                //               flavorPriceD ='+ ₱ ${flavorData[index3]['price']}';
-                                //             }
-                                //             if (flavorData[index3]['unit']!=null) {
-                                //               uomName = flavorData[index3]['unit'].toString();
-                                //             }
-                                //             return Column(
-                                //               crossAxisAlignment: CrossAxisAlignment.start,
-                                //               children: [
-                                //
-                                //                 Row(
-                                //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //                   children: [
-                                //
-                                //                     Flexible(
-                                //                       fit: FlexFit.loose,
-                                //                       child: SizedBox(height: 35,
-                                //                         child: RadioListTile(
-                                //                           visualDensity: const VisualDensity(
-                                //                             horizontal: VisualDensity.minimumDensity,
-                                //                             vertical: VisualDensity.minimumDensity,
-                                //                           ),
-                                //                           contentPadding: EdgeInsets.all(0),
-                                //                           activeColor: Colors.deepOrange,
-                                //                           title: Transform.translate(
-                                //                             offset: const Offset(-10, 0),
-                                //                             child: Row(
-                                //                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                //                               children: [
-                                //
-                                //                                 Text('${flavorData[index3]['flavor_name']}  $uomName', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                //                                 Text('$flavorPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                //                               ],
-                                //                             ),
-                                //                           ),
-                                //                           value: index3,
-                                //                           groupValue: flavorDataGroupValue,
-                                //                           onChanged: (newValue) {
-                                //                             setState((){
-                                //                               flavorDataGroupValue = newValue;
-                                //                               flavorId = flavorData[index3]['flavor_id'];
-                                //                               flavorPrice = flavorData[index3]['price'];
-                                //                               print(flavorId);
-                                //                             });
-                                //                           },
-                                //                         )
-                                //                       )
-                                //                     )
-                                //                   ],
-                                //                 )
-                                //               ],
-                                //             );
-                                //           }
-                                //         ),
-                                //       ),
-                                //     ],
-                                //   ),
-                                // ),
-
                                 ///suggestionFlavor
                                 Visibility(
                                   visible:suggestionFlavorDataVisible,
@@ -1176,7 +1115,9 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Flavor",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Flavor",
+                                          style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54)
+                                        ),
                                       ),
 
                                       Padding(
@@ -1224,7 +1165,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionFlavorData[index3]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionFlavorData[index3]['suggestion_name']} ',
+                                                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$flavorPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1265,7 +1207,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Ways of Cooking",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Ways of Cooking",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1313,7 +1255,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionWocData[index4]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionWocData[index4]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$wocPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1354,7 +1297,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Type of Sauce",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Type of Sauce",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1402,7 +1345,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionTosData[index5]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionTosData[index5]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$tosPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1443,7 +1387,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Type of Noodles",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Type of Noodles",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1491,7 +1435,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionTonData[index6]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionTonData[index6]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$tonPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1532,7 +1477,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Toppings",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Toppings",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1580,7 +1525,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionTopsData[index7]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionTopsData[index7]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$topsPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1621,7 +1567,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Choice of Ice",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Choice of Ice",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1669,7 +1615,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionCoiData[index8]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionCoiData[index8]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$coiPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1710,7 +1657,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Choice of Sweetness Level for Milktea",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Choice of Sweetness Level for Milktea",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1758,7 +1705,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionCoslfmData[index9]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionCoslfmData[index9]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$coslfmPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1799,7 +1747,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Sinkers",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Sinkers",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1847,7 +1795,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionSinkData[index10]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionSinkData[index10]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$sinkPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1888,7 +1837,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Basic Crepe Flavor",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Basic Crepe Flavor",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -1936,7 +1885,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionBcfData[index11]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionBcfData[index11]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$bcfPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -1977,7 +1927,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Classic Crepe",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Classic Crepe",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2025,7 +1975,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionCcData[index12]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionCcData[index12]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$ccPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2066,7 +2017,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Choice of Milktea",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Choice of Milktea",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2114,7 +2065,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionComData[index13]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionComData[index13]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$comPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2155,7 +2107,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Choice of Fruit Tea",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Choice of Fruit Tea",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2203,7 +2155,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionCoftData[index14]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionCoftData[index14]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$coftPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2244,7 +2197,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Choose your Meat Filling",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Choose your Meat Filling",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2292,7 +2245,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionCymfData[index15]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionCymfData[index15]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$cymfPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2333,7 +2287,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Type of Mission Burrito",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Type of Mission Burrito",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2381,7 +2335,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionTombData[index16]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionTombData[index16]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$tombPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2422,7 +2377,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Choice of Sweet Variant",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Choice of Sweet Variant",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2470,7 +2425,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionCosvData[index17]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionCosvData[index17]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$cosvPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2511,7 +2467,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Type of Pizza",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Type of Pizza",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2559,7 +2515,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionTopData[index18]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionTopData[index18]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$topPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2600,7 +2557,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select Type of Crunchy Wrap",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select Type of Crunchy Wrap",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2648,7 +2605,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionTocwData[index19]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionTocwData[index19]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$topPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2689,7 +2647,7 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                        child: Text("Select -->",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Select -->",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
@@ -2737,7 +2695,8 @@ class _ViewItem extends State<ViewItem>{
                                                                 child: Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: [
-                                                                    Text('${suggestionNamelessData[index20]['suggestion_name']} ', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                    Text('${suggestionNamelessData[index20]['suggestion_name']} ',
+                                                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                     Text('$topPriceD', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
                                                                   ],
                                                                 ),
@@ -2781,7 +2740,7 @@ class _ViewItem extends State<ViewItem>{
                                           child: Column(
                                             children: [
 
-                                              Text("1-pc Choice of Drinks",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54)),
+                                              Text("1-pc Choice of Drinks",style: GoogleFonts.openSans(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54)),
                                               Text("Select 1",style: TextStyle(fontSize: 14.0,fontWeight: FontWeight.bold, color: Colors.black54)),
                                             ],
                                           )
@@ -2789,70 +2748,71 @@ class _ViewItem extends State<ViewItem>{
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                                         child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount:choicesDrinksData == null ? 0 : choicesDrinksData.length,
-                                            itemBuilder: (BuildContext context, int index6) {
-                                              String uomName = "";
-                                              String sidePrice;
-                                              if (choicesDrinksData[index6]['addon_price'] == '0.00') {
-                                                sidePrice = "";
-                                              } else {
-                                                sidePrice ='+ ₱ ${choicesDrinksData[index6]['addon_price']}';
-                                              }
-                                              if (choicesDrinksData[index6]['unit'] != null) {
-                                                uomName = choicesDrinksData[index6]['unit'].toString();
-                                              }
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
+                                          physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:choicesDrinksData == null ? 0 : choicesDrinksData.length,
+                                          itemBuilder: (BuildContext context, int index6) {
+                                            String uomName = "";
+                                            String sidePrice;
+                                            if (choicesDrinksData[index6]['addon_price'] == '0.00') {
+                                              sidePrice = "";
+                                            } else {
+                                              sidePrice ='+ ₱ ${choicesDrinksData[index6]['addon_price']}';
+                                            }
+                                            if (choicesDrinksData[index6]['unit'] != null) {
+                                              uomName = choicesDrinksData[index6]['unit'].toString();
+                                            }
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
 
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
 
-                                                      Flexible(
-                                                        fit: FlexFit.loose,
-                                                        child: SizedBox(height: 35,
-                                                          child: RadioListTile(
-                                                            visualDensity: const VisualDensity(
-                                                              horizontal: VisualDensity.minimumDensity,
-                                                              vertical: VisualDensity.minimumDensity,
-                                                            ),
-                                                            contentPadding: EdgeInsets.all(0),
-                                                            activeColor: Colors.deepOrange,
-                                                            title:  Transform.translate(
-                                                              offset: const Offset(-10, 0),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-
-                                                                  Expanded(
-                                                                    child: Text('${choicesDrinksData[index6]['sub_productname']}  $uomName', overflow: TextOverflow.ellipsis, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),),
-                                                                  Text('$sidePrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            value: index6,
-                                                            groupValue: choiceDrinksGroupValue,
-                                                            onChanged: (newValue) {
-                                                              setState((){
-                                                                choiceDrinksGroupValue = newValue;
-                                                                choiceUomIdDrinks = choicesDrinksData[index6]['uom_id'];
-                                                                choiceIdDrinks = choicesDrinksData[index6]['sub_productid'];
-                                                                choicePriceDrinks = choicesDrinksData[index6]['addon_price'];
-                                                                print(choiceIdDrinks);
-                                                                print(choiceUomIdDrinks);
-                                                              });
-                                                            },
+                                                    Flexible(
+                                                      fit: FlexFit.loose,
+                                                      child: SizedBox(height: 35,
+                                                        child: RadioListTile(
+                                                          visualDensity: const VisualDensity(
+                                                            horizontal: VisualDensity.minimumDensity,
+                                                            vertical: VisualDensity.minimumDensity,
                                                           ),
+                                                          contentPadding: EdgeInsets.all(0),
+                                                          activeColor: Colors.deepOrange,
+                                                          title:  Transform.translate(
+                                                            offset: const Offset(-10, 0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+
+                                                                Expanded(
+                                                                  child: Text('${choicesDrinksData[index6]['sub_productname']}  $uomName', overflow: TextOverflow.ellipsis,
+                                                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),),
+                                                                Text('$sidePrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          value: index6,
+                                                          groupValue: choiceDrinksGroupValue,
+                                                          onChanged: (newValue) {
+                                                            setState((){
+                                                              choiceDrinksGroupValue = newValue;
+                                                              choiceUomIdDrinks = choicesDrinksData[index6]['uom_id'];
+                                                              choiceIdDrinks = choicesDrinksData[index6]['sub_productid'];
+                                                              choicePriceDrinks = choicesDrinksData[index6]['addon_price'];
+                                                              print(choiceIdDrinks);
+                                                              print(choiceUomIdDrinks);
+                                                            });
+                                                          },
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              );
-                                            }
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -2870,7 +2830,7 @@ class _ViewItem extends State<ViewItem>{
                                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
                                         child: Column(
                                           children: [
-                                            Text("1-pc Choice of Fries",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                            Text("1-pc Choice of Fries",style: GoogleFonts.openSans(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                             Text("Select 1",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                           ],
                                         ),
@@ -2879,71 +2839,72 @@ class _ViewItem extends State<ViewItem>{
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                                         child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount:choicesFriesData == null ? 0 : choicesFriesData.length,
-                                            itemBuilder: (BuildContext context, int index7) {
-                                              String uomName = "";
-                                              String sidePrice;
-                                              if (choicesFriesData[index7]['addon_price'] == '0.00') {
-                                                sidePrice = "";
-                                              } else {
-                                                sidePrice ='+ ₱ ${choicesFriesData[index7]['addon_price']}';
-                                              }
-                                              if (choicesFriesData[index7]['unit'] != null) {
-                                                uomName = choicesFriesData[index7]['unit'].toString();
-                                              }
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
+                                          physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:choicesFriesData == null ? 0 : choicesFriesData.length,
+                                          itemBuilder: (BuildContext context, int index7) {
+                                            String uomName = "";
+                                            String sidePrice;
+                                            if (choicesFriesData[index7]['addon_price'] == '0.00') {
+                                              sidePrice = "";
+                                            } else {
+                                              sidePrice ='+ ₱ ${choicesFriesData[index7]['addon_price']}';
+                                            }
+                                            if (choicesFriesData[index7]['unit'] != null) {
+                                              uomName = choicesFriesData[index7]['unit'].toString();
+                                            }
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
 
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
 
-                                                      Flexible(
-                                                        fit: FlexFit.loose,
-                                                        child: SizedBox(height: 35,
-                                                          child: RadioListTile(
-                                                            visualDensity: const VisualDensity(
-                                                              horizontal: VisualDensity.minimumDensity,
-                                                              vertical: VisualDensity.minimumDensity,
-                                                            ),
-                                                            contentPadding: EdgeInsets.all(0),
-                                                            activeColor: Colors.deepOrange,
-                                                            title:  Transform.translate(
-                                                              offset: const Offset(-10, 0),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-
-                                                                  Expanded(
-                                                                    child: Text('${choicesFriesData[index7]['sub_productname']} $uomName', overflow: TextOverflow.ellipsis, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                                  ),
-                                                                  Text('$sidePrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            value: index7,
-                                                            groupValue: choiceFriesGroupValue,
-                                                            onChanged: (newValue) {
-                                                              setState((){
-                                                                choiceFriesGroupValue = newValue;
-                                                                choiceUomIdFries = choicesFriesData[index7]['uom_id'];
-                                                                choiceIdFries = choicesFriesData[index7]['sub_productid'];
-                                                                choicePriceFries = choicesFriesData[index7]['addon_price'];
-                                                                print(choiceUomIdFries);
-                                                                print(choiceIdFries);
-                                                              });
-                                                            },
+                                                    Flexible(
+                                                      fit: FlexFit.loose,
+                                                      child: SizedBox(height: 35,
+                                                        child: RadioListTile(
+                                                          visualDensity: const VisualDensity(
+                                                            horizontal: VisualDensity.minimumDensity,
+                                                            vertical: VisualDensity.minimumDensity,
                                                           ),
+                                                          contentPadding: EdgeInsets.all(0),
+                                                          activeColor: Colors.deepOrange,
+                                                          title:  Transform.translate(
+                                                            offset: const Offset(-10, 0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+
+                                                                Expanded(
+                                                                  child: Text('${choicesFriesData[index7]['sub_productname']} $uomName', overflow: TextOverflow.ellipsis,
+                                                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                ),
+                                                                Text('$sidePrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          value: index7,
+                                                          groupValue: choiceFriesGroupValue,
+                                                          onChanged: (newValue) {
+                                                            setState((){
+                                                              choiceFriesGroupValue = newValue;
+                                                              choiceUomIdFries = choicesFriesData[index7]['uom_id'];
+                                                              choiceIdFries = choicesFriesData[index7]['sub_productid'];
+                                                              choicePriceFries = choicesFriesData[index7]['addon_price'];
+                                                              print(choiceUomIdFries);
+                                                              print(choiceIdFries);
+                                                            });
+                                                          },
                                                         ),
                                                       ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              );
-                                            }
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -2961,7 +2922,7 @@ class _ViewItem extends State<ViewItem>{
                                           padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
                                           child: Column(
                                             children: [
-                                              Text("1-pc Choice of Sides",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                              Text("1-pc Choice of Sides",style: GoogleFonts.openSans(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                               Text("Select 1",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                             ],
                                           )
@@ -2970,71 +2931,72 @@ class _ViewItem extends State<ViewItem>{
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                                         child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount:choicesSidesData == null ? 0 : choicesSidesData.length,
-                                            itemBuilder: (BuildContext context, int index8) {
-                                              String uomName = "";
-                                              String sidePrice;
-                                              if (choicesSidesData[index8]['addon_price'] == '0.00') {
-                                                sidePrice = "";
-                                              } else {
-                                                sidePrice ='+ ₱ ${choicesSidesData[index8]['addon_price']}';
-                                              }
-                                              if (choicesSidesData[index8]['unit']!=null) {
-                                                uomName = choicesSidesData[index8]['unit'].toString();
-                                              }
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-
-                                                      Flexible(
-                                                          fit: FlexFit.loose,
-                                                          child: SizedBox(height: 35,
-                                                              child: RadioListTile(
-                                                                visualDensity: const VisualDensity(
-                                                                  horizontal: VisualDensity.minimumDensity,
-                                                                  vertical: VisualDensity.minimumDensity,
-                                                                ),
-                                                                contentPadding: EdgeInsets.all(0),
-                                                                activeColor: Colors.deepOrange,
-                                                                title:  Transform.translate(
-                                                                  offset: const Offset(-10, 0),
-                                                                  child: Row(
-                                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                    children: [
-
-                                                                      Expanded(
-                                                                        child: Text('${choicesSidesData[index8]['sub_productname']} $uomName', overflow: TextOverflow.ellipsis, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                                      ),
-                                                                      Text('$sidePrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                value: index8,
-                                                                groupValue: choiceSidesGroupValue,
-                                                                onChanged: (newValue1) {
-                                                                  setState((){
-                                                                    choiceSidesGroupValue = newValue1;
-                                                                    choiceUomIdSides = choicesSidesData[index8]['uom_id'];
-                                                                    choiceIdSides = choicesSidesData[index8]['sub_productid'];
-                                                                    choicePriceSides = choicesSidesData[index8]['addon_price'];
-                                                                    print('$choiceUomIdSides');
-                                                                    print('$choiceIdSides');
-                                                                  });
-                                                                },
-                                                              )
-                                                          )
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              );
+                                          physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:choicesSidesData == null ? 0 : choicesSidesData.length,
+                                          itemBuilder: (BuildContext context, int index8) {
+                                            String uomName = "";
+                                            String sidePrice;
+                                            if (choicesSidesData[index8]['addon_price'] == '0.00') {
+                                              sidePrice = "";
+                                            } else {
+                                              sidePrice ='+ ₱ ${choicesSidesData[index8]['addon_price']}';
                                             }
+                                            if (choicesSidesData[index8]['unit']!=null) {
+                                              uomName = choicesSidesData[index8]['unit'].toString();
+                                            }
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+
+                                                    Flexible(
+                                                      fit: FlexFit.loose,
+                                                      child: SizedBox(height: 35,
+                                                        child: RadioListTile(
+                                                          visualDensity: const VisualDensity(
+                                                            horizontal: VisualDensity.minimumDensity,
+                                                            vertical: VisualDensity.minimumDensity,
+                                                          ),
+                                                          contentPadding: EdgeInsets.all(0),
+                                                          activeColor: Colors.deepOrange,
+                                                          title:  Transform.translate(
+                                                            offset: const Offset(-10, 0),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                              children: [
+
+                                                                Expanded(
+                                                                  child: Text('${choicesSidesData[index8]['sub_productname']} $uomName', overflow: TextOverflow.ellipsis,
+                                                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                                ),
+                                                                Text('$sidePrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          value: index8,
+                                                          groupValue: choiceSidesGroupValue,
+                                                          onChanged: (newValue1) {
+                                                            setState((){
+                                                              choiceSidesGroupValue = newValue1;
+                                                              choiceUomIdSides = choicesSidesData[index8]['uom_id'];
+                                                              choiceIdSides = choicesSidesData[index8]['sub_productid'];
+                                                              choicePriceSides = choicesSidesData[index8]['addon_price'];
+                                                              print('$choiceUomIdSides');
+                                                              print('$choiceIdSides');
+                                                            });
+                                                          },
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -3050,79 +3012,80 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 0.0),
-                                        child: Text("Add-on Drink(s)",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Add-on Drink(s)",style: GoogleFonts.openSans(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                                         child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount:addonDrinksData == null ? 0 : addonDrinksData.length,
-                                            itemBuilder: (BuildContext context, int index9) {
-                                              String uomName = "";
-                                              String addonPrice = addonDrinksData[index9]['addon_price'];
-                                              if (addonPrice == '0.00') {
-                                                addonPrice = "";
-                                              }
-                                              if (addonDrinksData[index9]['unit'] != null) {
-                                                uomName = addonDrinksData[index9]['unit'];
-                                              }
-                                              side1.add(false);
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-
-                                                  SizedBox(height: 35,
-                                                    child: CheckboxListTile(
-                                                      visualDensity: const VisualDensity(
-                                                        horizontal: VisualDensity.minimumDensity,
-                                                        vertical: VisualDensity.minimumDensity,
-                                                      ),
-                                                      contentPadding: EdgeInsets.all(0),
-                                                      activeColor: Colors.deepOrange,
-                                                      title: Transform.translate(
-                                                        offset: const Offset(-10, 0),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Text('${addonDrinksData[index9]['sub_productname']} $uomName', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                            Text('+ ₱ $addonPrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      value: side1[index9],
-                                                      onChanged: (bool value1){
-                                                        setState(() {
-                                                          side1[index9] = value1;
-                                                          // selectedSideItems.clear();
-                                                          // selectedSideItemsUom.clear();
-                                                          if (value1) {
-                                                            selectedSideOnPrice.add(addonDrinksData[index9]['addon_price']);
-                                                            selectedSideItems.add(addonDrinksData[index9]['sub_productid']);
-                                                            selectedSideItemsUom.add(addonDrinksData[index9]['uom_id']);
-                                                            selectedSideSides.add(addonDrinksData[index9]['addon_sides']);
-                                                            selectedSideDessert.add(addonDrinksData[index9]['addon_dessert']);
-                                                            selectedSideDrinks.add(addonDrinksData[index9]['addon_drinks']);
-
-                                                          } else {
-                                                            selectedSideOnPrice.remove(addonDrinksData[index9]['addon_price']);
-                                                            selectedSideItems.remove(addonDrinksData[index9]['sub_productid']);
-                                                            selectedSideItemsUom.remove(addonDrinksData[index9]['uom_id']);
-                                                            selectedSideSides.remove(addonDrinksData[index9]['addon_sides']);
-                                                            selectedSideDessert.remove(addonDrinksData[index9]['addon_dessert']);
-                                                            selectedSideDrinks.remove(addonDrinksData[index9]['addon_drinks']);
-
-                                                          }
-                                                          print(selectedSideSides);
-                                                        });
-                                                      },
-                                                      controlAffinity: ListTileControlAffinity.leading,
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
+                                          physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:addonDrinksData == null ? 0 : addonDrinksData.length,
+                                          itemBuilder: (BuildContext context, int index9) {
+                                            String uomName = "";
+                                            String addonPrice = addonDrinksData[index9]['addon_price'];
+                                            if (addonPrice == '0.00') {
+                                              addonPrice = "";
                                             }
+                                            if (addonDrinksData[index9]['unit'] != null) {
+                                              uomName = addonDrinksData[index9]['unit'];
+                                            }
+                                            side1.add(false);
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+
+                                                SizedBox(height: 35,
+                                                  child: CheckboxListTile(
+                                                    visualDensity: const VisualDensity(
+                                                      horizontal: VisualDensity.minimumDensity,
+                                                      vertical: VisualDensity.minimumDensity,
+                                                    ),
+                                                    contentPadding: EdgeInsets.all(0),
+                                                    activeColor: Colors.deepOrange,
+                                                    title: Transform.translate(
+                                                      offset: const Offset(-10, 0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          Text('${addonDrinksData[index9]['sub_productname']} $uomName',
+                                                            style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                          Text('+ ₱ $addonPrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    value: side1[index9],
+                                                    onChanged: (bool value1){
+                                                      setState(() {
+                                                        side1[index9] = value1;
+                                                        // selectedSideItems.clear();
+                                                        // selectedSideItemsUom.clear();
+                                                        if (value1) {
+                                                          selectedSideOnPrice.add(addonDrinksData[index9]['addon_price']);
+                                                          selectedSideItems.add(addonDrinksData[index9]['sub_productid']);
+                                                          selectedSideItemsUom.add(addonDrinksData[index9]['uom_id']);
+                                                          selectedSideSides.add(addonDrinksData[index9]['addon_sides']);
+                                                          selectedSideDessert.add(addonDrinksData[index9]['addon_dessert']);
+                                                          selectedSideDrinks.add(addonDrinksData[index9]['addon_drinks']);
+
+                                                        } else {
+                                                          selectedSideOnPrice.remove(addonDrinksData[index9]['addon_price']);
+                                                          selectedSideItems.remove(addonDrinksData[index9]['sub_productid']);
+                                                          selectedSideItemsUom.remove(addonDrinksData[index9]['uom_id']);
+                                                          selectedSideSides.remove(addonDrinksData[index9]['addon_sides']);
+                                                          selectedSideDessert.remove(addonDrinksData[index9]['addon_dessert']);
+                                                          selectedSideDrinks.remove(addonDrinksData[index9]['addon_drinks']);
+
+                                                        }
+                                                        print(selectedSideSides);
+                                                      });
+                                                    },
+                                                    controlAffinity: ListTileControlAffinity.leading,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -3138,80 +3101,81 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                                        child: Text("Add-on Dessert(s)",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Add-on Dessert(s)",style: GoogleFonts.openSans(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                                         child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount:addonDessertData == null ? 0 : addonDessertData.length,
-                                            itemBuilder: (BuildContext context, int index10) {
-                                              String uomName = "";
-                                              String addonPrice = addonDessertData[index10]['addon_price'];
-                                              if(addonPrice == '0.00'){
-                                                addonPrice = "";
-                                              }
-                                              if(addonDessertData[index10]['unit']!=null){
-                                                uomName = addonDessertData[index10]['unit'];
-                                              }
-                                              side2.add(false);
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-
-                                                  SizedBox(height: 35,
-                                                    child:
-                                                    CheckboxListTile(
-                                                      visualDensity: const VisualDensity(
-                                                        horizontal: VisualDensity.minimumDensity,
-                                                        vertical: VisualDensity.minimumDensity,
-                                                      ),
-                                                      contentPadding: EdgeInsets.all(0),
-                                                      activeColor: Colors.deepOrange,
-                                                      title: Transform.translate(
-                                                        offset: const Offset(-10, 0),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-
-                                                            Text('${addonDessertData[index10]['sub_productname']} $uomName', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                            Text('+ ₱ $addonPrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      value: side2[index10],
-                                                      onChanged: (bool value2){
-                                                        setState(() {
-                                                          side2[index10] = value2;
-                                                          // selectedSideItems.clear();
-                                                          // selectedSideItemsUom.clear();
-                                                          if (value2) {
-                                                            selectedSideOnPrice.add(addonDessertData[index10]['addon_price']);
-                                                            selectedSideItems.add(addonDessertData[index10]['sub_productid']);
-                                                            selectedSideItemsUom.add(addonDessertData[index10]['uom_id']);
-                                                            selectedSideSides.add(addonDessertData[index10]['addon_sides']);
-                                                            selectedSideDessert.add(addonDessertData[index10]['addon_dessert']);
-                                                            selectedSideDrinks.add(addonDessertData[index10]['addon_Drinks']);
-
-                                                          } else {
-                                                            selectedSideOnPrice.remove(addonDessertData[index10]['addon_price']);
-                                                            selectedSideItems.remove(addonDessertData[index10]['sub_productid']);
-                                                            selectedSideItemsUom.remove(addonDessertData[index10]['uom_id']);
-                                                            selectedSideSides.remove(addonDessertData[index10]['addon_sides']);
-                                                            selectedSideDessert.remove(addonDessertData[index10]['addon_dessert']);
-                                                            selectedSideDrinks.remove(addonDessertData[index10]['addon_Drinks']);
-                                                          }
-                                                          print(selectedSideSides);
-                                                        });
-                                                      },
-                                                      controlAffinity: ListTileControlAffinity.leading,
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
+                                          physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:addonDessertData == null ? 0 : addonDessertData.length,
+                                          itemBuilder: (BuildContext context, int index10) {
+                                            String uomName = "";
+                                            String addonPrice = addonDessertData[index10]['addon_price'];
+                                            if(addonPrice == '0.00'){
+                                              addonPrice = "";
                                             }
+                                            if(addonDessertData[index10]['unit']!=null){
+                                              uomName = addonDessertData[index10]['unit'];
+                                            }
+                                            side2.add(false);
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+
+                                                SizedBox(height: 35,
+                                                  child:
+                                                  CheckboxListTile(
+                                                    visualDensity: const VisualDensity(
+                                                      horizontal: VisualDensity.minimumDensity,
+                                                      vertical: VisualDensity.minimumDensity,
+                                                    ),
+                                                    contentPadding: EdgeInsets.all(0),
+                                                    activeColor: Colors.deepOrange,
+                                                    title: Transform.translate(
+                                                      offset: const Offset(-10, 0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+
+                                                          Text('${addonDessertData[index10]['sub_productname']} $uomName',
+                                                            style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                          Text('+ ₱ $addonPrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    value: side2[index10],
+                                                    onChanged: (bool value2){
+                                                      setState(() {
+                                                        side2[index10] = value2;
+                                                        // selectedSideItems.clear();
+                                                        // selectedSideItemsUom.clear();
+                                                        if (value2) {
+                                                          selectedSideOnPrice.add(addonDessertData[index10]['addon_price']);
+                                                          selectedSideItems.add(addonDessertData[index10]['sub_productid']);
+                                                          selectedSideItemsUom.add(addonDessertData[index10]['uom_id']);
+                                                          selectedSideSides.add(addonDessertData[index10]['addon_sides']);
+                                                          selectedSideDessert.add(addonDessertData[index10]['addon_dessert']);
+                                                          selectedSideDrinks.add(addonDessertData[index10]['addon_Drinks']);
+
+                                                        } else {
+                                                          selectedSideOnPrice.remove(addonDessertData[index10]['addon_price']);
+                                                          selectedSideItems.remove(addonDessertData[index10]['sub_productid']);
+                                                          selectedSideItemsUom.remove(addonDessertData[index10]['uom_id']);
+                                                          selectedSideSides.remove(addonDessertData[index10]['addon_sides']);
+                                                          selectedSideDessert.remove(addonDessertData[index10]['addon_dessert']);
+                                                          selectedSideDrinks.remove(addonDessertData[index10]['addon_Drinks']);
+                                                        }
+                                                        print(selectedSideSides);
+                                                      });
+                                                    },
+                                                    controlAffinity: ListTileControlAffinity.leading,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -3227,78 +3191,79 @@ class _ViewItem extends State<ViewItem>{
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                                        child: Text("Add-on Side(s)",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
+                                        child: Text("Add-on Side(s)",style: GoogleFonts.openSans(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.black54),),
                                       ),
 
                                       Padding(
                                         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 10.0),
                                         child: ListView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            itemCount:addonSidesData == null ? 0 : addonSidesData.length,
-                                            itemBuilder: (BuildContext context, int index11) {
-                                              String uomName = "";
-                                              String addonPrice = addonSidesData[index11]['addon_price'];
-                                              if(addonPrice == '0.00'){
-                                                addonPrice = "";
-                                              }
-                                              if(addonSidesData[index11]['unit']!=null){
-                                                uomName = addonSidesData[index11]['unit'];
-                                              }
-                                              side3.add(false);
-                                              return Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-
-                                                  SizedBox(height: 35,
-                                                    child: CheckboxListTile(
-                                                      visualDensity: const VisualDensity(
-                                                        horizontal: VisualDensity.minimumDensity,
-                                                        vertical: VisualDensity.minimumDensity,
-                                                      ),
-                                                      contentPadding: EdgeInsets.all(0),
-                                                      activeColor: Colors.deepOrange,
-                                                      title: Transform.translate(
-                                                        offset: const Offset(-10, 0),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-
-                                                            Text('${addonSidesData[index11]['sub_productname']} $uomName', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
-                                                            Text('+ ₱ $addonPrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      value: side3[index11],
-                                                      onChanged: (bool value3){
-                                                        setState(() {
-                                                          side3[index11] = value3;
-                                                          if (value3) {
-                                                            selectedSideOnPrice.add(addonSidesData[index11]['addon_price']);
-                                                            selectedSideItems.add(addonSidesData[index11]['sub_productid']);
-                                                            selectedSideItemsUom.add(addonSidesData[index11]['uom_id']);
-                                                            selectedSideSides.add(addonSidesData[index11]['addon_sides']);
-                                                            selectedSideDessert.add(addonSidesData[index11]['addon_dessert']);
-                                                            selectedSideDrinks.add(addonSidesData[index11]['addon_Drinks']);
-
-                                                          } else {
-                                                            selectedSideOnPrice.remove(addonSidesData[index11]['addon_price']);
-                                                            selectedSideItems.remove(addonSidesData[index11]['sub_productid']);
-                                                            selectedSideItemsUom.remove(addonSidesData[index11]['uom_id']);
-                                                            selectedSideSides.remove(addonSidesData[index11]['addon_sides']);
-                                                            selectedSideDessert.remove(addonSidesData[index11]['addon_dessert']);
-                                                            selectedSideDrinks.remove(addonSidesData[index11]['addon_Drinks']);
-                                                          }
-                                                          print(selectedSideSides);
-                                                          print(selectedSideItemsUom);
-                                                        });
-                                                      },
-                                                      controlAffinity: ListTileControlAffinity.leading,
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
+                                          physics: NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:addonSidesData == null ? 0 : addonSidesData.length,
+                                          itemBuilder: (BuildContext context, int index11) {
+                                            String uomName = "";
+                                            String addonPrice = addonSidesData[index11]['addon_price'];
+                                            if(addonPrice == '0.00'){
+                                              addonPrice = "";
                                             }
+                                            if(addonSidesData[index11]['unit']!=null){
+                                              uomName = addonSidesData[index11]['unit'];
+                                            }
+                                            side3.add(false);
+                                            return Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+
+                                                SizedBox(height: 35,
+                                                  child: CheckboxListTile(
+                                                    visualDensity: const VisualDensity(
+                                                      horizontal: VisualDensity.minimumDensity,
+                                                      vertical: VisualDensity.minimumDensity,
+                                                    ),
+                                                    contentPadding: EdgeInsets.all(0),
+                                                    activeColor: Colors.deepOrange,
+                                                    title: Transform.translate(
+                                                      offset: const Offset(-10, 0),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+
+                                                          Text('${addonSidesData[index11]['sub_productname']} $uomName',
+                                                            style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                          Text('+ ₱ $addonPrice', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    value: side3[index11],
+                                                    onChanged: (bool value3){
+                                                      setState(() {
+                                                        side3[index11] = value3;
+                                                        if (value3) {
+                                                          selectedSideOnPrice.add(addonSidesData[index11]['addon_price']);
+                                                          selectedSideItems.add(addonSidesData[index11]['sub_productid']);
+                                                          selectedSideItemsUom.add(addonSidesData[index11]['uom_id']);
+                                                          selectedSideSides.add(addonSidesData[index11]['addon_sides']);
+                                                          selectedSideDessert.add(addonSidesData[index11]['addon_dessert']);
+                                                          selectedSideDrinks.add(addonSidesData[index11]['addon_Drinks']);
+
+                                                        } else {
+                                                          selectedSideOnPrice.remove(addonSidesData[index11]['addon_price']);
+                                                          selectedSideItems.remove(addonSidesData[index11]['sub_productid']);
+                                                          selectedSideItemsUom.remove(addonSidesData[index11]['uom_id']);
+                                                          selectedSideSides.remove(addonSidesData[index11]['addon_sides']);
+                                                          selectedSideDessert.remove(addonSidesData[index11]['addon_dessert']);
+                                                          selectedSideDrinks.remove(addonSidesData[index11]['addon_Drinks']);
+                                                        }
+                                                        print(selectedSideSides);
+                                                        print(selectedSideItemsUom);
+                                                      });
+                                                    },
+                                                    controlAffinity: ListTileControlAffinity.leading,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
@@ -3322,7 +3287,26 @@ class _ViewItem extends State<ViewItem>{
 
                       TextButton(
                         onPressed: _counter == 1 ? null : _decrementCounter,
-                        child: new Text('-',style: TextStyle(fontSize: 20,color: Colors.deepOrange,),),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            color: Colors.deepOrange[400],
+                          ),
+                          height: 25,
+                          width: 25,
+                          child: Icon(
+                            Icons.remove,
+                            size: 16,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
 
                       Padding(
@@ -3337,7 +3321,26 @@ class _ViewItem extends State<ViewItem>{
 
                       TextButton(
                         onPressed: _counter == 999 ? null : _incrementCounter,
-                        child: new Text('+',style: TextStyle(fontSize: 20,color: Colors.deepOrange,),),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2),
+                            color: Colors.deepOrange[400],
+                          ),
+                          height: 25,
+                          width: 25,
+                          child: Icon(
+                            Icons.add,
+                            size: 16,
+                            color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
 
                       Padding(
@@ -3389,18 +3392,18 @@ class _ViewItem extends State<ViewItem>{
                             print(selectedSideItemsUom);
                           },
                           style: SleekButtonStyle.flat(
-                            color: Colors.deepOrange,
+                            color: Colors.deepOrange[400],
                             inverted: false,
-                            rounded: true,
-                            size: SleekButtonSize.big,
+                            rounded: false,
+                            size: SleekButtonSize.normal,
                             context: context,
                           ),
                           child: Center(
-                            child:Text("ADD TO CART", style:
-                            TextStyle(
+                            child:Text("ADD TO CART",
+                              style: GoogleFonts.openSans(
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold,
-                              fontSize: 13.0,
+                              fontSize: 14.0,
                               shadows: [
                                 Shadow(
                                   blurRadius: 1.0,

@@ -204,13 +204,18 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
   Future checkIfOnGoing() async{
     var res = await db.checkIfOnGoing(widget.ticketId);
     if (!mounted) return;
-    setState(() {
-      if(res == 'true'){
-        Navigator.of(context).push(_viewOrderStatus(widget.ticketId));
-      }if(res == 'false'){
-        itemNotYetReady();
+    setState(() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String username = prefs.getString('s_customerId');
+      if(username == null){
+        await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+      } else {
+        if(res == 'true'){
+          Navigator.of(context).push(_viewOrderStatus(widget.ticketId)).then((val)=>{onRefresh()});
+        }if(res == 'false'){
+          itemNotYetReady();
+        }
       }
-      // print(res);
     });
   }
 
@@ -309,31 +314,44 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
       isDismissible: true,
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
+        borderRadius: BorderRadius.only(topRight:  Radius.circular(15),topLeft:  Radius.circular(15)),
       ),
       builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height  * 0.4,
+          height: MediaQuery.of(context).size.height  * 0.5,
           child:Container(
             padding: EdgeInsets.all(0),
             child: Scrollbar(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:[
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                    child: Text("ADD ONS",style: TextStyle(fontSize: 15.0,fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.deepOrange[400],
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                      ),
+                    ),
+                    height: 40,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 10.0),
+                          child: Text("ADD ONS",
+                            style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
-
-                  ///suggestions
                   Expanded(
                     child: Scrollbar(
                       child: ListView(
                         shrinkWrap: true,
                         children: <Widget>[
-                          //flavors
+
+                          ///suggestions
                           ListView.builder(
                             physics: BouncingScrollPhysics(),
                             shrinkWrap: true,
@@ -353,8 +371,10 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:[
                                       Expanded(
-                                          child: Text('+ ${loadItems[mainItemIndex]['suggestions'][index]['description']}',
-                                            style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,)
+                                        child: Text('+ ${loadItems[mainItemIndex]['suggestions'][index]['description']}',
+                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                       Text('$price', style: TextStyle(fontSize: 14.0)),
                                     ],
@@ -384,9 +404,10 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children:[
                                         Expanded(
-                                            child: Text('+ ${loadItems[mainItemIndex]['choices'][index]['product_name']}',
-                                              style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
-                                            )
+                                          child: Text('+ ${loadItems[mainItemIndex]['choices'][index]['product_name']}',
+                                            style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                         Text('$price', style: TextStyle(fontSize: 14.0)),
                                       ],
@@ -401,9 +422,10 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:[
                                       Expanded(
-                                          child: Text('+ ${loadItems[mainItemIndex]['choices'][index]['product_name']} ${loadItems[mainItemIndex]['choices'][index]['unit_measure']}',
-                                            style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
-                                          )
+                                        child: Text('+ ${loadItems[mainItemIndex]['choices'][index]['product_name']} ${loadItems[mainItemIndex]['choices'][index]['unit_measure']}',
+                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                       Text('$price', style: TextStyle(fontSize: 14.0)),
                                     ],
@@ -427,9 +449,10 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children:[
                                         Expanded(
-                                            child: Text('+ ${loadItems[mainItemIndex]['add_ons'][index]['product_name']}',
-                                              style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
-                                            )
+                                          child: Text('+ ${loadItems[mainItemIndex]['add_ons'][index]['product_name']}',
+                                            style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
                                         Text('₱ ${loadItems[mainItemIndex]['add_ons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0)),
                                       ],
@@ -444,9 +467,10 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children:[
                                       Expanded(
-                                          child: Text('+ ${loadItems[mainItemIndex]['add_ons'][index]['product_name'].toString()} ${loadItems[mainItemIndex]['add_ons'][index]['unit_measure'].toString()}',
-                                            style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
-                                          )
+                                        child: Text('+ ${loadItems[mainItemIndex]['add_ons'][index]['product_name'].toString()} ${loadItems[mainItemIndex]['add_ons'][index]['unit_measure'].toString()}',
+                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
                                       ),
                                       Text('₱ ${loadItems[mainItemIndex]['add_ons'][index]['addon_price'].toString()}', style: TextStyle(fontSize: 14.0)
                                       ),
@@ -593,14 +617,28 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+          ),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text('Order Details',style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text('Order Details',
+            style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+          ),
           actions: <Widget>[
 
             Visibility(
@@ -612,7 +650,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                     fit: BoxFit.contain,
                     height: 30,
                     width: 30,
-                    color: Colors.deepOrangeAccent,
+                    color: Colors.white,
                   ),
                   onPressed: () {
                     checkIfOnGoing();
@@ -620,40 +658,6 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                 ),
               ),
             ),
-
-            // Visibility(
-            //   visible: visible,
-            //   child: Padding(
-            //     padding: EdgeInsets.only(right: 15),
-            //     child: GestureDetector(
-            //       onTap: () {
-            //         print('tara rides');
-            //         checkIfOnGoing();
-            //       },
-            //       child: Image.asset(
-            //         'assets/png/rider_icon.png',
-            //         fit: BoxFit.contain,
-            //         height: 30,
-            //         width: 30,
-            //         color: Colors.deepOrangeAccent,
-            //       ),
-            //     ),
-            //   ),
-            // ),
-
-            // Visibility(
-            //   visible: visible,
-            //   child: Padding(
-            //     padding: EdgeInsets.only(right: 15),
-            //     child: SizedBox(width: 25,
-            //         child: IconButton(icon: Icon(CupertinoIcons.chat_bubble_2,color: Colors.deepOrangeAccent,),
-            //             onPressed: () async {
-            //               checkIfOnGoing();
-            //             }
-            //         )
-            //     ),
-            //   ),
-            // )
           ],
         ),
 
@@ -678,9 +682,9 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                       int prepared;
 
                       double sum;
-                      if (lookItemsSegregateList[index0]['icoos'] == '0') {
+                      if (int.parse(lookItemsSegregateList[index0]['icoos']) != lookItemsSegregateList.length) {
                         icoos = 'Remove it from my order';
-                      } else if (lookItemsSegregateList[index0]['icoos'] == '1') {
+                      } else {
                         icoos = 'Cancel entire order';
                       }
                       // if (lookItemsSegregateList[index0]['cancel_status'] == '1') {
@@ -720,95 +724,112 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
 
-                            Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange[300],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text('${lookItemsSegregateList[index0]['tenant_name']} - ${lookItemsSegregateList[index0]['acroname']}',
-                                    style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 15.0),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text('${lookItemsSegregateList[index0]['tenant_name']} - ${lookItemsSegregateList[index0]['acroname']}',
+                                      style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
+                                    ),
                                   ),
-                                ),
 
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15, bottom: 3),
-                                  child: SizedBox(width: 20, height: 20,
-                                    child: RawMaterialButton(
-                                      onPressed: () async {
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 15, bottom: 3),
+                                    child: SizedBox(width: 20, height: 20,
+                                      child: RawMaterialButton(
+                                        onPressed: () async {
 
-                                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                                        String username = prefs.getString('s_customerId');
-                                        if(username == null){
-                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                          // await Navigator.of(context).push(_signIn());
-                                        } else {
-                                          String acroname = lookItemsSegregateList[index0]['acroname'];
-                                          String tenantName = lookItemsSegregateList[index0]['tenant_name'];
-                                          String tenantId = lookItemsSegregateList[index0]['tenant_id'];
-                                          bool res = lookItemsSegregateList[index0]['sumpertenants'] == '0.00' ? true : false;
-                                          if (widget.mop == 'Pick-up') {
-                                            Navigator.of(context).push(_orderTimeFramePickup(
-                                                widget.ticketNo,
-                                                widget.mop,
-                                                acroname,
-                                                tenantName,
-                                                tenantId,
-                                                res),
-                                            );
-                                          } else if (widget.mop == 'Delivery') {
-                                            Navigator.of(context).push(_orderTimeFrameDelivery(
-                                                widget.ticketNo,
-                                                widget.ticketId,
-                                                widget.mop,
-                                                acroname,
-                                                tenantName,
-                                                tenantId,
-                                                res),
-                                            );
+                                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                                          String username = prefs.getString('s_customerId');
+                                          if(username == null){
+                                            await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+                                          } else {
+                                            String acroname = lookItemsSegregateList[index0]['acroname'];
+                                            String tenantName = lookItemsSegregateList[index0]['tenant_name'];
+                                            String tenantId = lookItemsSegregateList[index0]['tenant_id'];
+                                            bool res = lookItemsSegregateList[index0]['sumpertenants'] == '0.00' ? true : false;
+                                            if (widget.mop == 'Pick-up') {
+                                              Navigator.of(context).push(_orderTimeFramePickup(
+                                                  widget.ticketNo,
+                                                  widget.mop,
+                                                  acroname,
+                                                  tenantName,
+                                                  tenantId,
+                                                  res),
+                                              ).then((val)=>{onRefresh()});
+                                            } else if (widget.mop == 'Delivery') {
+                                              Navigator.of(context).push(_orderTimeFrameDelivery(
+                                                  widget.ticketNo,
+                                                  widget.ticketId,
+                                                  widget.mop,
+                                                  acroname,
+                                                  tenantName,
+                                                  tenantId,
+                                                  res),
+                                              ).then((val)=>{onRefresh()});
+                                            }
                                           }
-                                        }
-                                      },
-                                      elevation: 1.0,
-                                      child: Icon(Icons.timer_outlined, color: Colors.deepOrangeAccent),
-                                      shape: CircleBorder(),
-                                    )
-                                  ),
-                                )
-                              ],
+                                        },
+                                        elevation: 1.0,
+                                        child: Icon(Icons.timer_outlined, color: Colors.white,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 1.0,
+                                              color: Colors.black54,
+                                              offset: Offset(1.0, 1.0),
+                                            ),
+                                          ],
+                                        ),
+                                        shape: CircleBorder(),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
 
-                            Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                            Padding(
+                            Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.deepOrange[200],
+                              ),
                               padding: EdgeInsets.symmetric(horizontal: 10),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
 
-                                  Text('Item Ordered', style: TextStyle(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                                  Text('Item Ordered',
+                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  ),
 
                                   Row(
                                     children: [
 
                                       Padding(
                                         padding: EdgeInsets.symmetric(horizontal: 40),
-                                        child: Text('Status', style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                                        child: Text('Status',
+                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        ),
                                       ),
 
                                       Padding(
                                         padding: EdgeInsets.only(right: 10),
-                                        child: Text('Price', style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
-                                      )
+                                        child: Text('Price',
+                                          style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
                               ),
                             ),
-
-                            Divider(color: Colors.black54),
 
                             ListView.builder(
                               physics:  NeverScrollableScrollPhysics (),
@@ -871,8 +892,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                     Padding(
                                                       padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
                                                       child: Text("₱ ${loadItems[index]['product_price']}",
-                                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                          color: Colors.black,),
+                                                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black54),
                                                       ),
                                                     ),
                                                   ],
@@ -892,16 +912,17 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                             padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                                             child: RichText(
                                                               overflow: TextOverflow.ellipsis,
+                                                              maxLines: 3,
                                                               text: TextSpan(
-                                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                  text: '${loadItems[index]['prod_name']}'), maxLines: 2,
+                                                                text: '${loadItems[index]['prod_name']}',
+                                                                style: TextStyle(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 13),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
 
                                                         Row(
                                                           children: [
-
                                                             Visibility(
                                                               visible:  trans2(checkTransIfExists) && loadItems[index]['tag_pickup'] == '0' &&  remitStatus2(checkRemitIfExists) && loadItems[index]['canceled_status'] == '0' ? true : false,
                                                               child: Padding(
@@ -993,22 +1014,22 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                             Visibility(
                                                               visible: delivered2() && loadItems[index]['canceled_status'] == '0' && trans() ? true : false,
                                                               child: Padding(
-                                                                  padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
-                                                                  child: Container(height: 25, width: 60,
-                                                                    child: OutlinedButton(
-                                                                      style: ButtonStyle(
-                                                                        shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
-                                                                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                                                        backgroundColor: MaterialStateProperty.all(Colors.cyan),
-                                                                        overlayColor: MaterialStateProperty.all(Colors.black12),
-                                                                        side: MaterialStateProperty.all(BorderSide(
-                                                                          color: Colors.cyan,
-                                                                          width: 1.0,
-                                                                          style: BorderStyle.solid,)),
-                                                                      ),
-                                                                      child:Text("In transit", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                                                padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+                                                                child: Container(height: 25, width: 60,
+                                                                  child: OutlinedButton(
+                                                                    style: ButtonStyle(
+                                                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                                                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                                                      backgroundColor: MaterialStateProperty.all(Colors.cyan),
+                                                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                                                      side: MaterialStateProperty.all(BorderSide(
+                                                                        color: Colors.cyan,
+                                                                        width: 1.0,
+                                                                        style: BorderStyle.solid,)),
                                                                     ),
-                                                                  )
+                                                                    child:Text("In transit", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                                                  ),
+                                                                ),
                                                               ),
                                                             ),
 
@@ -1041,7 +1062,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                                 crossAxisAlignment: CrossAxisAlignment.end,
                                                                 children: [
                                                                   Text("₱ ${loadItems[index]['total_price']}",
-                                                                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                                                    style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black87),
                                                                   ),
                                                                 ],
                                                               )
@@ -1057,7 +1078,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                                         Padding(
                                                           padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
                                                           child: Text('Quantity: ${loadItems[index]['d_qty']}',
-                                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                                           ),
                                                         ),
                                                       ],
@@ -1113,25 +1134,30 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                               }
                             ),
 
-                            Divider(thickness: 1, color: Colors.black54),
+                            Divider(thickness: 2, color: Colors.grey[200]),
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('TOTAL AMOUNT PURCHASED: ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+                                  Text('TOTAL AMOUNT PURCHASED: ',
+                                    style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  ),
                                   Text('₱ ${total}',
-                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent))
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                  ),
                                 ],
                               ),
                             ),
 
-                            Divider(thickness: 1, color: Colors.black54),
+                            Divider(thickness: 2, color: Colors.grey[200]),
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('IN CASE PRODUCT IS OUT OF STOCK:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black)),
+                              child: Text('IN CASE PRODUCT IS OUT OF STOCK:',
+                                style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
                             ),
 
                             Padding(
@@ -1139,7 +1165,9 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('$icoos', style: TextStyle(fontSize: 13, color: Colors.black54)),
+                                  Text('$icoos',
+                                    style: TextStyle(fontSize: 13, color: Colors.black87),
+                                  ),
 
                                   Visibility(
                                     visible: ifCancelled,
@@ -1156,7 +1184,9 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                             width: 1.0,
                                             style: BorderStyle.solid,)),
                                         ),
-                                        child:Text("$cancelDetails", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                        child:Text("$cancelDetails",
+                                          style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -1166,7 +1196,9 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              child: Text('SPECIAL INSTRUCTIONS', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black)),
+                              child: Text('SPECIAL INSTRUCTIONS',
+                                style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
                             ),
 
                             Padding(
@@ -1174,7 +1206,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                               child: new TextFormField(
                                 enabled: false,
                                 cursorColor: Colors.deepOrange,
-                                style: TextStyle(color: Colors.black54, fontSize: 13),
+                                style: GoogleFonts.openSans(color: Colors.black54, fontSize: 13),
                                 controller: TextEditingController(text: '$instruction'),
                                 maxLines: 4,
                                 decoration: InputDecoration(
@@ -1224,7 +1256,7 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                             // cancelOrderTenant(tenantID, widget.ticketId);
                                           },
                                           style: ButtonStyle(
-                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0))),
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
                                             padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
                                             backgroundColor: MaterialStateProperty.all(Colors.redAccent),
                                             overlayColor: MaterialStateProperty.all(Colors.black12),
@@ -1233,13 +1265,17 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                                               width: 1.0,
                                               style: BorderStyle.solid,)),
                                           ),
-                                          child:Text("CANCEL ORDER(S)", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold)),
+                                          child:Text("CANCEL ORDER(S)", style: GoogleFonts.openSans(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold)),
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
+                            ),
+
+                            SizedBox(
+                              height: 5,
                             ),
                           ],
                         ),
@@ -1261,25 +1297,34 @@ class _ToDeliver extends State<ToDeliverFood> with TickerProviderStateMixin{
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                          // await Navigator.of(context).push(_signIn());
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         } else {
                           if (widget.mop == 'Pick-up') {
-                            Navigator.of(context).push(_orderSummaryPickup(widget.ticketNo, widget.ticketId));
+                            Navigator.of(context).push(_orderSummaryPickup(widget.ticketNo, widget.ticketId)).then((val)=>{onRefresh()});
                           } else if (widget.mop == 'Delivery') {
-                            Navigator.of(context).push(_orderSummaryDelivery(widget.ticketNo, widget.ticketId));
+                            Navigator.of(context).push(_orderSummaryDelivery(widget.ticketNo, widget.ticketId)).then((val)=>{onRefresh()});
                           }
                         }
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.deepOrange,
+                        color: Colors.deepOrange[400],
                         inverted: false,
-                        rounded: true,
+                        rounded: false,
                         size: SleekButtonSize.normal,
                         context: context,
                       ),
                       child: Center(
-                          child: Text("NEXT", style:TextStyle(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 18.0),
+                        child: Text("NEXT",
+                          style:GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 16.0,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -1314,7 +1359,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

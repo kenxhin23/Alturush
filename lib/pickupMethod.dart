@@ -18,9 +18,9 @@ import 'create_account_signin.dart';
 
 class PlaceOrderPickUp extends StatefulWidget {
   final paymentMethod;
-  final productID;
+  final tempID;
 
-  const PlaceOrderPickUp({Key key, this.paymentMethod, this.productID}) : super(key: key);
+  const PlaceOrderPickUp({Key key, this.paymentMethod, this.tempID}) : super(key: key);
   @override
   _PlaceOrderPickUp createState() => _PlaceOrderPickUp();
 }
@@ -46,6 +46,8 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
   List<String> quantity = [];
   List<String> totalPrice = [];
   List<String> tenantID = [];
+  List<String> datePicker = [];
+  List<String> dateTimer = [];
   List loadCartData = [];
   List loadIMainItems;
   List getBu;
@@ -102,7 +104,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
             getBuNameData,
             subtotal,
             specialInstruction,
-            widget.productID));
+            widget.tempID)).then((val)=>{onRefresh()});
     }
   }
 
@@ -123,7 +125,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
   // }
 
   Future loadTotal2() async {
-    var res = await db.loadSubTotal2(widget.productID);
+    var res = await db.loadSubTotal2(widget.tempID);
     if (!mounted) return;
     setState(() {
       loadTotalData = res['user_details'];
@@ -148,7 +150,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
   // }
 
   Future loadCart2() async {
-    var res = await db.loadCartData2(widget.productID);
+    var res = await db.loadCartData2(widget.tempID);
     if (!mounted) return;
     setState(() {
 
@@ -200,7 +202,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
   // }
 
   Future getTenantSegregate2() async{
-    var res = await db.getAmountPerTenant2(widget.productID);
+    var res = await db.getAmountPerTenant2(widget.tempID);
     if (!mounted) return;
     setState(() {
       getTenant = res['user_details'];
@@ -247,89 +249,122 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
 
   viewAddon(BuildContext context, mainItemIndex) {
     showModalBottomSheet(
-    isScrollControlled: true,
-    isDismissible: true,
-    transitionAnimationController: controller,
-    context: context,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.only(
-          topRight: Radius.circular(10), topLeft: Radius.circular(10)),
-    ),
-    builder: (ctx) {
-      return Container(
-        height: MediaQuery.of(context).size.height * 0.4,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // loadFlavors
-            // loadAddons
-            Padding(
-              padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-              child: Text(
-                "ADD ONS",
-                style: TextStyle(
-                    fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+      isScrollControlled: true,
+      isDismissible: true,
+      transitionAnimationController: controller,
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topRight: Radius.circular(15), topLeft: Radius.circular(15),
+        ),
+      ),
+      builder: (ctx) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.5,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange[400],
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                  ),
+                ),
+                height: 40,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text("ADD ONS",
+                        style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            Divider(thickness: 1, color: Colors.deepOrangeAccent,),
+              Expanded(
+                child: Scrollbar(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
 
-            Expanded(
-              child: Scrollbar(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-
-                    ///flavors
-                    ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: loadIMainItems[mainItemIndex]['suggestions'].length == null ? 0 : loadIMainItems[mainItemIndex]['suggestions'].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String flavorPrice;
-                        var f = index;
-                          if (loadIMainItems[mainItemIndex]['suggestions'].length > 0) {
-                            if (loadIMainItems[mainItemIndex]['suggestions'][f]['addon_price'] == '0.00'){
-                              flavorPrice = "";
-                            }else{
-                              flavorPrice = ('₱ ${loadIMainItems[mainItemIndex]['suggestions'][f]['addon_price']}');
+                      ///suggestions
+                      ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: loadIMainItems[mainItemIndex]['suggestions'].length == null ? 0 : loadIMainItems[mainItemIndex]['suggestions'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String flavorPrice;
+                          var f = index;
+                            if (loadIMainItems[mainItemIndex]['suggestions'].length > 0) {
+                              if (loadIMainItems[mainItemIndex]['suggestions'][f]['addon_price'] == '0.00'){
+                                flavorPrice = "";
+                              }else{
+                                flavorPrice = ('₱ ${loadIMainItems[mainItemIndex]['suggestions'][f]['addon_price']}');
+                              }
+                              return Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                child: Container(
+                                  child: Row(
+                                    mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Text('+ ${loadIMainItems[mainItemIndex]['suggestions'][f]['description']}',
+                                          style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                        )
+                                      ),
+                                      Text('$flavorPrice',
+                                        style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
                             }
+                          return SizedBox();
+                        },
+                      ),
+
+                      ///choices
+                      ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: loadIMainItems[mainItemIndex]['choices'].length == null ? 0 : loadIMainItems[mainItemIndex]['choices'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          String choicesPrice;
+                          if (loadIMainItems[mainItemIndex]['choices'][index]['addon_price'] == '0.00') {
+                            choicesPrice = "";
+                          } else {
+                            choicesPrice = ('₱ ${loadIMainItems[mainItemIndex]['choices'][index]['addon_price']}');
+                          }
+                          if(loadIMainItems[mainItemIndex]['choices'][index]['unit_measure'] == null) {
                             return Padding(
                               padding:
                               EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                               child: Container(
                                 child: Row(
-                                  mainAxisAlignment : MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Expanded(
-                                      child: Text(
-                                        '+ ${loadIMainItems[mainItemIndex]['suggestions'][f]['description']}',
-                                        style: TextStyle(fontSize: 14.0,), overflow: TextOverflow.ellipsis,
-                                      )
+                                      child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']}',
+                                        style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
-                                    Text('$flavorPrice', style: TextStyle(fontSize: 14.0)),
+                                    Text('$choicesPrice',
+                                      style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                    ),
                                   ],
                                 ),
                               ),
                             );
                           }
-                        return SizedBox();
-                      },
-                    ),
-
-                    ///choices
-                    ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: loadIMainItems[mainItemIndex]['choices'].length == null ? 0 : loadIMainItems[mainItemIndex]['choices'].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        String choicesPrice;
-                        if (loadIMainItems[mainItemIndex]['choices'][index]['addon_price'] == '0.00') {
-                          choicesPrice = "";
-                        } else {
-                          choicesPrice = ('₱ ${loadIMainItems[mainItemIndex]['choices'][index]['addon_price']}');
-                        }
-                        if(loadIMainItems[mainItemIndex]['choices'][index]['unit_measure'] == null) {
                           return Padding(
                             padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -339,43 +374,48 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                 MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']}',
-                                    style: TextStyle(fontSize: 14.0,), overflow: TextOverflow.ellipsis,)
+                                    child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']} - ${loadIMainItems[mainItemIndex]['choices'][index]['unit_measure']}',
+                                      style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                  Text('$choicesPrice', style: TextStyle(fontSize: 14.0)),
+                                  Text('$choicesPrice',
+                                    style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                  ),
                                 ],
                               ),
                             ),
                           );
-                        }
-                        return Padding(
-                          padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']} - ${loadIMainItems[mainItemIndex]['choices'][index]['unit_measure']}',
-                                    style: TextStyle(fontSize: 14.0,), overflow: TextOverflow.ellipsis,
-                                  )
-                                ),
-                                Text('$choicesPrice', style: TextStyle(fontSize: 14.0)),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                        },
+                      ),
 
-                    //addon
-                    ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: loadIMainItems[mainItemIndex]['addons'].length == null ? 0 : loadIMainItems[mainItemIndex]['addons'].length,
-                      itemBuilder: (BuildContext context, int index) {
-                        if(loadIMainItems[mainItemIndex]['addons'][index]['unit_measure'] == null){
+                      //addon
+                      ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: loadIMainItems[mainItemIndex]['addons'].length == null ? 0 : loadIMainItems[mainItemIndex]['addons'].length,
+                        itemBuilder: (BuildContext context, int index) {
+                          if(loadIMainItems[mainItemIndex]['addons'][index]['unit_measure'] == null){
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Container(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text('+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']}',
+                                        style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}',
+                                      style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             child: Container(
@@ -383,44 +423,29 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
                                   Expanded(
-                                    child: Text(
-                                      '+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']}',
-                                      style: TextStyle(fontSize: 14.0,), overflow: TextOverflow.ellipsis,
-                                    )
+                                    child: Text('+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']} ${loadIMainItems[mainItemIndex]['addons'][index]['unit_measure']}',
+                                      style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                  Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0)),
+                                  Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}',
+                                    style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                  ),
                                 ],
                               ),
                             ),
                           );
-                        }
-                        return Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                          child: Container(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Expanded(
-                                  child: Text(
-                                    '+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']} ${loadIMainItems[mainItemIndex]['addons'][index]['unit_measure']}',
-                                    style: TextStyle(fontSize: 14.0,), overflow: TextOverflow.ellipsis,
-                                  )
-                                ),
-                                Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0)),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                        },
+                      ),
+                    ],
+                  ),
+                )
               )
-            )
-          ],
-        ),
-      );
-    });
+            ],
+          ),
+        );
+      }
+    );
   }
 
 
@@ -531,7 +556,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
     // loadCart();
     loadCart2();
     stock = 0;
-    print(widget.productID);
+    print(widget.tempID);
     // _deliveryDate.clear();
     _deliveryTime.clear();
     // print(getBu.length);
@@ -553,26 +578,38 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
     return WillPopScope(
       onWillPop: () async{
         Navigator.pop(context);
-//          Navigator.pop(context);
         return true;
       },
-
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+          ),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Review Checkout Form (Pick-up)",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text("Review Checkout Form (Pick-up)",
+            style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+          ),
         ),
-        body: isLoading ?
-        Center(
+        body: isLoading ? Center(
           child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange)),
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+          ),
         ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -597,33 +634,39 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                             crossAxisAlignment : CrossAxisAlignment.start,
                             children: <Widget>[
 
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('${getTenant[index0]['tenant_name'].toString()} - ${getTenant[index0]['acroname'].toString()}',
-                                  style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 15.0),
-                                ),
-                              ),
-
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                              Container(
+                                height: 40,
+                                color: Colors.deepOrange[300],
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Product Details',
-                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                    Text('Total Price',
-                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      child: Text('${getTenant[index0]['tenant_name'].toString()} - ${getTenant[index0]['acroname'].toString()}',
+                                        style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
 
-                              Divider(color: Colors.black54),
+                              Container(
+                                height: 40,
+                                color: Colors.deepOrange[100],
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Product Details',
+                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      ),
+                                      Text('Total Price',
+                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
 
                               ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
@@ -682,10 +725,9 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                       ),
 
                                                       Padding(
-                                                        padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
+                                                        padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                                                         child: Text("₱ ${loadCartData[index]['main_item']['price']}",
-                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                            color: Colors.black,),
+                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black54),
                                                         ),
                                                       ),
                                                     ],
@@ -705,8 +747,8 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                                               child: RichText(
                                                                 text: TextSpan(
-                                                                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                    text: '${loadCartData[index]['main_item']['product_name']}'),
+                                                                  style: GoogleFonts.openSans(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 13),
+                                                                  text: '${loadCartData[index]['main_item']['product_name']}'),
                                                                 overflow: TextOverflow.ellipsis, maxLines: 2,
                                                               ),
                                                             ),
@@ -715,8 +757,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 2, 20, 0),
                                                             child: Text("₱ ${loadCartData[index]['main_item']['total_price'].toString()}",
-                                                              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                                color: Colors.deepOrangeAccent),
+                                                              style: TextStyle(fontSize: 13, color: Colors.black87),
                                                             ),
                                                           ),
                                                         ],
@@ -724,11 +765,10 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
 
                                                       Row(
                                                         children: <Widget>[
-
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
                                                             child: Text('Quantity: ${loadCartData[index]['main_item']['quantity'].toString()}',
-                                                              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                                              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                                             ),
                                                           ),
                                                         ],
@@ -797,25 +837,31 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                                     //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                                                   ),
                                                                   isExpanded: false,
-                                                                  hint: Text(
-                                                                      option, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black)),
+                                                                  hint: Text(option,
+                                                                    style: GoogleFonts.openSans(fontSize: 12, color: Colors.black54),
+                                                                  ),
                                                                   icon: const Icon(
                                                                     Icons.arrow_drop_down,
                                                                     color: Colors.black45,
                                                                   ),
                                                                   iconSize: 20,
                                                                   items: _option
-                                                                      .map((item) =>
-                                                                      DropdownMenuItem<String>(
-                                                                          value: item,
-                                                                          child: Container(
-                                                                            width: 70,
-                                                                            child:Text(item, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black)),
-                                                                          )
-                                                                      ))
+                                                                    .map((item) =>
+                                                                    DropdownMenuItem<String>(
+                                                                      value: item,
+                                                                      child: Container(
+                                                                        margin: EdgeInsets.all(0),
+                                                                        padding: EdgeInsets.all(0),
+                                                                        width: 70,
+                                                                        child:Text(item,
+                                                                          style: GoogleFonts.openSans(fontSize: 11.0, color: Colors.black54),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  )
                                                                       .toList(),
                                                                   // ignore: missing_return
-                                                                  onChanged: (value){
+                                                                  onChanged: (value) {
                                                                     setState(() {
                                                                       selectedValue = value;
                                                                       stock  = _option.indexOf(value);
@@ -850,34 +896,45 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                 }
                               ),
 
-                              Divider(thickness: 1, color: Colors.black54),
+                              Divider(thickness: 2, color: Colors.grey[200]),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Text("Total Amount",
+                                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                      ),
+                                    ),
 
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 20),
-                                    child: Text("₱ ${getTenant[index0]['total']}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.deepOrangeAccent)),
-                                  )
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Text("₱ ${getTenant[index0]['total']}",
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black87),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
 
-                              Divider(thickness: 1, color: Colors.black54),
+                              Divider(thickness: 2, color: Colors.grey[200]),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10, 0, 5, 5),
-                                child: new Text("Setup Date & Time for Pick-up", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),),
+                                child: new Text("Setup Date & Time for Pick-up",
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-                                child: new Text("Pick-up date*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.black)),
+                                child: new Text("Pick-up date*",
+                                  style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black87),
+                                ),
                               ),
 
                               Padding(
@@ -899,19 +956,33 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                             child: AlertDialog(
                                               contentPadding: EdgeInsets.all(0),
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                                  borderRadius: BorderRadius.all(Radius.circular(15.0))
                                               ),
-                                              titlePadding: const EdgeInsets.only(left: 10, top: 10, bottom: 0),
-                                              title: Text("Set date for this pick-up",style: TextStyle(fontSize: 15.0, color: Colors.deepOrangeAccent),
+                                              titlePadding: const EdgeInsets.all(0),
+                                              title: Container(
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepOrange[400],
+                                                  borderRadius: BorderRadius.only(
+                                                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(left: 15, top: 10),
+                                                  child: Text("Set date for this pick-up",
+                                                    style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
                                               ),
                                               content: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                                                  SizedBox(height: 10),
+
                                                   Container(
                                                     padding: EdgeInsets.all(0),
-                                                    height:190.0, // Change as per your requirement
+                                                    height:220.0, // Change as per your requirement
                                                     width: 300.0, // Change as per your requirement
                                                     child: Scrollbar(
                                                       child:ListView.builder(
@@ -923,14 +994,18 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                           n = index1;
                                                           var d1 = DateTime.parse(trueTime[0]['date_today']);
                                                           var d2 = new DateTime(d1.year, d1.month, d1.day + n);
+                                                          ///for database
                                                           final DateFormat formatter = DateFormat('yyyy-MM-dd');
                                                           final String formatted = formatter.format(d2);
+                                                          ///for app display
+                                                          final DateFormat formatter2 = DateFormat('MMMM d, y, EEEE');
+                                                          final String formatted2 = formatter2.format(d2);
                                                           return InkWell(
                                                             onTap: (){
                                                               while(deliveryDateData.length > getTenant.length-1){
                                                                 deliveryDateData.removeAt(index0);
                                                               }
-                                                              _deliveryDate[index0].text = formatted;
+                                                              _deliveryDate[index0].text = formatted2;
                                                               deliveryDateData.insert(index0, _deliveryDate[index0].text);
 
                                                               Navigator.of(context).pop();
@@ -974,11 +1049,14 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: <Widget>[
                                                                     Padding(
-                                                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                                                      child: Text('${formatted.toString()}',style: TextStyle(fontSize: 15.0),),
+                                                                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                                                      child: Text('${formatted2.toString()}',
+                                                                        style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                      ),
                                                                     ),
-                                                                  ]
+                                                                  ],
                                                                 ),
+                                                                Divider(thickness: 2, color: Colors.grey[200]),
                                                               ],
                                                             ),
                                                           );
@@ -998,22 +1076,19 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
                                                           borderRadius: BorderRadius.circular(20.0),
-                                                          side: BorderSide(color: Colors.deepOrangeAccent)
-                                                        )
-                                                      )
-                                                    ),
-                                                    child: Text(
-                                                      'Clear',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
+                                                          side: BorderSide(color: Colors.deepOrangeAccent),
+                                                        ),
                                                       ),
+                                                    ),
+                                                    child: Text('Clear',
+                                                      style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                                                     ),
                                                     onPressed: () {
                                                       _deliveryDate[index0].clear();
                                                       Navigator.of(context).pop();
                                                     },
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -1029,7 +1104,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                   child: IgnorePointer(
                                     child: new TextFormField(
                                       textInputAction: TextInputAction.done,
-                                      style: TextStyle(fontSize: 13),
+                                      style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                       cursorColor: Colors.deepOrange,
                                       controller: _deliveryDate[index0],
                                       validator: (value) {
@@ -1044,7 +1119,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                         focusedBorder:OutlineInputBorder(
                                           borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                         ),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                       ),
                                     ),
                                   ),
@@ -1053,7 +1128,9 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 5, 5),
-                                child: new Text("Pick-up time*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.black)),
+                                child: new Text("Pick-up time*",
+                                  style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black87),
+                                ),
                               ),
 
                               Padding(
@@ -1062,15 +1139,15 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                   onTap: (){
 
                                     getTrueTime();
-                                    if (_deliveryDate[index0].text.isEmpty) {
+                                    if(_deliveryDate[index0].text.isEmpty) {
                                       Fluttertoast.showToast(
-                                          msg: "Please select a pick-up date",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          timeInSecForIosWeb: 2,
-                                          backgroundColor: Colors.black.withOpacity(0.7),
-                                          textColor: Colors.white,
-                                          fontSize: 16.0
+                                        msg: "Please select a pick-up date",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor: Colors.black.withOpacity(0.7),
+                                        textColor: Colors.white,
+                                        fontSize: 16.0,
                                       );
                                     } else {
                                       FocusScope.of(context).requestFocus(FocusNode());
@@ -1085,17 +1162,32 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                               child: AlertDialog(
                                                 contentPadding: EdgeInsets.all(0),
                                                 shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                                    borderRadius: BorderRadius.all(Radius.circular(15.0))
                                                 ),
-                                                titlePadding: const EdgeInsets.only(left: 10, top: 10, bottom: 0),
-                                                title: Text("Set time for this pick-up",style: TextStyle(fontSize: 15.0, color: Colors.deepOrangeAccent)),
+                                                titlePadding: const EdgeInsets.all(0),
+                                                title: Container(
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.deepOrange[400],
+                                                    borderRadius: BorderRadius.only(
+                                                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 15, top: 10),
+                                                    child: Text("Set time for this pick-up",
+                                                      style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
                                                 content: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
-                                                    Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                                                    SizedBox(height: 10),
+
                                                     Container(
-                                                      height:200.0, // Change as per your requirement
+                                                      height:220.0, // Change as per your requirement
                                                       width: 300.0, // Change as per your requirement
                                                       child: Scrollbar(
                                                         child:  ListView.builder(
@@ -1134,11 +1226,14 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                     children: <Widget>[
                                                                       Padding(
-                                                                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                                                        child: Text('${from.toString()}',style: TextStyle(fontSize: 14.0),),
+                                                                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                                                        child: Text('${from.toString()}',
+                                                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                        ),
                                                                       ),
-                                                                    ]
+                                                                    ],
                                                                   ),
+                                                                  Divider(thickness: 2, color: Colors.grey[200]),
                                                                 ],
                                                               ),
                                                             );
@@ -1157,15 +1252,12 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                           RoundedRectangleBorder(
                                                             borderRadius: BorderRadius.circular(20.0),
-                                                            side: BorderSide(color: Colors.deepOrangeAccent)
-                                                          )
-                                                        )
-                                                      ),
-                                                      child: Text(
-                                                        'Clear',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
+                                                            side: BorderSide(color: Colors.deepOrangeAccent),
+                                                          ),
                                                         ),
+                                                      ),
+                                                      child: Text('Clear',
+                                                        style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                                                       ),
                                                       onPressed: () {
                                                         _deliveryTime[index0].clear();
@@ -1188,7 +1280,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                   },
                                   child: IgnorePointer(
                                     child: new TextFormField(
-                                      style: TextStyle(fontSize: 13),
+                                      style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                       textInputAction: TextInputAction.done,
                                       cursorColor: Colors.deepOrange,
                                       controller: _deliveryTime[index0],
@@ -1199,12 +1291,12 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                                         return null;
                                       },
                                       decoration: InputDecoration(
-                                        prefixIcon: Icon(CupertinoIcons.time, color: Colors.deepOrangeAccent,),
+                                        prefixIcon: Icon(CupertinoIcons.time, color: Colors.deepOrangeAccent),
                                         contentPadding: EdgeInsets.all(0),
                                         focusedBorder:OutlineInputBorder(
                                           borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                         ),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                       ),
                                     ),
                                   ),
@@ -1212,27 +1304,30 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                               ),
 
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: new Text("Special Instruction", style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                                padding: EdgeInsets.only(left: 10),
+                                child: new Text("Special Instruction",
+                                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                                 child: new TextFormField(
+                                  textCapitalization: TextCapitalization.words,
                                   keyboardType: TextInputType.multiline,
                                   textInputAction: TextInputAction.done,
                                   cursorColor: Colors.deepOrange,
                                   controller: _specialInstruction[index0],
-                                  style: TextStyle(fontSize: 13),
+                                  style: GoogleFonts.openSans(fontSize: 13),
                                   maxLines: 4,
                                   decoration: InputDecoration(
-                                    hintStyle: TextStyle(fontSize: 13),
+                                    hintStyle: GoogleFonts.openSans(fontSize: 13),
                                     hintText:"Special instruction",
                                     contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
                                     focusedBorder:OutlineInputBorder(
                                       borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                     ),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                   ),
                                 ),
                               ),
@@ -1250,6 +1345,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
               padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Row(
                 children: <Widget>[
+
                   Flexible(
                     child: SleekButton(
                       onTap: () async {
@@ -1257,8 +1353,7 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                          // await Navigator.of(context).push(_signIn());
+                          Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         } else {
                           if (_key.currentState.validate()) {
                             submitPickUp();
@@ -1277,24 +1372,27 @@ class _PlaceOrderPickUp extends State<PlaceOrderPickUp>    with SingleTickerProv
                         // print(tempDate);
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.deepOrange,
+                        color: Colors.deepOrange[400],
                         inverted: false,
-                        rounded: true,
-                        size: SleekButtonSize.big,
+                        rounded: false,
+                        size: SleekButtonSize.normal,
                         context: context,
                       ),
                       child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("NEXT",
-                            style: GoogleFonts.openSans(
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0),
-                            ),
-                          ],
-                        )
+                        child: Text("NEXT",
+                          style: GoogleFonts.openSans(
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -1352,17 +1450,17 @@ Route submitPickUpRoute(
     productID) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => SubmitPickUp(
-        groupValue:groupValue,
-        deliveryDateData:deliveryDateData,
-        deliveryTimeData:deliveryTimeData,
-        getTenantData:getTenantData,
-        getTenantNameData:getTenantNameData,
-        getBuNameData:getBuNameData,
-        subtotal:subtotal,
-        specialInstruction:specialInstruction,
-        productID : productID),
+        groupValue          : groupValue,
+        deliveryDateData    : deliveryDateData,
+        deliveryTimeData    : deliveryTimeData,
+        getTenantData       : getTenantData,
+        getTenantNameData   : getTenantNameData,
+        getBuNameData       : getBuNameData,
+        subtotal            : subtotal,
+        specialInstruction  : specialInstruction,
+        productID           : productID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1395,7 +1493,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

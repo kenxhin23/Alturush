@@ -315,21 +315,34 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.1,
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Summary (Pick-up)",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text("Summary (Pick-up)",
+            style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+          ),
         ),
-        body: isLoading
-            ? Center(
+        body: isLoading ? Center(
           child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
           ),
-        )  :
+        ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -345,45 +358,44 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                       padding: EdgeInsets.zero,
                       children: <Widget>[
 
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                        SizedBox(height: 30,
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange[300],
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                                child: new Text(
-                                  "CUSTOMER ADDRESS",
-                                  style: TextStyle(
-                                    color: Colors.deepOrangeAccent,
-                                    fontStyle: FontStyle.normal,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14.0,
-                                  ),
+                                child: new Text("CUSTOMER ADDRESS",
+                                  style: GoogleFonts.openSans(color: Colors.white, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
                                 ),
                               ),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                child: SizedBox(width: 175,
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 175,
                                   child: OutlinedButton.icon(
                                     onPressed: () async{
                                       FocusScope.of(context).requestFocus(FocusNode());
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                        // Navigator.of(context).push(_signIn());
+                                        Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
                                       }else{
                                         getPlaceOrderData();
                                         displayAddresses(context).then((val) => {onRefresh()});
                                       }
                                     },
-                                    label: Text('MANAGE ADDRESS',  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.white)),
+                                    label: Text('MANAGE ADDRESS',
+                                      style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 12.0, color: Colors.deepOrangeAccent),
+                                    ),
                                     style: ButtonStyle(
                                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                      backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                                      backgroundColor: MaterialStateProperty.all(Colors.white),
                                       overlayColor: MaterialStateProperty.all(Colors.black12),
                                       side: MaterialStateProperty.all(BorderSide(
                                         color: Colors.deepOrangeAccent,
@@ -393,24 +405,26 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                     ),
                                     icon: Wrap(
                                       children: [
-                                        Icon(Icons.settings_outlined, color: Colors.white, size: 18,)
+                                        Icon(Icons.settings_outlined, color: Colors.deepOrangeAccent, size: 18,)
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
                               ),
                             ],
                           ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent,),
-
                         Padding(
-                          padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                          padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 5.0),
                           child: Row(
                             children: <Widget>[
-                              Text("Customer: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                              Text("${userName.toString()}", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0)),
+                              Text("Recipient: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Text("${userName.toString()}",
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
                             ],
                           ),
                         ),
@@ -419,8 +433,12 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                           padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
                           child: Row(
                             children: <Widget>[
-                              Text("Contact Number: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                              Text("${placeContactNo.toString()}", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0)),
+                              Text("Contact Number: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Text("${placeContactNo.toString()}",
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
                             ],
                           ),
                         ),
@@ -429,145 +447,182 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                           padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
                           child: Row(
                             children: <Widget>[
-                              Text("Address: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0),),
-                              Text("$street, $placeOrderBrg, $placeOrderTown, $province",
-                                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0))
+                              Text("Address: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Flexible(
+                                child: Text("$street, $placeOrderBrg, $placeOrderTown, $province",
+                                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                ),
+                              ),
                             ],
-                          )
+                          ),
                         ),
 
                         Padding(
                           padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
                           child: Row(
                             children: <Widget>[
-                              Text("Landmark: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                              Flexible(child: Text("$placeRemarks", style: TextStyle(fontSize: 14.0), maxLines: 6, overflow: TextOverflow.ellipsis)
+                              Text("Landmark: ",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Flexible(
+                                child: Text("$placeRemarks",
+                                  maxLines: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                ),
                               ),
                             ],
-                          )
+                          ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                        SizedBox(
+                          height: 5,
+                        ),
 
-                        SizedBox(height: 30,
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.zero,
+                                child: Text("TOTAL SUMMARY",
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('No. of Store(s)',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('$stores',
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('No. of Item(s)',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('$items',
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Total Amount Order',
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('₱ ${oCcy.format(widget.subtotal)}',
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 6, 0, 0),
-                            child: Text("TOTAL SUMMARY", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent ),),
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('TOTAL AMOUNT TO PAY',
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+                                ),
+                                Text('₱ ${oCcy.format(widget.subtotal)}',
+                                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black87),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('No. of Store(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('$stores',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
+                              Text('PAYMENT METHOD',
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('Pay via CASH',
+                                style: TextStyle(fontSize: 13.0, color: Colors.black87),
+                              ),
                             ],
                           ),
                         ),
 
-                        Divider(color: Colors.black54),
+                        SizedBox(height: 15),
 
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('No. of Item(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('$items',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total Amount Order',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('₱ ${oCcy.format(widget.subtotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('TOTAL AMOUNT TO PAY',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('₱ ${oCcy.format(widget.subtotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('PAYMENT METHOD',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('Pay via CASH',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent),
-                        SizedBox(height: 30,
+                        Container(
+                          height: 40,
+                          color: Colors.deepOrange[300],
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                                padding: EdgeInsets.only(left: 10.0),
                                 child: new Text("APPLY DISCOUNT",
-                                  style: GoogleFonts.openSans(color: Colors.deepOrangeAccent, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.white),
                                 ),
                               ),
 
                               Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                                child: SizedBox(width: 175,
+                                padding: EdgeInsets.only(right: 15),
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 175,
                                   child: OutlinedButton.icon(
                                     onPressed: () async{
                                       FocusScope.of(context).requestFocus(FocusNode());
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                        // Navigator.of(context).push(_signIn());
-                                      }else{
-                                        // applyDiscount();
-                                        showApplyDiscountDialog(context).then((_)=>{loadId()});
-                                        // await Navigator.of(context).push(_showDiscountPerson());
+                                        Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
+                                      } else {
+                                        showApplyDiscountDialog(context).then((_) => {onRefresh()});
                                       }
                                     },
-                                    label: Text('MANAGE DISCOUNT',  style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.white)),
+                                    label: Text('MANAGE DISCOUNT',
+                                      style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 12.0, color: Colors.deepOrangeAccent),
+                                    ),
                                     style: ButtonStyle(
                                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                      backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                                      backgroundColor: MaterialStateProperty.all(Colors.white),
                                       overlayColor: MaterialStateProperty.all(Colors.black12),
                                       side: MaterialStateProperty.all(BorderSide(
                                         color: Colors.deepOrangeAccent,
                                         width: 1.0,
-                                        style: BorderStyle.solid,)),
+                                        style: BorderStyle.solid),
+                                      ),
                                     ),
                                     icon: Wrap(
                                       children: [
-                                        Icon(Icons.settings_outlined, color: Colors.white, size: 18,)
+                                        Icon(Icons.settings_outlined, color: Colors.deepOrangeAccent, size: 18.0),
                                       ],
                                     ),
                                   ),
@@ -577,7 +632,9 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                           ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                        SizedBox(
+                          height: 10,
+                        ),
 
                         RefreshIndicator(
                           color: Colors.deepOrangeAccent,
@@ -588,9 +645,11 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                               children: <Widget>[
                                 exist == false ? Padding(
                                   padding: EdgeInsets.only(left: 10, top: 5),
-                                  child: Text('No Discount Details', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, color: Colors.black54),),
-                                ) :
-                                ListView.builder(
+                                  child: Text('No Discount Details',
+                                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                                  ),
+                                ) : ListView.builder(
+                                  padding: EdgeInsets.all(0),
                                   shrinkWrap: true,
                                   physics: BouncingScrollPhysics(),
                                   itemCount: loadIdList == null ? 0 : loadIdList.length,
@@ -627,8 +686,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                                               imageUrl: loadIdList[index]['d_photo'],
                                                               fit: BoxFit.contain,
                                                               imageBuilder: (context, imageProvider) => Container(
-                                                                height: 50,
-                                                                width: 50,
+                                                                height: 55,
+                                                                width: 55,
                                                                 decoration: new BoxDecoration(
                                                                   image: new DecorationImage(
                                                                     image: imageProvider,
@@ -636,15 +695,15 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                                                   ),
                                                                   borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                                                   border: new Border.all(
-                                                                    color: Colors.black54,
-                                                                    width: 0.5,
+                                                                    color: Colors.deepOrangeAccent,
+                                                                    width: 1,
                                                                   ),
                                                                 ),
                                                               ),
                                                               placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
                                                               errorWidget: (context, url, error) => Container(
-                                                                height: 50,
-                                                                width: 50,
+                                                                height: 55,
+                                                                width: 55,
                                                                 decoration: new BoxDecoration(
                                                                   image: new DecorationImage(
                                                                     image: AssetImage("assets/png/No_image_available.png"),
@@ -652,8 +711,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                                                   ),
                                                                   borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                                                   border: new Border.all(
-                                                                    color: Colors.black54,
-                                                                    width: 0.5,
+                                                                    color: Colors.deepOrangeAccent,
+                                                                    width: 1,
                                                                   ),
                                                                 ),
                                                               ),
@@ -665,12 +724,18 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                                                             child: Column(
                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: [
-                                                                Text('${loadIdList[index]['name']} ',style: TextStyle(fontSize: 14, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),),
-                                                                Text('(${loadIdList[index]['discount_name']})',style: TextStyle(fontSize: 13)),
-                                                                Text('${loadIdList[index]['discount_no']}',style: TextStyle(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),),
+                                                                Text('Name: ${loadIdList[index]['name']} ',
+                                                                  style: GoogleFonts.openSans(fontSize: 14, color: Colors.black87),
+                                                                ),
+                                                                Text('Discount Type: (${loadIdList[index]['discount_name']})',
+                                                                  style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                                                ),
+                                                                Text('ID Number: ${loadIdList[index]['discount_no']}',
+                                                                  style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                                                ),
                                                               ],
                                                             ),
-                                                          )
+                                                          ),
                                                         ],
                                                       ),
 
@@ -749,9 +814,9 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                         // print(widget.specialInstruction);
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.deepOrange,
+                        color: Colors.deepOrange[400],
                         inverted: false,
-                        rounded: true,
+                        rounded: false,
                         size: SleekButtonSize.normal,
                         context: context,
                       ),
@@ -759,16 +824,32 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(CupertinoIcons.paperplane),
+                            Icon(CupertinoIcons.paperplane, size: 20,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
                             SizedBox(width: 5),
                             Text("CHECKOUT",
-                            style: TextStyle(
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0),
+                              style: GoogleFonts.openSans(
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 1.0,
+                                    color: Colors.black54,
+                                    offset: Offset(1.0, 1.0),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
-                        )
+                        ),
                       ),
                     ),
                   ),
@@ -799,8 +880,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String username = prefs.getString('s_customerId');
     if(username == null){
-      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-      // Navigator.of(context).push(_signIn());
+      // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+      Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
     }else{
       _placeOrderPickUp();
       CoolAlert.show(
@@ -814,8 +895,8 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String username = prefs.getString('s_customerId');
           if(username == null){
-            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-            // Navigator.of(context).push(_signIn());
+            // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+            Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
           }if(username != null){
             Navigator.of(context).pop();
             Navigator.of(context).pop();
@@ -837,7 +918,7 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
       isDismissible: true,
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
+        borderRadius: BorderRadius.only(topRight:  Radius.circular(15),topLeft:  Radius.circular(15)),
       ),
       builder: (ctx) {
         return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
@@ -847,41 +928,47 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
 
-                SizedBox(height: 5),
-
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                  child: SizedBox(height: 35,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-
-                        Text("Select your address",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),),
-
-                        OutlinedButton(
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(20))),
-                            backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                            overlayColor: MaterialStateProperty.all(Colors.black12),
-                            side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.deepOrangeAccent,
-                              width: 1.0,
-                              style: BorderStyle.solid,)),
-                          ),
-                          onPressed:(){
-                            Navigator.pop(context);
-                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
-                            refreshKey.currentState.show();
-                          },
-                          child:Text("+ Add new",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 14.0),),
-                        ),
-                      ],
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrangeAccent,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
                     ),
                   ),
-                ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
 
-                Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                      Text("Select your address",
+                        style: GoogleFonts.openSans(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+
+                      OutlinedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
+                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                          overlayColor: MaterialStateProperty.all(Colors.black12),
+                          side: MaterialStateProperty.all(BorderSide(
+                            color: Colors.deepOrangeAccent,
+                            width: 1.0,
+                            style: BorderStyle.solid),
+                          ),
+                        ),
+                        onPressed:(){
+                          Navigator.pop(context);
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
+                          refreshKey.currentState.show();
+                        },
+                        child:Text("+ Add new",
+                          style: GoogleFonts.openSans(color:Colors.deepOrangeAccent, fontWeight: FontWeight.bold,fontSize: 14.0),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
                 Expanded(
                   child: Scrollbar(
@@ -893,8 +980,6 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                         var f= index;
                         f++;
                         return InkWell(
-                            onTap: () async {
-                            },
                           child: Card(
                             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             child: RadioListTile(
@@ -907,28 +992,31 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                               title: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-
                                       Padding(
                                         padding: EdgeInsets.only(top: 5,),
-                                        child: Text('${getItemsData[index]['firstname']} ${getItemsData[index]['lastname']}',style: TextStyle(fontSize: 14, color: Colors.black),),
+                                        child: Text('${getItemsData[index]['firstname']} ${getItemsData[index]['lastname']}',
+                                          style: GoogleFonts.openSans(fontSize: 14, color: Colors.black),
+                                        ),
                                       ),
-
                                       Padding(
                                         padding: EdgeInsets.symmetric(vertical: 5),
                                         child: Text('${getItemsData[index]['street_purok']}, ${getItemsData[index]['d_brgName']}, \n${getItemsData[index]['d_townName']}, '
-                                            '${getItemsData[index]['zipcode']}, ${getItemsData[index]['d_province']}' ,overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13, color: Colors.black54)),
-                                      )
+                                          '${getItemsData[index]['zipcode']}, ${getItemsData[index]['d_province']}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                        ),
+                                      ),
                                     ],
                                   ),
-
                                   Padding(
                                     padding: EdgeInsets.only(right: 10),
-                                    child: Text('${getItemsData[index]['d_contact']}',style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black)),
-                                  )
+                                    child: Text('${getItemsData[index]['d_contact']}',
+                                      style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black),
+                                    ),
+                                  ),
                                 ],
                               ),
                               value: index,
@@ -952,7 +1040,7 @@ class _SubmitPickUp extends State<SubmitPickUp> with TickerProviderStateMixin {
                       },
                     ),
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -1062,9 +1150,9 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
-      contentPadding: EdgeInsets.only(top: 5) ,
+      contentPadding: EdgeInsets.zero,
       content: Container(
         height: 400.0,
         width: 300.0,
@@ -1074,76 +1162,84 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
 
-            SizedBox(height: 30,
-              child: Row(
-                children: [
-
-                  SizedBox(height: 30 , width: 30,
-                    child: IconButton(
-                      onPressed: (){
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      icon: Image.asset('assets/png/img_552316.png',
-                        color: Colors.black54,
-                        fit: BoxFit.contain,
-                        height: 30,
-                        width: 30,
+            Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.deepOrangeAccent,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: IconButton(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        icon: Image.asset('assets/png/img_552316.png',
+                          color: Colors.white,
+                          fit: BoxFit.contain,
+                          height: 30,
+                          width: 30,
+                        ),
                       ),
                     ),
-                  ),
-
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Text("Apply Discount ", style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
-                  ),
-                ],
-              ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Text("Apply Discount ",
+                        style: GoogleFonts.openSans(color: Colors.white,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),
+                      ),
+                    ),
+                  ],
+                )
             ),
 
-            Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-            SizedBox(height: 30,
+            Container(
+              color: Colors.grey[200],
+              height: 35,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Text("Discount Applied List ", style: TextStyle(color: Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                    child: Text("Discount Applied List ",
+                      style: GoogleFonts.openSans(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15.0),
+                    ),
                   ),
-
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    padding: EdgeInsets.fromLTRB(0, 5, 10, 5),
                     child:OutlinedButton(
                       onPressed: () async{
                         FocusScope.of(context).requestFocus(FocusNode());
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(_signIn());
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          await Navigator.of(context).push(_signIn());
                         }else{
                           showAddDiscountDialog(context).then((_)=>{loadID()});
                           checkIfHasId();
-                          loadID();
                         }
                       },
-                      child: Text('+ ADD',  style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.white)),
+                      child: Text('+ ADD',
+                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.white),
+                      ),
                       style: ButtonStyle(
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(25))),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
                         overlayColor: MaterialStateProperty.all(Colors.black12),
                         backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                         side: MaterialStateProperty.all(BorderSide(
                           color: Colors.deepOrangeAccent,
-                          width: 1.0,
-                          style: BorderStyle.solid,)),
+                          width: 0.5 ,
+                          style: BorderStyle.solid),
+                        ),
                       ),
                     ),
                   ),
                 ],
-              )
+              ),
             ),
-
-            Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
             Expanded(
               child: RefreshIndicator(
@@ -1171,7 +1267,7 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                SizedBox(height: 40,
+                                SizedBox(height: 65,
                                   child:
                                   CheckboxListTile(
                                     visualDensity: const VisualDensity(
@@ -1187,8 +1283,15 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            Text('${loadIdList[index]['name']} (${loadIdList[index]['discount_name']})',style: TextStyle(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black)),
-                                            Text('${loadIdList[index]['discount_no']}',style: TextStyle(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black)),
+                                            Text('Name: ${loadIdList[index]['name']} ',
+                                              style: GoogleFonts.openSans(fontSize: 13, color: Colors.black87),
+                                            ),
+                                            Text('Discount Type: (${loadIdList[index]['discount_name']})',
+                                              style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                            ),
+                                            Text('ID #: ${loadIdList[index]['discount_no']}',
+                                              style: GoogleFonts.openSans(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black54),
+                                            ),
                                           ],
                                         ),
                                       )
@@ -1208,61 +1311,92 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> {
                                     controlAffinity: ListTileControlAffinity.leading,
                                   ),
                                 ),
+                                Divider(thickness: 2, color: Colors.grey[200]),
                               ],
                             ),
                           );
-                        }
+                        },
                       ),
                     ],
-                  )
+                  ),
                 ),
               ),
-            )
+            ),
           ],
-        )
+        ),
       ),
       actions: <Widget>[
 
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.black,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            for (int i=0;i<selectedDiscountType.length;i++){
-              side[i] = false;
-            }
-            selectedDiscountType.clear();
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
 
-            Navigator.pop(context);
-          },
-          child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 12.0),),
-        ),
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          side: BorderSide(color: Colors.deepOrangeAccent)
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    for (int i=0;i<selectedDiscountType.length;i++){
+                      side[i] = false;
+                    }
+                    selectedDiscountType.clear();
 
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.deepOrangeAccent,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            if (selectedDiscountType.isEmpty){
-              print('pili pd discount');
-              Fluttertoast.showToast(
-                  msg: "No discount applied!",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 2,
-                  backgroundColor: Colors.black.withOpacity(0.7),
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
-            } else {
-              print('very gud');
-              Navigator.of(context).pop();
-            }
-          },
-          child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),),
+                    Navigator.pop(context);
+                  },
+                  child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 12.0),
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.deepOrange[400]),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: Colors.deepOrange[400]),
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    if (selectedDiscountType.isEmpty){
+                      print('pili pd discount');
+                      Fluttertoast.showToast(
+                          msg: "No discount applied!",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: Colors.black.withOpacity(0.7),
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
+                    } else {
+                      print(selectedDiscountType);
+                      print('very gud');
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -1458,9 +1592,9 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
-      contentPadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.zero,
       content: Container(
         height: 400.0,
         width: 300.0,
@@ -1472,43 +1606,51 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
 
-              SizedBox(height: 30,
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.deepOrangeAccent,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                  ),
+                ),
                 child: Row(
                   children: [
-
-                    SizedBox(height: 30 , width: 30,
+                    SizedBox(
+                      height: 30,
+                      width: 30,
                       child: IconButton(
-                        onPressed: (){
-                        },
                         padding: EdgeInsets.symmetric(horizontal: 5),
                         icon: Image.asset('assets/png/img_552316.png',
-                          color: Colors.black54,
+                          color: Colors.white,
                           fit: BoxFit.contain,
                           height: 30,
                           width: 30,
                         ),
                       ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      child: Text("Apply Discount ", style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                      child: Text("Apply Discount ",
+                        style: GoogleFonts.openSans(color: Colors.white,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),
+                      ),
                     ),
                   ],
-                )
+                ),
               ),
-
-              Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
               Expanded(
                 child: Scrollbar(
                   child: ListView(
+                    padding: EdgeInsets.only(top: 10),
                     shrinkWrap: true,
                     children: <Widget>[
 
                       Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
-                          child: Text('Discount Type',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Text('Discount Type',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       SizedBox(height: 40,
@@ -1520,22 +1662,22 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                               //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                               isDense: true,
                               focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1),
                               ),
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 10,
                                 vertical: 10,
                               ),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               //Add more decoration as you want here
                               //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                             ),
                             isExpanded: true,
-                            hint: const Text(
-                              'Select Discount Type', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                            hint: Text(
+                              'Select Discount Type', style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                             ),
                             icon: const Icon(
                               Icons.arrow_drop_down,
@@ -1577,8 +1719,10 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                       ),
 
                       Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                          child: Text('Full Name',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                        child: Text('Full Name',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       SizedBox(height: 40,
@@ -1589,9 +1733,10 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                             textInputAction: TextInputAction.done,
                             cursorColor: Colors.deepOrange.withOpacity(0.8),
                             controller: _name,
+                            style: GoogleFonts.openSans(fontSize: 14),
                             decoration: InputDecoration(
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide(
                                     color: Colors.deepOrange.withOpacity(0.7),
                                     width: 2.0),
@@ -1601,9 +1746,9 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                                 vertical: 10,
                               ),
                               hintText: 'Full Name ex. (Lastname, Firstname)',
-                              hintStyle: const TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                              hintStyle: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                               border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
                             validator: (value) {
@@ -1617,8 +1762,10 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                        child: Text('ID. Picture',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                        child: Text('ID. Picture',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       SizedBox(height: 40,
@@ -1634,6 +1781,7 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                                 textInputAction: TextInputAction.done,
                                 cursorColor: Colors.deepOrange.withOpacity(0.5),
                                 controller: _imageTxt,
+                                style: GoogleFonts.openSans(fontSize: 14),
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return 'Please capture an image!';
@@ -1642,7 +1790,7 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                                 },
                                 decoration: InputDecoration(
                                   hintText: 'No File Choosen',
-                                  hintStyle: const TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                                  hintStyle: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                                   contentPadding: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
                                   prefixIcon: Icon(Icons.camera_alt_outlined,color: Colors.grey,),
                                   focusedBorder: OutlineInputBorder(
@@ -1660,8 +1808,10 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                       ),
 
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                        child: Text('ID. Number',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                        child: Text('ID. Number',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
                       ),
 
                       SizedBox(height: 40,
@@ -1670,6 +1820,7 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                           child:TextFormField(
                             cursorColor: Colors.deepOrange.withOpacity(0.8),
                             controller: _idNumber,
+                            style: GoogleFonts.openSans(fontSize: 14),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Please enter some value!';
@@ -1678,7 +1829,7 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                             },
                             decoration: InputDecoration(
                               hintText: 'ID. Number',
-                              hintStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                              hintStyle: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
                               contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -1687,7 +1838,8 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
                                     width: 2.0),
                               ),
                               border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15.0)),
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
                             ),
                           ),
                         ),
@@ -1702,32 +1854,59 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
       ),
       actions: <Widget>[
 
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.black,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            Navigator.pop(context);
-          },
-          child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 12.0),),
-        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
 
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.deepOrangeAccent,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            if (_formKey.currentState.validate()) {
-              uploadId();
-            }
-            // _name.clear();
-            // _imageTxt.clear();
-            // _idNumber.clear();
-          },
-          child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),),
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: Colors.deepOrangeAccent),
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    Navigator.pop(context);
+                  },
+                  child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 12.0),),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.deepOrange[400]),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: Colors.deepOrange[400]),
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    if (_formKey.currentState.validate()) {
+                      uploadId();
+                    }
+                    // _name.clear();
+                    // _imageTxt.clear();
+                    // _idNumber.clear();
+                  },
+                  child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

@@ -246,22 +246,41 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      // appBar: AppBar(
-      //   systemOverlayStyle: SystemUiOverlayStyle(
-      //     statusBarColor: Colors.deepOrangeAccent[200], // Status bar
-      //   ),
-      //   backgroundColor: Colors.white,
-      //   elevation: 0.1,
-      // ),
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrange[400], // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        iconTheme: new IconThemeData(color: Colors.white),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: <Color>[Colors.deepOrange, Colors.deepOrangeAccent]),
+          ),
+        ),
+        elevation: 0,
+      ),
       body:isLoading ?
       Center(
         child: CircularProgressIndicator(
             valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange)),
-      ) : Container(
+      ) : 
+      Container(
         decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.deepOrange,
+              Colors.deepOrange[200],
+            ],
+          ),
           color: Colors.white,
           image: DecorationImage(
-            image: AssetImage("assets/png/logo_raider8.2.png"),
+            alignment: Alignment(1, -0.5),
+            image: AssetImage("assets/png/logo_raider8.png"),
             fit: BoxFit.contain
           ),
         ),
@@ -272,12 +291,12 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
             Expanded(
               child: ListView(
                 physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
+                // shrinkWrap: true,
                 children: <Widget>[
                 SizedBox(height: height-400),
 
                   SizedBox(
-                    height: 420,
+                    height: 200,
                     width: 30.0,
                     child: Carousel(
                       images: [
@@ -291,7 +310,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                             Text("Welcome to Alturush",style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
-                                color: Colors.black54,
+                                color: Colors.white,
                                 fontSize: 18.0),
                             ),
                           ],
@@ -306,7 +325,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                             Text("Choose a restaurant",style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
-                                color: Colors.black54,
+                                color: Colors.white,
                                 fontSize: 18.0),
                             ),
                           ],
@@ -321,7 +340,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                             Text("Order online",style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
-                                color: Colors.black54,
+                                color: Colors.white,
                                 fontSize: 18.0),
                             ),
                           ],
@@ -336,7 +355,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                             Text("Multi store for fixed delivery fee",style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
-                                color: Colors.black54,
+                                color: Colors.white,
                                 fontSize: 18.0),
                             ),
                           ],
@@ -351,7 +370,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                             Text("Fast delivery",style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
-                                color: Colors.black54,
+                                color: Colors.white,
                                 fontSize: 18.0),
                             ),
                           ],
@@ -372,15 +391,20 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
 
             Center(
               child:Padding(
-                padding: EdgeInsets.fromLTRB(10.0,0.0, 10.0,10.0),
+                padding: EdgeInsets.fromLTRB(15.0,0.0, 15.0,10.0),
                 child: SizedBox(
                   width: width-10,
                   height: 50.0,
                   child:  OutlinedButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.black, // foreground
-                      // backgroundColor: Colors.deepOrange,
-                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
+                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                      backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                      side: MaterialStateProperty.all(BorderSide(
+                        color: Colors.white,
+                        width: 1.0,
+                        style: BorderStyle.solid,)),
                     ),
                     onPressed: () async {
                        // selectType(context ,width, height);
@@ -390,11 +414,20 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                         MaterialPageRoute(builder: (context) => HomePage()),
                       );
                     },
-                    child: Text("Get started", style: GoogleFonts.openSans(
+                    child: Text("Get started",
+                      style: GoogleFonts.openSans(
                         fontWeight: FontWeight.bold,
                         fontStyle: FontStyle.normal,
-                        color: Colors.black,
-                        fontSize: 20.0),
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 1.0,
+                            color: Colors.black54,
+                            offset: Offset(1.0, 1.0),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -411,7 +444,7 @@ Route _foodRoute(_globalCatID) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(globalCatID:_globalCatID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -427,7 +460,7 @@ Route _groceryRoute(_groceryRoute) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GroceryMain(groceryRoute:_groceryRoute),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -442,7 +475,7 @@ Route _electronicsRoute(_electronicsRoute) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ElectronicsApp(electronicsRoute:_electronicsRoute),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

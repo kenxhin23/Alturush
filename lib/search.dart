@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'create_account_signin.dart';
 import 'db_helper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'view_item.dart';
@@ -108,16 +110,23 @@ class _Search extends State<Search> {
             itemCount: searchProdData == null ? 0 : searchProdData.length,
             itemBuilder: (BuildContext context, int index){
               return InkWell(
-                onTap: (){
+                onTap: () async {
                   FocusScope.of(context).unfocus();
-                  Navigator.of(context).push(_viewItem(
-                      searchProdData[index]['bu_id'],
-                      searchProdData[index]['tenant_id'],
-                      searchProdData[index]['product_id'],
-                      searchProdData[index]['product_uom'],
-                      searchProdData[index]['unit_measure'],
-                      searchProdData[index]['price']
-                  ));
+
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  String username = prefs.getString('s_customerId');
+                  if(username == null){
+                    await Navigator.of(context).push(_signIn());
+                  } else {
+                    Navigator.of(context).push(_viewItem(
+                        searchProdData[index]['bu_id'],
+                        searchProdData[index]['tenant_id'],
+                        searchProdData[index]['product_id'],
+                        searchProdData[index]['product_uom'],
+                        searchProdData[index]['unit_measure'],
+                        searchProdData[index]['price']
+                    ));
+                  }
                 },
                 child:Padding(
                   padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
@@ -187,7 +196,23 @@ Route _viewItem(buCode, tenantCode, prodId,productUom,unitOfMeasure,price) {
     pageBuilder: (context, animation, secondaryAnimation) =>
         ViewItem(buCode: buCode, tenantCode: tenantCode, prodId: prodId,productUom:productUom,unitOfMeasure:unitOfMeasure,price:price),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _signIn() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

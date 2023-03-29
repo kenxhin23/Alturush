@@ -159,15 +159,26 @@ class _ToDeliver extends State<ToDeliverGood> {
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.green[300], // Status bar
+            statusBarColor: Colors.green[400], // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green[400],
           elevation: 0.1,
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Order Details",style: GoogleFonts.openSans(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text("Order Details",style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+          ),
         ),
         body: isLoading
             ? Center(
@@ -218,30 +229,32 @@ class _ToDeliver extends State<ToDeliverGood> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Divider(thickness: 1, color: Colors.green),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                            Container(
+                              height: 40,
+                              color: Colors.green[300],
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
 
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text('${lGetAmountPerTenant[index0]['business_unit']} - ${lGetAmountPerTenant[index0]['acroname']}',
-                                    style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 15.0),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text('${lGetAmountPerTenant[index0]['business_unit']} - ${lGetAmountPerTenant[index0]['acroname']}',
+                                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
+                                    ),
                                   ),
-                                ),
 
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15, bottom: 3),
-                                  child: SizedBox(width: 20, height: 20,
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 15, bottom: 3),
+                                    child: SizedBox(width: 20, height: 20,
                                       child: RawMaterialButton(
                                         onPressed: () async {
 
                                           SharedPreferences prefs = await SharedPreferences.getInstance();
                                           String username = prefs.getString('s_customerId');
                                           if(username == null){
-                                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                            // Navigator.of(context).push(_signIn());
+                                            // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                            Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                           } else {
                                             String acroname = lGetAmountPerTenant[index0]['acroname'];
                                             String bunit_name = lGetAmountPerTenant[index0]['business_unit'];
@@ -256,7 +269,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                   acroname,
                                                   bunit_name,
                                                   bu_id),
-                                              );
+                                              ).then((val)=>{onRefresh()});
                                             } else if (widget.mop == 'Delivery') {
                                               print('for delivery');
                                               Navigator.of(context).push(_orderTimeFrameDelivery(
@@ -266,49 +279,66 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                   acroname,
                                                   bunit_name,
                                                   bu_id),
-                                              );
+                                              ).then((val)=>{onRefresh()});
                                             }
                                           }
-
-
                                         },
                                         elevation: 1.0,
-                                        child: Icon(Icons.timer_outlined, color: Colors.green),
+                                        child: Icon(Icons.timer_outlined, color: Colors.white,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 1.0,
+                                              color: Colors.black54,
+                                              offset: Offset(1.0, 1.0),
+                                            ),
+                                          ],
+                                        ),
                                         shape: CircleBorder(),
-                                      )
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Divider(thickness: 1, color: Colors.green),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-
-                                  Text('Item Ordered', style: TextStyle(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
-
-                                  Row(
-                                    children: [
-
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 50),
-                                        child: Text('Status', style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
                                       ),
-
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 10),
-                                        child: Text('Price', style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
-                                      )
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
 
-                            Divider(color: Colors.black54),
+                            Container(
+                              height: 40,
+                              color: Colors.green[200],
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+
+                                    Text('Item Ordered',
+                                      style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: EdgeInsets.symmetric(horizontal: 50),
+                                          child: Text('Status',
+                                            style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 10),
+                                          child: Text('Price',
+                                            style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(
+                              height: 10,
+                            ),
+
 
                             ListView.builder(
                               physics:  NeverScrollableScrollPhysics (),
@@ -322,6 +352,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                 var claimed;
                                 var paid;
                                 var cancelled;
+                                String icoos;
 
                                 if (loadItems[index1]['pending_status'] == '1') {
                                   pending_status = true;
@@ -351,6 +382,12 @@ class _ToDeliver extends State<ToDeliverGood> {
                                   cancelled = true;
                                 } else {
                                   cancelled = false;
+                                }
+
+                                if (loadItems[index1]['icoos'] == '0') {
+                                  icoos ='Cancel Item';
+                                } else {
+                                  icoos ='Cancel Order';
                                 }
 
                                 // print(pending_status);
@@ -402,7 +439,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                   padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
                                                   child: Text("₱ ${loadItems[index1]['price']}",
                                                     style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                      color: Colors.black,),
+                                                      color: Colors.black54),
                                                   ),
                                                 ),
                                               ],
@@ -421,9 +458,11 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                             padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                                             child: RichText(
                                                               overflow: TextOverflow.ellipsis,
+                                                              maxLines: 3,
                                                               text: TextSpan(
-                                                                  style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                  text: '${loadItems[index1]['prod_name']}'), maxLines: 3,
+                                                                style: GoogleFonts.openSans(color: Colors.black54, fontSize: 13, fontWeight: FontWeight.bold),
+                                                                text: '${loadItems[index1]['prod_name']}',
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -542,9 +581,63 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                         Padding(
                                                           padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
                                                           child: Text('Quantity: ${loadItems[index1]['d_qty']}',
-                                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                                           ),
                                                         ),
+                                                      ],
+                                                    ),
+
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: <Widget>[
+                                                        Padding(
+                                                          padding: EdgeInsets.fromLTRB(5, 5, 0, 5),
+                                                          child: Text('If out of stock: ',
+                                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                          ),
+                                                        ),
+
+                                                        Padding(
+                                                          padding: EdgeInsets.only(right: 10, top: 5),
+                                                          child: Container(
+                                                            padding: EdgeInsets.all(0),
+                                                            width: 100,
+                                                            child: DropdownButtonFormField(
+                                                              decoration: InputDecoration(
+                                                                enabled: false,
+                                                                //Add isDense true and zero Padding.
+                                                                //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                                                                isDense: true,
+                                                                focusedBorder: OutlineInputBorder(
+                                                                    borderRadius: BorderRadius.circular(5),
+                                                                    borderSide: BorderSide(color: Colors.green.withOpacity(0.8), width: 1)
+                                                                ),
+                                                                contentPadding: const EdgeInsets.only(left: 5, right: 0),
+                                                                border: OutlineInputBorder(
+                                                                  borderRadius: BorderRadius.circular(5),
+                                                                ),
+                                                                //Add more decoration as you want here
+                                                                //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                                                              ),
+                                                              hint: Text(icoos, style: GoogleFonts.openSans(fontSize: 12, color: Colors.black38),
+                                                              ),
+                                                              icon: const Icon(
+                                                                Icons.arrow_drop_down,
+                                                                color: Colors.black45,
+                                                              ),
+                                                              iconSize: 20,
+                                                              isExpanded: true,
+                                                              // ignore: missing_return
+                                                            ),
+                                                          ),
+                                                        ),
+
+                                                        // Padding(
+                                                        //   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                                                        //   child: Text(icoos,
+                                                        //     style: TextStyle(fontSize: 13.0, color: Colors.black),
+                                                        //   ),
+                                                        // ),
                                                       ],
                                                     ),
                                                   ],
@@ -561,75 +654,73 @@ class _ToDeliver extends State<ToDeliverGood> {
                                 );
                               },
                             ),
-                            Divider(thickness: 1, color: Colors.black54),
+                            Divider(thickness: 2, color: Colors.grey[200]),
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('TOTAL AMOUNT PURCHASED: ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black)),
+                                  Text('TOTAL AMOUNT PURCHASED: ',
+                                    style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  ),
                                   Text('₱ ${total}',
-                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.green),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                                   ),
                                 ],
                               ),
                             ),
 
-                            Divider(thickness: 1, color: Colors.black54),
+                            Divider(thickness: 2, color: Colors.grey[200]),
 
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('IN CASE PRODUCT IS OUT OF STOCK:', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black)),
-                            ),
-
-                            Padding(
+                            Visibility(
+                              visible: ifCancelled,
+                              child: Padding(
                                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text('Remove it from my order', style: TextStyle(fontSize: 13, color: Colors.black54)),
 
-                                    Visibility(
-                                      visible: ifCancelled,
-                                      child: SizedBox(
-                                        height: 20,
-                                        child: OutlinedButton(
-                                          style: ButtonStyle(
-                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0))),
-                                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                            backgroundColor: MaterialStateProperty.all(Colors.redAccent),
-                                            overlayColor: MaterialStateProperty.all(Colors.black12),
-                                            side: MaterialStateProperty.all(BorderSide(
-                                              color: Colors.redAccent,
-                                              width: 1.0,
-                                              style: BorderStyle.solid,)),
-                                          ),
-                                          child:Text("$cancelDetails", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
+                                    SizedBox(
+                                      height: 20,
+                                      child: OutlinedButton(
+                                        style: ButtonStyle(
+                                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(5.0))),
+                                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                          backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                                          overlayColor: MaterialStateProperty.all(Colors.black12),
+                                          side: MaterialStateProperty.all(BorderSide(
+                                            color: Colors.redAccent,
+                                            width: 1.0,
+                                            style: BorderStyle.solid,)),
                                         ),
+                                        child:Text("$cancelDetails", style: TextStyle(color: Colors.white, fontSize: 12, fontStyle: FontStyle.normal)),
                                       ),
                                     ),
                                   ],
-                                )
+                                ),
+                              ),
                             ),
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                              child: Text('SPECIAL INSTRUCTIONS', style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black)),
+                              child: Text('SPECIAL INSTRUCTIONS',
+                                style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
                             ),
 
                             Padding(
                               padding:EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
                               child: new TextFormField(
                                 enabled: false,
-                                cursorColor: Colors.deepOrange,
-                                style: TextStyle(color: Colors.black54, fontSize: 13),
+                                cursorColor: Colors.green[400],
+                                style: GoogleFonts.openSans(color: Colors.black54, fontSize: 13),
                                 controller: TextEditingController(text: '$instruction'),
                                 maxLines: 4,
                                 decoration: InputDecoration(
                                   contentPadding: EdgeInsets.fromLTRB(10.0, 0.5, 10.0, 10.0),
                                   focusedBorder:OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
+                                    borderSide: BorderSide(color: Colors.green[400], width: 2.0),
                                   ),
                                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
                                 ),
@@ -645,7 +736,7 @@ class _ToDeliver extends State<ToDeliverGood> {
                                   children: [
                                     Flexible(
                                       child: SizedBox(
-                                        height: 35,
+                                        height: 30,
                                         child: OutlinedButton(
                                           onPressed: () async {
 
@@ -656,8 +747,8 @@ class _ToDeliver extends State<ToDeliverGood> {
                                                 showCancelBtn: true,
                                                 type: CoolAlertType.warning,
                                                 text: "Are you sure?",
-                                                confirmBtnColor: Colors.deepOrangeAccent,
-                                                backgroundColor: Colors.deepOrangeAccent,
+                                                confirmBtnColor: Colors.green[400],
+                                                backgroundColor: Colors.green[400],
                                                 barrierDismissible: false,
                                                 confirmBtnText: 'Yes',
                                                 onConfirmBtnTap: () async {
@@ -674,7 +765,7 @@ class _ToDeliver extends State<ToDeliverGood> {
 
                                           },
                                           style: ButtonStyle(
-                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(25.0))),
+                                            shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: new BorderRadius.circular(10.0))),
                                             padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
                                             backgroundColor: MaterialStateProperty.all(Colors.redAccent),
                                             overlayColor: MaterialStateProperty.all(Colors.black12),
@@ -683,7 +774,9 @@ class _ToDeliver extends State<ToDeliverGood> {
                                               width: 1.0,
                                               style: BorderStyle.solid,)),
                                           ),
-                                          child:Text("CANCEL ORDER(S)", style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold)),
+                                          child:Text("CANCEL ORDER(S)",
+                                            style: TextStyle(color: Colors.white, fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -709,25 +802,34 @@ class _ToDeliver extends State<ToDeliverGood> {
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                          // Navigator.of(context).push(_signIn());
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         } else {
                           if (widget.mop == 'Pick-up') {
-                            Navigator.of(context).push(_orderSummaryPickupGoods(widget.ticket, widget.ticketId));
+                            Navigator.of(context).push(_orderSummaryPickupGoods(widget.ticket, widget.ticketId)).then((val)=>{onRefresh()});
                           } else if (widget.mop == 'Delivery') {
-                            Navigator.of(context).push(_orderSummaryDeliveryGoods(widget.ticket, widget.ticketId));
+                            Navigator.of(context).push(_orderSummaryDeliveryGoods(widget.ticket, widget.ticketId)).then((val)=>{onRefresh()});
                           }
                         }
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.green,
+                        color: Colors.green[400],
                         inverted: false,
-                        rounded: true,
+                        rounded: false,
                         size: SleekButtonSize.normal,
                         context: context,
                       ),
                       child: Center(
-                        child: Text("NEXT", style:TextStyle(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 18.0),
+                        child: Text("NEXT",
+                          style:GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 16.0,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -747,7 +849,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

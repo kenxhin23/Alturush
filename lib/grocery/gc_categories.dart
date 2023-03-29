@@ -159,51 +159,52 @@ class _GcCategory extends State<GcCategory>{
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.green[300], // Status bar
+            statusBarColor: Colors.green[400], // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green[400],
           elevation: 0.1,
-          iconTheme: new IconThemeData(color: Colors.black54),
-          // title: Row(
-          //   mainAxisAlignment: MainAxisAlignment.start,
-          //   children: [
-          //     Image.asset(
-          //       'assets/png/alturush_text_logo.png',
-          //       fit: BoxFit.contain,
-          //       height: 30,
-          //     ),
-          //     // Container(
-          //     //   padding: const EdgeInsets.all(8.0), child: Text("Participating Businesses",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 18.0),),)
-          //   ],
-          // ),
+          iconTheme: new IconThemeData(color: Colors.white),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.search_outlined, color: Colors.black54, size: 25,),
+              icon: Icon(Icons.search_outlined, color: Colors.white, size: 25,
+                shadows: [
+                  Shadow(
+                    blurRadius: 1.0,
+                    color: Colors.black54,
+                    offset: Offset(1.0, 1.0),
+                  ),
+                ],
+              ),
               onPressed: () async {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 String username = prefs.getString('s_customerId');
                 if(username == null){
-                  Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                  // Navigator.of(context).push(_signIn());
+                  Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+                } else {
+                  Navigator.of(context).push(_search(widget.bUnitCode, widget.groupCode)).then((val)=>{onRefresh()});
                 }
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
-                  bunitCode : widget.bUnitCode,
-                  groupCode : widget.groupCode))).then((val)=>{onRefresh()});
-                // Navigator.of(context).push(_search(widget.bUnitCode));
               }
             ),
             status == null ? TextButton(
               onPressed: () async {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                // await Navigator.of(context).push(_signIn());
+                await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                 loadProfile();
                 getGcCounter();
               },
-              child: Text("Login",style: GoogleFonts.openSans(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 16.0),),
+              child: Text("Login",style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold,fontSize: 16.0),),
             ):
             Padding(
               padding: EdgeInsets.all(0),
@@ -213,13 +214,13 @@ class _GcCategory extends State<GcCategory>{
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   String username = prefs.getString('s_customerId');
                   if(username == null){
-                    Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                    // await Navigator.of(context).push(_signIn());
+                    // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                    await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                     loadProfile();
                     getGcCounter();
                     loadProfilePic();
                   }else{
-                    await Navigator.of(context).push(_profilePage());
+                    await Navigator.of(context).push(_profilePage()).then((val)=>{onRefresh()});
                     loadProfile();
                     getGcCounter();
                     loadProfilePic();
@@ -231,7 +232,7 @@ class _GcCategory extends State<GcCategory>{
                   child: Padding(
                     padding:EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
                     child: profileLoading ? CircularProgressIndicator(
-                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
+                      valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
                     ) : CachedNetworkImage(
                       imageUrl: profilePicture,
                       imageBuilder: (context, imageProvider) => Container(
@@ -240,19 +241,21 @@ class _GcCategory extends State<GcCategory>{
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.white,
+                          border: Border.all(color: Colors.white),
                           image: DecorationImage(
                             image: imageProvider,
                             fit: BoxFit.fill,
                           ),
                         ),
                       ),
-                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.deepOrangeAccent,),
+                      placeholder: (context, url) => const CircularProgressIndicator(color: Colors.white),
                       errorWidget: (context, url, error) => Container(
                         height: 50,
                         width: 50,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.white,
+                          border: Border.all(color: Colors.white),
                           image: DecorationImage(
                             image: AssetImage("assets/jpg/no_photo.jpg"),
                             fit: BoxFit.fill,
@@ -278,23 +281,31 @@ class _GcCategory extends State<GcCategory>{
               animationDuration: Duration(milliseconds: 300),
               animationType: BadgeAnimationType.slide,
               showBadge: showBadge,
-              badgeColor: Colors.green,
+              badgeColor: Colors.white,
               badgeContent: Text('${cartCount.toString()}',
-                style: TextStyle(color: Colors.white, fontSize: 10),
+                style: TextStyle(color: Colors.green[400], fontSize: 11, fontWeight: FontWeight.bold),
               ),
               child: Padding(
                 padding: EdgeInsets.only(right: 25),
                 child: SizedBox(width: 25,
-                  child: IconButton(icon: Icon(CupertinoIcons.cart,),
+                  child: IconButton(icon: Icon(CupertinoIcons.cart,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 1.0,
+                        color: Colors.black54,
+                        offset: Offset(1.0, 1.0),
+                      ),
+                    ],
+                  ),
                     onPressed: () async {
                       SharedPreferences prefs = await SharedPreferences.getInstance();
                       String username = prefs.getString('s_customerId');
                       if(username == null){
-                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                        // await Navigator.of(context).push(_signIn());
+                        // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                        await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         getGcCounter();
                       } else {
-                        await Navigator.of(context).push(_gcViewCart());
+                        await Navigator.of(context).push(_gcViewCart()).then((val)=>{onRefresh()});
                         getGcCounter();
                       }
                     }
@@ -322,7 +333,7 @@ class _GcCategory extends State<GcCategory>{
                 ),
               ),
               child: SizedBox(
-                height: 150,
+                height: 160.0,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(25, 30, 25, 30),
                   child: Card(
@@ -343,8 +354,8 @@ class _GcCategory extends State<GcCategory>{
                               ),
                               borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                               border: new Border.all(
-                                color: Colors.black54,
-                                width: 0.5,
+                                color: Colors.green[400],
+                                width: 1,
                               ),
                             ),
                           ),
@@ -353,7 +364,7 @@ class _GcCategory extends State<GcCategory>{
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.normal,
-                              fontSize: 18.0
+                              fontSize: 20.0
                             )
                           ),
                           // subtitle: Text('Select from our participating businesses',
@@ -371,16 +382,25 @@ class _GcCategory extends State<GcCategory>{
                 ),
               ),
             ),
-            SizedBox(
-              height: 5.0,
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
-              child: Text('GROCERIES CATEGORY',style: GoogleFonts.openSans(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.normal,
-                fontSize: 18.0),
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.green[300],
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 5, 0, 10),
+                    child: Text('GROCERIES CATEGORY',
+                      style: GoogleFonts.openSans(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.normal,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
 
@@ -395,23 +415,27 @@ class _GcCategory extends State<GcCategory>{
                     itemCount: categoryData == null ? 0 : categoryData.length,
                     itemBuilder: (BuildContext context, int index) {
                       return InkWell(
-                        onTap:  () {
+                        onTap:  () async {
                           print(categoryData[index]['category_no']);
                           print(categoryData[index]['category_name']);
                           // GcLoadStore
-
-
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcLoadStore(
-                              logo          : widget.logo,
-                              categoryName  : categoryData[index]['category_name'],
-                              categoryNo    : categoryData[index]['category_no'],
-                              businessUnit  : widget.businessUnit,
-                              bUnitCode     : widget.bUnitCode,
-                              groupCode     : widget.groupCode
-                          ))).then((val)=>{onRefresh()});
+                          SharedPreferences prefs = await SharedPreferences.getInstance();
+                          String username = prefs.getString('s_customerId');
+                          if(username == null){
+                            await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+                          } else {
+                            await Navigator.of(context).push(_loadGC(
+                                widget.logo,
+                                categoryData[index]['category_name'],
+                                categoryData[index]['category_no'],
+                                widget.businessUnit,
+                                widget.bUnitCode,
+                                widget.groupCode
+                            )).then((val)=>{onRefresh()});
+                          }
                         },
                         child: Container(
-                          height: 120.0,
+                          height: 100.0,
                           width: 30.0,
                           child: Card(
                             color: Colors.white,
@@ -421,8 +445,8 @@ class _GcCategory extends State<GcCategory>{
 
                                 ListTile(
                                   leading:Container(
-                                    width: 50.0,
-                                    height: 50.0,
+                                    width: 55.0,
+                                    height: 55.0,
                                     decoration: new BoxDecoration(
                                       image: new DecorationImage(
                                         image: new NetworkImage(categoryData[index]['image']),
@@ -430,33 +454,37 @@ class _GcCategory extends State<GcCategory>{
                                       ),
                                       borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                       border: new Border.all(
-                                        color: Colors.black54,
-                                        width: 0.5,
+                                        color: Colors.green[400],
+                                        width: 2,
                                       ),
                                     ),
                                   ),
-                                  title: Text(categoryData[index]['category_name'].toString(),style: GoogleFonts.openSans(color: Colors.black,fontStyle: FontStyle.normal,fontWeight:FontWeight.bold,fontSize: 18.0),),
+                                  title: Text(categoryData[index]['category_name'].toString(),
+                                    style: GoogleFonts.openSans(color: Colors.black54, fontWeight:FontWeight.bold, fontSize: 18.0),
+                                  ),
                                 ),
                               ]
                             ),
                           ),
                         ),
                       );
-                    }
+                    },
                   ),
                 ),
               ),
-            )
-          ]
-        )
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-Route _search(bunitCode) {
+Route _search(bunitCode, groupCode) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(bunitCode : bunitCode),
+    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(
+      bunitCode : bunitCode,
+      groupCode : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -474,7 +502,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -490,7 +518,7 @@ Route _profilePage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ProfilePage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -507,7 +535,7 @@ Route _gcViewCart(){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcLoadCart(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -535,7 +563,7 @@ Route _loadGC(
         bUnitCode:bUnitCode,
         groupCode:groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

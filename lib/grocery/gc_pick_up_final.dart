@@ -59,6 +59,8 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
+
+
   var isLoading = true;
   var totalLoading = true;
   var timeCount;
@@ -68,6 +70,12 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
   var grandTotal = 0.0;
   var minimumAmount = 0.0;
   var lt = 0;
+  var townId;
+  var barrioId;
+  var stores;
+  var items;
+  var index = 0;
+  var shipping;
 
   List getBillList = [];
   List getConFeeList = [];
@@ -94,13 +102,6 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
   String tenant;
   String buName;
   String groupID;
-
-  var townId, barrioId;
-  var stores;
-  var items;
-  var index = 0;
-
-  int shipping;
 
   AnimationController controller;
 
@@ -132,7 +133,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       province = placeOrder[0]['d_province'];
       userName = ('${placeOrder[0]['firstname']} ${placeOrder[0]['lastname']}');
       // getTenantSegregate();
-      isLoading = false;
+      // isLoading = false;
     });
     // print(placeOrder);
   }
@@ -148,7 +149,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
         }
       }
       // print(getItemsData);
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -176,10 +177,9 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       }
       priceGroup = loadPriceGroup[0]['price_group'];
       // print(priceGroup);
-
       gcGroupByBu(priceGroup);
       loadCart();
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -190,7 +190,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       loadCartData = res['user_details'];
       items = loadCartData.length;
       // print(loadCartData);
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -198,12 +198,12 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
     var res = await db.getBill(priceGroup);
     if (!mounted) return;
     setState((){
-      totalLoading = false;
+      // totalLoading = false;
       getBillList = res['user_details'];
       bill = double.parse(getBillList[0]['d_subtotal']);
       grandTotal = bill+(conFee);
-      totalLoading = false;
-      isLoading = false;
+      // totalLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -219,7 +219,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
         displayAdd(groupID);
       }
       stores = getBuName.length;
-      getConFee(lt);
+      // getConFee(lt);
       totalLoading = false;
       isLoading = false;
     });
@@ -235,7 +235,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       print(getBu);
       print('mao ni ag group id');
       print(groupID);
-      isLoading = false;
+      // isLoading = false;
     });
     // print(getBu.length);
   }
@@ -251,7 +251,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       conFee = fee * lt;
       minimumAmount = double.parse(getConFeeList[0]['minimum_order_amount']);
       getBill(priceGroup, conFee);
-      isLoading = false;
+      // isLoading = false;
     });
   }
 
@@ -261,7 +261,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       widget.deliveryDateData,
       widget.deliveryTimeData,
       widget.buData,
-      widget.grandTotal,
+      grandTotal,
       widget.pickingFee,
       widget.placeRemarksData,
       widget.pickUpOrDelivery,
@@ -304,51 +304,56 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
       isDismissible: true,
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
+        borderRadius: BorderRadius.only(topRight:  Radius.circular(15),topLeft:  Radius.circular(15)),
       ),
       builder: (ctx) {
         return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
           return Container(
-            height: MediaQuery.of(context).size.height  * 0.4,
+            height: MediaQuery.of(context).size.height * 0.4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
 
-                SizedBox(height: 5),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.green[400],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                  child: SizedBox(height: 35,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      Text("Select your address",
+                        style: GoogleFonts.openSans(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
 
-                        Text("Select your address",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.green)),
-
-                        OutlinedButton(
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(20))),
-                            backgroundColor: MaterialStateProperty.all(Colors.green),
-                            overlayColor: MaterialStateProperty.all(Colors.black12),
-                            side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.green,
+                      OutlinedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
+                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                          overlayColor: MaterialStateProperty.all(Colors.black12),
+                          side: MaterialStateProperty.all(BorderSide(
+                              color: Colors.green[400],
                               width: 1.0,
-                              style: BorderStyle.solid,)),
+                              style: BorderStyle.solid),
                           ),
-                          onPressed:(){
-                            Navigator.pop(context);
-                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
-                            refreshKey.currentState.show();
-                          },
-                          child:Text("+ Add new",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 14.0),),
                         ),
-                      ],
-                    )
-                  )
+                        onPressed:(){
+                          Navigator.pop(context);
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
+                        },
+                        child:Text("+ Add new",
+                          style: GoogleFonts.openSans(color:Colors.green[400], fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-
-                Divider(thickness: 1, color: Colors.green),
 
                 Expanded(
                   child: Scrollbar(
@@ -380,22 +385,28 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                                     children: [
 
                                       Padding(
-                                        padding: EdgeInsets.only(top: 5,),
-                                        child: Text('${getItemsData[index]['firstname']} ${getItemsData[index]['lastname']}',style: TextStyle(fontSize: 14, color: Colors.black),),
+                                        padding: EdgeInsets.only(top: 5),
+                                        child: Text('${getItemsData[index]['firstname']} ${getItemsData[index]['lastname']}',
+                                          style: GoogleFonts.openSans(fontSize: 14, color: Colors.black),
+                                        ),
                                       ),
 
                                       Padding(
                                         padding: EdgeInsets.symmetric(vertical: 5),
                                         child: Text('${getItemsData[index]['street_purok']}, ${getItemsData[index]['d_brgName']}, \n${getItemsData[index]['d_townName']}, '
-                                            '${getItemsData[index]['zipcode']}, ${getItemsData[index]['d_province']}', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13, color: Colors.black54)),
-                                      )
+                                            '${getItemsData[index]['zipcode']}, ${getItemsData[index]['d_province']}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                        ),
+                                      ),
                                     ],
                                   ),
 
                                   Padding(
                                     padding: EdgeInsets.only(right: 10),
-                                    child: Text('${getItemsData[index]['d_contact']}',style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black)),
-                                  )
+                                    child: Text('${getItemsData[index]['d_contact']}',style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black),
+                                    ),
+                                  ),
                                 ],
                               ),
                               value: index,
@@ -419,7 +430,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                       },
                     ),
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -436,6 +447,7 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
     getBuSegregate();
     getPlaceOrderData();
     initController();
+    grandTotal = widget.subTotal + widget.pickingFee;
     print(widget.groupValue);
     print(widget.deliveryDateData);
     print(widget.deliveryTimeData);
@@ -476,15 +488,25 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.green[300], // Status bar
+            statusBarColor: Colors.green[400],
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green[400],
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Summary (Pick-up)",style: GoogleFonts.openSans(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 18.0),),
+          title: Text("Summary (Pick-up)",
+            style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+          ),
         ),
         body: isLoading
             ? Center(
@@ -507,66 +529,85 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                       padding: EdgeInsets.zero,
                       children: <Widget>[
 
-                        Divider(thickness: 1, color: Colors.green),
-
-                        SizedBox(height: 30,
+                        Container(
+                          height: 40,
+                          color: Colors.green[300],
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                                padding: EdgeInsets.only(left: 10),
                                 child: new Text("CUSTOMER ADDRESS",
-                                  style: TextStyle(color: Colors.green, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14.0),
                                 ),
                               ),
 
                               Padding(
-                                padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
-                                child: SizedBox(width: 175,
+                                padding: EdgeInsets.only(left: 5.0, right: 15.0),
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 175,
                                   child: OutlinedButton.icon(
                                     onPressed: () async{
                                       FocusScope.of(context).requestFocus(FocusNode());
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                        // Navigator.of(context).push(_signIn());
+                                        // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                        Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                       }else{
                                         getPlaceOrderData();
                                         displayAddresses(context).then((val) => {onRefresh()});
                                       }
                                     },
-                                    label: Text('MANAGE ADDRESS',  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.white)),
+                                    label: Text('MANAGE ADDRESS',  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.green)),
                                     style: ButtonStyle(
                                       padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                      backgroundColor: MaterialStateProperty.all(Colors.green),
+                                      backgroundColor: MaterialStateProperty.all(Colors.white),
                                       overlayColor: MaterialStateProperty.all(Colors.black12),
                                       side: MaterialStateProperty.all(BorderSide(
-                                        color: Colors.green,
-                                        width: 1.0,
-                                        style: BorderStyle.solid),
+                                          color: Colors.green,
+                                          width: 1.0,
+                                          style: BorderStyle.solid),
                                       ),
                                     ),
                                     icon: Wrap(
                                       children: [
-                                        Icon(Icons.settings_outlined, color: Colors.white, size: 18,)
+                                        Icon(Icons.settings_outlined, color: Colors.green, size: 18,)
                                       ],
                                     ),
                                   ),
-                                )
+                                ),
                               ),
                             ],
-                          )
+                          ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.green),
+
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Recipient: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                              ),
+                              Text("${userName.toString()}",
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                            ],
+                          ),
+                        ),
 
                         Padding(
                           padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
                           child: Row(
                             children: <Widget>[
-                              Text("Customer: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                              Text("${userName.toString()}", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0)),
+                              Text("Contact Number: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Text("${placeContactNo.toString()}",
+                                style: TextStyle(fontSize: 14.0),
+                              ),
                             ],
                           ),
                         ),
@@ -575,242 +616,146 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                           padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
                           child: Row(
                             children: <Widget>[
-                              Text("Contact Number: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                              Text("${placeContactNo.toString()}", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0)),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
-                          child: Row(
-                            children: <Widget>[
-                              Text("Address: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0),),
+                              Text("Address: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
                               Text("$street, $placeOrderBrg, $placeOrderTown, $province",
-                                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0))
-                            ],
-                          )
-                        ),
-
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                          child: Row(
-                            children: <Widget>[
-                              Text("Landmark: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                              Flexible(child: Text("$placeRemarks", style: TextStyle(fontSize: 14.0), maxLines: 6, overflow: TextOverflow.ellipsis)
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           )
                         ),
 
-                        Divider(thickness: 1, color: Colors.green),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Landmark: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Flexible(
+                                child: Text("$placeRemarks",
+                                  style: TextStyle(fontSize: 14.0),
+                                  maxLines: 6, overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          )
+                        ),
 
-                        SizedBox(height: 30,
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(0),
+                              child: Text("TOTAL SUMMARY",
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                            ),
+                          )
+                        ),
+
+
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("No. of Store(s)",
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('${widget.stores}',
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("No. of Item(s)",
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text("${widget.items}",
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 0.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Total Amount',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('₱ ${oCcy.format(widget.subTotal)}',
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(15.0, 15.0, 15.0, 5.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Picking Fee',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+
+                              Text('₱ ${oCcy.format(widget.pickingFee)}',
+                                style: TextStyle(fontSize: 14.0),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 6, 0, 0),
-                            child: Text("TOTAL SUMMARY", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.green)),
+                            padding: EdgeInsets.fromLTRB(15.0, 0.0, 15.0, 0.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('TOTAL AMOUNT TO PAY',
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.green[400]),
+                                ),
+                                Text('₱ ${oCcy.format(grandTotal)}',
+                                  style: TextStyle(fontSize: 14.0),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.green),
-
                         Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                          padding: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 0.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('No. of Store(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('${widget.stores}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
+                              Text('PAYMENT METHOD',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('Pay via CASH',
+                                style: TextStyle(fontSize: 14.0),
+                              ),
                             ],
                           ),
                         ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('No. of Item(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('${widget.items}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Total Amount',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('₱ ${oCcy.format(widget.subTotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('Picking Fee',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('₱ ${oCcy.format(widget.pickingFee)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('TOTAL AMOUNT TO PAY',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('₱ ${oCcy.format(widget.grandTotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('PAYMENT METHOD',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-
-                              Text('Pay via CASH',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                            ],
-                          ),
-                        ),
-
-                        Divider(thickness: 1, color: Colors.green),
                       ],
                     ),
                   )
                 ),
               ),
-              // child:Scrollbar(
-              //   child: ListView(
-              //     children: [
-              //       totalLoading
-              //           ? Padding(
-              //         padding:EdgeInsets.fromLTRB(20.0,20.0, 5.0, 20.0),
-              //         child: Center(
-              //           child: CircularProgressIndicator(
-              //             valueColor: new AlwaysStoppedAnimation<Color>(Colors.green),
-              //           ),
-              //         ),
-              //       ) : Wrap(
-              //         direction: Axis.horizontal,
-              //         children:[
-              //           Row(
-              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //             children: [
-              //               Padding(
-              //                 padding:EdgeInsets.fromLTRB(20.0, 7.0, 5.0, 5.0),
-              //                 child: new Text("Picking Fee:", style: TextStyle(color: Colors.black87.withOpacity(0.8),fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //               ),
-              //               Padding(
-              //                 padding:EdgeInsets.fromLTRB(20.0, 7.0, 20.0, 5.0),
-              //                 child: new Text("₱ ${oCcy.format(conFee*lt)}", style: TextStyle(color: Colors.black87.withOpacity(0.8),fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //               ),
-              //             ],
-              //           ),
-              //
-              //           Row(
-              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //             children: [
-              //               Padding(
-              //                 padding:EdgeInsets.fromLTRB(20.0, 7.0, 5.0, 5.0),
-              //                 child: new Text("Total:", style: TextStyle(color: Colors.black87.withOpacity(0.8),fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //               ),
-              //               Padding(
-              //                 padding:EdgeInsets.fromLTRB(20.0, 7.0, 20.0, 5.0),
-              //                 child: new Text("₱ ${oCcy.format(bill)}", style: TextStyle(color: Colors.black87.withOpacity(0.8),fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //               ),
-              //             ],
-              //           ),
-              //
-              //           Row(
-              //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //             children: [
-              //               Padding(
-              //                 padding:EdgeInsets.fromLTRB(20.0, 7.0, 5.0, 5.0),
-              //                 child: new Text("Grand Total:", style: TextStyle(color: Colors.black87.withOpacity(0.8),fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //               ),
-              //
-              //               Padding(
-              //                 padding:EdgeInsets.fromLTRB(20.0, 7.0, 20.0, 5.0),
-              //                 child: new Text("₱ ${oCcy.format(grandTotal)}", style: TextStyle(color: Colors.black87.withOpacity(0.8),fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //               ),
-              //            ],
-              //           ),
-              //          ],
-              //         ),
-              //         Divider(
-              //           color: Colors.black87.withOpacity(0.8),
-              //         ),
-              //
-              //         ListView.builder(
-              //         physics: BouncingScrollPhysics(),
-              //         shrinkWrap: true,
-              //         itemCount: widget.buNameData == null ? 0: widget.buNameData.length,
-              //         itemBuilder: (BuildContext context, int index) {
-              //             // return Text(widget.buNameData[index]);
-              //             return Column(
-              //                 crossAxisAlignment: CrossAxisAlignment.start,
-              //                 children: [
-              //
-              //                   Padding(
-              //                     padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-              //                     child: new Text(widget.buNameData[index], style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 22.0),),
-              //                   ),
-              //                   Padding(
-              //                     padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-              //                     child: new Text("Total: ₱ ${widget.totalData[index]}", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //                   ),
-              //                   Padding(
-              //                     padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-              //                     child: new Text("Picking fee: "+conFee.toString(), style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //                   ),
-              //                   Padding(
-              //                     padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-              //                     child: new Text("Pick up date: ${widget.deliveryDateData[index]} : ${widget.deliveryTimeData[index]}" , style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //                   ),
-              //                   // Padding(
-              //                   //   padding: EdgeInsets.fromLTRB(20, 5, 5, 5),
-              //                   //   child: new Text("Remarks ${widget.placeRemarksData[index]}", style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 20.0),),
-              //                   // ),
-              //                   // Padding(
-              //                   //   padding: EdgeInsets.fromLTRB(20, 5, 5, 5),
-              //                   //   child: new Text(widget.placeRemarks[index], style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 18.0),),
-              //                   // ),
-              //                 ]);
-              //               }
-              //             ),
-              //             Padding(
-              //               padding: EdgeInsets.fromLTRB(20, 5, 5, 5),
-              //               child: new Text("MOP : ${widget.modeOfPayment}", style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 20.0),
-              //               ),
-              //             ),
-              //
-              //
-              //     ],
-              //   ),
-              // ),
             ),
 
             Padding(
@@ -823,25 +768,15 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                          // Navigator.of(context).push(_signIn());
+                          Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         }else{
-                          print(widget.groupValue);
-                          print(widget.deliveryDateData);
-                          print(widget.deliveryTimeData);
-                          print(widget.buData);
-                          print(widget.subTotal);
-                          print(widget.pickingFee);
-                          print(widget.placeRemarksData);
-                          print(widget.pickUpOrDelivery);
                           submitOrder2();
-
                         }
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.green,
+                        color: Colors.green[400],
                         inverted: false,
-                        rounded: true,
+                        rounded: false,
                         size: SleekButtonSize.normal,
                         context: context,
                       ),
@@ -849,13 +784,27 @@ class _GcPickUpFinal extends State<GcPickUpFinal> with TickerProviderStateMixin{
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(CupertinoIcons.paperplane),
+                            Icon(CupertinoIcons.paperplane, size: 20,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
                             SizedBox(width: 5),
                             Text("CHECKOUT",
                               style: TextStyle(
-                                fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 1.0,
+                                    color: Colors.black54,
+                                    offset: Offset(1.0, 1.0),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
@@ -878,7 +827,23 @@ Route _profilePageRoute() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => TrackOrder(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _addNewAddress() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => AddNewAddress(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -894,7 +859,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

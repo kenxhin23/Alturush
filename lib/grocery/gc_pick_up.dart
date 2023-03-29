@@ -21,8 +21,9 @@ class GcPickUp extends StatefulWidget {
   final grandTotal;
   final priceGroup;
   final tempID;
+  final townID;
 
-  const GcPickUp({Key key, this.stores, this.items, this.subTotal, this.pickingFee, this.grandTotal, this.priceGroup, this.tempID}) : super(key: key);
+  const GcPickUp({Key key, this.stores, this.items, this.subTotal, this.pickingFee, this.grandTotal, this.priceGroup, this.tempID, this.townID}) : super(key: key);
 
   @override
   _GcPickUp createState() => _GcPickUp();
@@ -32,6 +33,7 @@ class _GcPickUp extends State<GcPickUp> {
   GlobalKey<FormState> _key = GlobalKey<FormState>();
   final db = RapidA();
   final oCcy = new NumberFormat("#,##0.00", "en_US");
+
   List<TextEditingController> _deliveryDate = [];
   List<TextEditingController> _deliveryTime = [];
   List<TextEditingController> placeRemarks = [];
@@ -88,12 +90,13 @@ class _GcPickUp extends State<GcPickUp> {
       trueTime = res['user_details'];
 
       tCount = DateTime.parse(trueTime[0]['date_today']+" "+trueTime[0]['hour_today']).difference(DateTime.parse(trueTime[0]['date_today']+" "+"15:00:00")).inHours;
+      print(tCount);
 
-      if (tCount > 0) {
+      if (tCount >= 0) {
         print('next day');
         d1 = DateTime.parse(trueTime[0]['next_day']);
         time = false;
-      } else {
+      } else if (tCount < 0){
         d1 = DateTime.parse(trueTime[0]['date_today']);
         time = true;
         print('date today');
@@ -196,16 +199,16 @@ class _GcPickUp extends State<GcPickUp> {
     });
   }
 
-  Future loadCart() async {
-    var res = await db.gcLoadCartData();
-    if (!mounted) return;
-    setState(() {
-      loadCartData = res['user_details'];
-      items = loadCartData.length;
-
-      isLoading = false;
-    });
-  }
+  // Future loadCart() async {
+  //   var res = await db.gcLoadCartData();
+  //   if (!mounted) return;
+  //   setState(() {
+  //     loadCartData = res['user_details'];
+  //     items = loadCartData.length;
+  //
+  //     isLoading = false;
+  //   });
+  // }
 
   Future loadCart2() async {
     var res = await db.gcLoadCartData2(widget.tempID);
@@ -265,8 +268,9 @@ class _GcPickUp extends State<GcPickUp> {
     }
   }
 
-  updateCartStock(id, stk) async {
-    await db.updateCartStk(id, stk);
+  updateCartIcoos(id, stk) async {
+    print('na update na');
+    await db.updateCartIcoos(id, stk);
   }
 
   modeOfPayment(_modeOfPayment){
@@ -393,15 +397,24 @@ class _GcPickUp extends State<GcPickUp> {
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.green[300], // Status bar
+            statusBarColor: Colors.green[400], // Status bar
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green[400],
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Review Checkout Form (Pick-up)",style: GoogleFonts.openSans(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text("Review Checkout Form (Pick-up)",style: GoogleFonts.openSans(fontSize: 16.0, fontWeight: FontWeight.bold, color:Colors.white),
+          ),
         ),
         body: isLoading
           ? Center(
@@ -430,37 +443,51 @@ class _GcPickUp extends State<GcPickUp> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
 
-                            Divider(thickness: 1, color: Colors.green),
 
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text(getBuName[index]['buName'], style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 15.0)),
-                            ),
-
-                            Divider(thickness: 1, color: Colors.green),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
+                            Container(
+                              height: 40,
+                              color: Colors.green[300],
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('Product Details',
-                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-                                  ),
-                                  Text('Total Price',
-                                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    child: Text(getBuName[index]['buName'], style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
                                   ),
                                 ],
                               ),
                             ),
 
-                            Divider(color: Colors.black54),
+                            Container(
+                              height: 40,
+                              color: Colors.green[100],
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('Product Details',
+                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                    ),
+                                    Text('Total Price',
+                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            // Divider(color: Colors.black54),
 
                             ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: loadCartData == null ? 0 : loadCartData.length,
                               itemBuilder: (BuildContext context, int index0) {
+                                if (loadCartData[index0]['icoos'] == '0') {
+                                  option = "Cancel Item";
+                                } else {
+                                  option = "Cancel Order";
+                                }
 
                                 return Visibility(
                                   visible: loadCartData[index0]['buCode'] != getBuName[index]['buId'] ? false : true,
@@ -473,57 +500,56 @@ class _GcPickUp extends State<GcPickUp> {
                                           Row(
                                             children: <Widget>[
                                               Padding(
-                                                  padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-                                                  child: Column(
-                                                    children: <Widget>[
-                                                      CachedNetworkImage(
-                                                        imageUrl:  loadCartData[index0]['product_image'],
-                                                        fit: BoxFit.contain,
-                                                        imageBuilder: (context, imageProvider) => Container(
-                                                          height: 75,
-                                                          width: 75,
-                                                          decoration: new BoxDecoration(
-                                                            shape: BoxShape.circle,
-                                                            image: new DecorationImage(
-                                                              image: imageProvider,
-                                                              fit: BoxFit.scaleDown,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
-                                                        errorWidget: (context, url, error) => Container(
-                                                          height: 75,
-                                                          width: 75,
-                                                          decoration: new BoxDecoration(
-                                                            shape: BoxShape.circle,
-                                                            image: new DecorationImage(
-                                                              image: AssetImage("assets/png/No_image_available.png"),
-                                                              fit: BoxFit.scaleDown,
-                                                            ),
+                                                padding: EdgeInsets.all(0.0),
+                                                child: Column(
+                                                  children: <Widget>[
+                                                    CachedNetworkImage(
+                                                      imageUrl:  loadCartData[index0]['product_image'],
+                                                      fit: BoxFit.contain,
+                                                      imageBuilder: (context, imageProvider) => Container(
+                                                        height: 75,
+                                                        width: 75,
+                                                        decoration: new BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          image: new DecorationImage(
+                                                            image: imageProvider,
+                                                            fit: BoxFit.scaleDown,
                                                           ),
                                                         ),
                                                       ),
-                                                      // Container(
-                                                      //   width: 75.0, height: 75.0,
-                                                      //   decoration: new BoxDecoration(
-                                                      //     shape: BoxShape.circle,
-                                                      //     image: new DecorationImage(
-                                                      //       image: new NetworkImage(
-                                                      //           loadCartData[index]['main_item']['image']),
-                                                      //       fit: BoxFit.scaleDown,
-                                                      //     ),
-                                                      //   ),
-                                                      // ),
+                                                      placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey),
+                                                      errorWidget: (context, url, error) => Container(
+                                                        height: 75,
+                                                        width: 75,
+                                                        decoration: new BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          image: new DecorationImage(
+                                                            image: AssetImage("assets/png/No_image_available.png"),
+                                                            fit: BoxFit.scaleDown,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    // Container(
+                                                    //   width: 75.0, height: 75.0,
+                                                    //   decoration: new BoxDecoration(
+                                                    //     shape: BoxShape.circle,
+                                                    //     image: new DecorationImage(
+                                                    //       image: new NetworkImage(
+                                                    //           loadCartData[index]['main_item']['image']),
+                                                    //       fit: BoxFit.scaleDown,
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
 
-                                                      Padding(
-                                                        padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
-                                                        child: Text("₱ ${loadCartData[index0]['price_price'].toString()}",
-                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                              color: Colors.black),
-                                                        ),
+                                                    Padding(
+                                                      padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
+                                                      child: Text("₱ ${loadCartData[index0]['price_price'].toString()}",
+                                                        style: TextStyle(fontSize: 13, color: Colors.black54),
                                                       ),
-                                                    ],
-                                                  )
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
 
                                               Expanded(
@@ -537,9 +563,10 @@ class _GcPickUp extends State<GcPickUp> {
                                                             padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
                                                             child: RichText(
                                                               overflow: TextOverflow.ellipsis,
+                                                              maxLines: 2,
                                                               text: TextSpan(
-                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                text: ('${loadCartData[index0]['product_name']}'),
+                                                                style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                text: loadCartData[index0]['product_name'],
                                                               ),
                                                             ),
                                                           ),
@@ -548,10 +575,9 @@ class _GcPickUp extends State<GcPickUp> {
                                                         Padding(
                                                           padding: EdgeInsets.fromLTRB(0, 2, 15, 0),
                                                           child: Text("₱ ${loadCartData[index0]['total_price']}",
-                                                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                                color: Colors.green),
+                                                            style: TextStyle(fontSize: 13, color: Colors.black87),
                                                           ),
-                                                        ),
+                                                        )
                                                       ],
                                                     ),
 
@@ -561,79 +587,72 @@ class _GcPickUp extends State<GcPickUp> {
                                                         Padding(
                                                           padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
                                                           child: Text('Quantity: ${loadCartData[index0]['cart_qty']}',
-                                                            style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                                            style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                                           ),
                                                         ),
 
                                                         Padding(
-                                                          padding: EdgeInsets.only(right: 10, top: 5),
-                                                          child: Container(
-                                                            padding: EdgeInsets.all(0),
-                                                            width: 95,
-                                                            child: DropdownButtonFormField(
-                                                              decoration: InputDecoration(
-                                                                //Add isDense true and zero Padding.
-                                                                //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                                                                isDense: true,
-                                                                focusedBorder: OutlineInputBorder(
+                                                            padding: EdgeInsets.only(right: 10, top: 5),
+                                                            child: Container(
+                                                              padding: EdgeInsets.all(0),
+                                                              width: 95,
+                                                              child: DropdownButtonFormField(
+                                                                decoration: InputDecoration(
+                                                                  isDense: true,
+                                                                  focusedBorder: OutlineInputBorder(
                                                                     borderRadius: BorderRadius.circular(5),
-                                                                    borderSide: BorderSide(color: Colors.green.withOpacity(0.8), width: 1)
+                                                                    borderSide: BorderSide(color: Colors.green.withOpacity(0.8), width: 1),
+                                                                  ),
+                                                                  contentPadding: const EdgeInsets.only(left: 5, right: 0),
+                                                                  border: OutlineInputBorder(
+                                                                    borderRadius: BorderRadius.circular(5),
+                                                                  ),
                                                                 ),
-                                                                contentPadding: const EdgeInsets.only(
-                                                                    left: 5, right: 0
+                                                                borderRadius: BorderRadius.circular(5),
+                                                                isExpanded: false,
+                                                                hint: Text('Cancel Item', style: GoogleFonts.openSans(fontSize: 12.0, color: Colors.black54),
                                                                 ),
-                                                                border: OutlineInputBorder(
-                                                                  borderRadius: BorderRadius.circular(5),
+                                                                icon: const Icon(
+                                                                  Icons.arrow_drop_down,
+                                                                  color: Colors.black45,
                                                                 ),
-                                                                //Add more decoration as you want here
-                                                                //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                                                              ),
-                                                              hint: Text(
-                                                                  'Cancel Item', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black)),
-                                                              icon: const Icon(
-                                                                Icons.arrow_drop_down,
-                                                                color: Colors.black45,
-                                                              ),
-                                                              iconSize: 20,
-                                                              items: _option
-                                                                  .map((item) =>
-                                                                  DropdownMenuItem<String>(
+                                                                iconSize: 20,
+                                                                items: _option
+                                                                    .map((item) =>
+                                                                    DropdownMenuItem<String>(
                                                                       value: item,
                                                                       child: Container(
                                                                         margin: EdgeInsets.all(0),
-                                                                        padding: EdgeInsets.zero,
+                                                                        padding: EdgeInsets.all(0),
                                                                         width: 70,
-                                                                        child:Text(item, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black)),
-                                                                      )
-                                                                  ))
-                                                                  .toList(),
-                                                              isExpanded: true,
-                                                              // ignore: missing_return
-                                                              onChanged: (value){
-                                                                setState(() {
-                                                                  selectedValue = value;
-                                                                  stock  = _option.indexOf(value);
+                                                                        child: Text(item,
+                                                                          style: GoogleFonts.openSans(fontSize: 11.0, color: Colors.black54),
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                )
+                                                                    .toList(),
+                                                                onChanged: (value) {
+                                                                  setState(() {
+                                                                    selectedValue = value;
+                                                                    stock = _option.indexOf(value);
 
+                                                                    print(loadCartData[index0]['cart_id']);
+                                                                    print(stock);
 
-                                                                });
-                                                                //Do something when changing the item if you want.
-                                                              },
-                                                              onTap: (){
-                                                              },
-                                                              onSaved: (value) {
-                                                                selectedValue = value.toString();
-
-                                                              },
-                                                            ),
-                                                          ),
+                                                                    updateCartIcoos(loadCartData[index0]['cart_id'], stock);
+                                                                  });
+                                                                },
+                                                              ),
+                                                            )
                                                         )
                                                       ],
                                                     ),
                                                   ],
                                                 ),
-                                              )
+                                              ),
                                             ],
-                                          )
+                                          ),
                                         ],
                                       ),
                                       elevation: 0,
@@ -644,32 +663,43 @@ class _GcPickUp extends State<GcPickUp> {
                               }
                             ),
 
-                            Divider(thickness: 1, color: Colors.black54),
+                            Divider(thickness: 2, color: Colors.grey[200]),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(right: 20),
-                                  child: Text("₱ ${getBuName[index]['total']}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.green)),
-                                )
-                              ],
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10),
+                                    child: Text('Total Amount',
+                                      style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(right: 20),
+                                    child: Text('₱ ${getBuName[index]['total']}',
+                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black87),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
 
-                            Divider(thickness: 1, color: Colors.black54),
+                            Divider(thickness: 2, color: Colors.grey[200]),
 
                             Padding(
                               padding: EdgeInsets.fromLTRB(10, 0, 5, 5),
-                              child: new Text("Setup Date & Time for Pick-up", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),),
+                              child: new Text("Setup Date & Time for Pick-up",
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
                             ),
 
                             Padding(
                               padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-                              child: new Text("Pick-up date*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.black)),
+                              child: new Text("Pick-up date*",
+                                style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black),
+                              ),
                             ),
 
                             Padding(
@@ -691,19 +721,35 @@ class _GcPickUp extends State<GcPickUp> {
                                           child: AlertDialog(
                                             contentPadding: EdgeInsets.all(0),
                                             shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(15.0),
+                                              ),
                                             ),
-                                            titlePadding: const EdgeInsets.only(left: 10, top: 10, bottom: 0),
-                                            title: Text("Set date for this pick-up",style: TextStyle(fontSize: 15.0, color: Colors.green),
+                                            titlePadding: const EdgeInsets.all(0),
+                                            title: Container(
+                                              height: 40,
+                                              decoration: BoxDecoration(
+                                                color: Colors.green[400],
+                                                borderRadius: BorderRadius.only(
+                                                  topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(left: 15, top: 10),
+                                                child: Text("Set date for this pick-up",
+                                                  style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                ),
+                                              ),
                                             ),
                                             content: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Divider(thickness: 1, color: Colors.green),
+                                                SizedBox(height: 10),
+
                                                 Container(
                                                   padding: EdgeInsets.all(0),
-                                                  height:190.0, // Change as per your requirement
+                                                  height:220.0, // Change as per your requirement
                                                   width: 300.0, // Change as per your requirement
                                                   child: Scrollbar(
                                                     child:ListView.builder(
@@ -717,15 +763,19 @@ class _GcPickUp extends State<GcPickUp> {
                                                         n = index1;
 
                                                         var d2 = new DateTime(d1.year, d1.month, d1.day + n);
+                                                        ///for datebase
                                                         final DateFormat formatter = DateFormat('yyyy-MM-dd');
                                                         final String formatted = formatter.format(d2);
+                                                        ///for app display
+                                                        final DateFormat formatter2 = DateFormat('MMMM d, y, EEEE');
+                                                        final String formatted2 = formatter2.format(d2);
                                                         return InkWell(
                                                           onTap: (){
 
                                                             while(deliveryDateData.length > getBuName.length-1){
                                                               deliveryDateData.removeAt(index);
                                                             }
-                                                            _deliveryDate[index].text = formatted;
+                                                            _deliveryDate[index].text = formatted2;
                                                             deliveryDateData.insert(index, _deliveryDate[index].text);
 
                                                             Navigator.of(context).pop();
@@ -748,8 +798,6 @@ class _GcPickUp extends State<GcPickUp> {
                                                                     timeCount = 0;
                                                                   }
                                                                 }
-
-
                                                               });
                                                             }else{
                                                               setState(() {
@@ -770,11 +818,14 @@ class _GcPickUp extends State<GcPickUp> {
                                                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                 children: <Widget>[
                                                                   Padding(
-                                                                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                                                    child: Text('${formatted.toString()}',style: TextStyle(fontSize: 15.0),),
+                                                                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                                                    child: Text('${formatted2.toString()}',
+                                                                      style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                    ),
                                                                   ),
-                                                                ]
+                                                                ],
                                                               ),
+                                                              Divider(thickness: 2, color: Colors.grey[200]),
                                                             ],
                                                           ),
                                                         );
@@ -785,30 +836,28 @@ class _GcPickUp extends State<GcPickUp> {
                                               ],
                                             ),
                                             actions: <Widget>[
+
                                               Padding(
                                                 padding: EdgeInsets.only(right: 5),
                                                 child: TextButton(
                                                   style: ButtonStyle(
-                                                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                                                    backgroundColor: MaterialStateProperty.all(Colors.green[400]),
                                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                       RoundedRectangleBorder(
                                                         borderRadius: BorderRadius.circular(20.0),
-                                                        side: BorderSide(color: Colors.green)
-                                                      )
-                                                    )
-                                                  ),
-                                                  child: Text(
-                                                    'Clear',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
+                                                        side: BorderSide(color: Colors.green[400]),
+                                                      ),
                                                     ),
+                                                  ),
+                                                  child: Text('Clear',
+                                                    style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                                                   ),
                                                   onPressed: () {
                                                     _deliveryDate[index].clear();
                                                     Navigator.of(context).pop();
                                                   },
                                                 ),
-                                              )
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -824,7 +873,7 @@ class _GcPickUp extends State<GcPickUp> {
                                 child: IgnorePointer(
                                   child: new TextFormField(
                                     textInputAction: TextInputAction.done,
-                                    style: TextStyle(fontSize: 13),
+                                    style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                     cursorColor: Colors.deepOrange,
                                     controller: _deliveryDate[index],
                                     validator: (value) {
@@ -834,12 +883,12 @@ class _GcPickUp extends State<GcPickUp> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.date_range,color: Colors.green,),
+                                      prefixIcon: Icon(Icons.date_range,color: Colors.green[400]),
                                       contentPadding: EdgeInsets.all(0),
                                       focusedBorder:OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.green, width: 2.0),
+                                        borderSide: BorderSide(color: Colors.green[400], width: 2.0),
                                       ),
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                     ),
                                   ),
                                 ),
@@ -848,7 +897,9 @@ class _GcPickUp extends State<GcPickUp> {
 
                             Padding(
                               padding: EdgeInsets.fromLTRB(20, 10, 5, 5),
-                              child: new Text("Pick-up time*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.black)),
+                              child: new Text("Pick-up time*",
+                                style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black),
+                              ),
                             ),
 
                             Padding(
@@ -880,19 +931,36 @@ class _GcPickUp extends State<GcPickUp> {
                                             child: AlertDialog(
                                               contentPadding: EdgeInsets.all(0),
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(15.0),
+                                                ),
                                               ),
-                                              titlePadding: const EdgeInsets.only(left: 10, top: 10, bottom: 0),
-                                              title: Text("Set time for this pick-up",style: TextStyle(fontSize: 15.0, color: Colors.green)),
+                                              titlePadding: const EdgeInsets.all(0),
+                                              title: Container(
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.green[400],
+                                                  borderRadius: BorderRadius.only(
+                                                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(left: 15, top: 10),
+                                                  child: Text("Set time for this pick-up",
+                                                    style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
                                               content: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-
-                                                  Divider(thickness: 1, color: Colors.green),
+                                                  SizedBox(
+                                                    height: 10,
+                                                  ),
 
                                                   Container(
-                                                    height:200.0, // Change as per your requirement
+                                                    height:220.0, // Change as per your requirement
                                                     width: 300.0, // Change as per your requirement
                                                     child: Scrollbar(
                                                       child:  ListView.builder(
@@ -929,21 +997,25 @@ class _GcPickUp extends State<GcPickUp> {
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: <Widget>[
                                                                     Padding(
-                                                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                                                      child: Text('${from.toString()}',style: TextStyle(fontSize: 14.0),),
+                                                                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                                                      child: Text('${from.toString()}',
+                                                                        style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                      ),
                                                                     ),
-                                                                  ]
+                                                                  ],
                                                                 ),
+                                                                Divider(thickness: 2, color: Colors.grey[200]),
                                                               ],
                                                             ),
                                                           );
-                                                        }
+                                                        },
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                               actions: <Widget>[
+
                                                 Padding(
                                                   padding: EdgeInsets.only(right: 5),
                                                   child: TextButton(
@@ -952,15 +1024,12 @@ class _GcPickUp extends State<GcPickUp> {
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
                                                           borderRadius: BorderRadius.circular(20.0),
-                                                          side: BorderSide(color: Colors.green)
-                                                        )
-                                                      )
-                                                    ),
-                                                    child: Text(
-                                                      'Clear',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
+                                                          side: BorderSide(color: Colors.green),
+                                                        ),
                                                       ),
+                                                    ),
+                                                    child: Text('Clear',
+                                                      style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                                                     ),
                                                     onPressed: () {
                                                       _deliveryTime[index].clear();
@@ -983,8 +1052,8 @@ class _GcPickUp extends State<GcPickUp> {
                                 },
                                 child: IgnorePointer(
                                   child: new TextFormField(
-                                    style: TextStyle(fontSize: 13),
                                     textInputAction: TextInputAction.done,
+                                    style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                     cursorColor: Colors.green,
                                     controller: _deliveryTime[index],
                                     validator: (value) {
@@ -994,21 +1063,27 @@ class _GcPickUp extends State<GcPickUp> {
                                       return null;
                                     },
                                     decoration: InputDecoration(
-                                      prefixIcon: Icon(CupertinoIcons.time, color: Colors.green,),
+                                      prefixIcon: Icon(CupertinoIcons.time, color: Colors.green[400]),
                                       contentPadding: EdgeInsets.all(0),
                                       focusedBorder:OutlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.green, width: 2.0),
+                                        borderSide: BorderSide(color: Colors.green[400], width: 2.0),
                                       ),
-                                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(15.0),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
+
                             Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: new Text("Special Instruction", style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                              padding: EdgeInsets.only(left: 10),
+                              child: new Text("Special Instruction",
+                                style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
                             ),
+
                             Padding(
                               padding:EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
                               child: new TextFormField(
@@ -1016,27 +1091,29 @@ class _GcPickUp extends State<GcPickUp> {
                                 textInputAction: TextInputAction.done,
                                 cursorColor: Colors.green,
                                 controller: _specialInstruction[index],
-                                style: TextStyle(fontSize: 13),
+                                style: GoogleFonts.openSans(fontSize: 13),
                                 maxLines: 4,
                                 decoration: InputDecoration(
-                                  hintStyle: TextStyle(fontSize: 13),
+                                  hintStyle: GoogleFonts.openSans(fontSize: 13),
                                   hintText:"Special instruction",
                                   contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 10.0),
                                   focusedBorder:OutlineInputBorder(
                                     borderSide: BorderSide(color: Colors.green, width: 2.0),
                                   ),
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
                       );
-                    }
+                    },
                   ),
                 ),
               ),
-            )
+            ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
@@ -1050,33 +1127,51 @@ class _GcPickUp extends State<GcPickUp> {
                       placeRemarksData.clear();
 
                       if (_key.currentState.validate()) {
-                        // Navigator.of(context).push(_gcPickUpFinal(groupValue,_deliveryTime,_deliveryDate,_modeOfPayment,placeRemarks));
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                          // Navigator.of(context).push(_signIn());
+                          Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         }else{
                           Navigator.of(context).push(_gcPickUpFinal(
-                            groupValue,
-                            deliveryDateData,
-                            deliveryTimeData,
-                            buNameData,
-                            buData,
-                            totalData,
-                            convenienceData,
-                            specialInstruction,
-                            _modeOfPayment.text,
-                            widget.stores,
-                            widget.items,
-                            widget.subTotal,
-                            widget.pickingFee,
-                            widget.grandTotal,
-                            widget.priceGroup,
-                            widget.tempID)
-                          );
+                              groupValue,
+                              deliveryDateData,
+                              deliveryTimeData,
+                              buNameData,
+                              buData,
+                              totalData,
+                              convenienceData,
+                              specialInstruction,
+                              _modeOfPayment.text,
+                              widget.stores,
+                              widget.items,
+                              widget.subTotal,
+                              widget.pickingFee,
+                              widget.grandTotal,
+                              widget.priceGroup,
+                              widget.tempID
+                          )).then((val)=>{onRefresh()});
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcPickUpFinal(
+                          //     pickUpOrDelivery  : '1',
+                          //     groupValue        : groupValue,
+                          //     deliveryDateData  : deliveryDateData,
+                          //     deliveryTimeData  : deliveryTimeData,
+                          //     buNameData        : buNameData,
+                          //     buData            : buData,
+                          //     totalData         : totalData,
+                          //     convenienceData   : convenienceData,
+                          //     placeRemarksData  : specialInstruction,
+                          //     modeOfPayment     : _modeOfPayment.text,
+                          //     stores            : widget.stores,
+                          //     items             : widget.items,
+                          //     subTotal          : widget.subTotal,
+                          //     pickingFee        : widget.pickingFee,
+                          //     grandTotal        : widget.grandTotal,
+                          //     priceGroup        : widget.priceGroup,
+                          //     tempID            : widget.tempID
+                          // ))).then((val)=>{onRefresh()});
                         }
                       }
+
 
                       for (int i=0; i<getBuName.length; i++){
                         while(specialInstruction.length > getBuName.length-1){
@@ -1084,25 +1179,12 @@ class _GcPickUp extends State<GcPickUp> {
                         }
                         specialInstruction.insert(i, "'${_specialInstruction[i].text}'");
                       }
+                   },
 
-                      // for(int q=0;q<billPerBu.length;q++){
-                      //   if(double.parse(billPerBu[q])<minimumAmount){
-                      //     w.add('true');
-                      //   }else{
-                      //     w.add('false');
-                      //   }
-                      //   placeRemarksData.add(placeRemarks[q].text);
-                      // }
-                      // if(w.contains('true')){
-                      //     billNotAbove();
-                      // }else{
-                      //
-                      // }
-                         },
                           style: SleekButtonStyle.flat(
-                            color: Colors.green,
+                            color: Colors.green[400],
                             inverted: false,
-                            rounded: true,
+                            rounded: false,
                             size: SleekButtonSize.normal,
                             context: context,
                           ),
@@ -1113,6 +1195,13 @@ class _GcPickUp extends State<GcPickUp> {
                                 fontStyle: FontStyle.normal,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 1.0,
+                                    color: Colors.black54,
+                                    offset: Offset(1.0, 1.0),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -1143,22 +1232,22 @@ Widget _myRadioButton({String title, int value, Function onChanged}) {
 }
 
 Route _gcPickUpFinal(
-    groupValue,
-    deliveryDateData,
-    deliveryTimeData,
-    buNameData,
-    buData,
-    totalData,
-    convenienceData,
-    placeRemarksData,
-    _modeOfPayment,
-    stores,
-    items,
-    subTotal,
-    pickingFee,
-    grandTotal,
-    priceGroup,
-    tempID
+  groupValue,
+  deliveryDateData,
+  deliveryTimeData,
+  buNameData,
+  buData,
+  totalData,
+  convenienceData,
+  placeRemarksData,
+  modeOfPayment,
+  stores,
+  items,
+  subTotal,
+  pickingFee,
+  grandTotal,
+  priceGroup,
+  tempID,
 ){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcPickUpFinal(
@@ -1171,17 +1260,17 @@ Route _gcPickUpFinal(
       totalData         : totalData,
       convenienceData   : convenienceData,
       placeRemarksData  : placeRemarksData,
-      modeOfPayment     : _modeOfPayment,
+      modeOfPayment     : modeOfPayment,
       stores            : stores,
       items             : items,
       subTotal          : subTotal,
       pickingFee        : pickingFee,
       grandTotal        : grandTotal,
       priceGroup        : priceGroup,
-      tempID            : tempID
+      tempID            : tempID,
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1197,7 +1286,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

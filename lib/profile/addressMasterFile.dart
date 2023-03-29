@@ -1,3 +1,4 @@
+import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -48,80 +49,107 @@ class _AddressMasterFile extends State<AddressMasterFile> {
   }
 
   deleteAddress(id) async{
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0))
-          ),
-          contentPadding: EdgeInsets.all(0),
-          content: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(padding: EdgeInsets.only(left: 10, top: 10),
-                  child: Text('Hello!',style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 20))
-              ),
-              Divider(thickness: 1, color: Colors.deepOrangeAccent),
-              SizedBox(height: 15,),
-              SingleChildScrollView(
-                child:Padding(
-                    padding:EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
-                    child: Text("Do you want to delete this address?",style: TextStyle(color: Colors.black54, fontWeight: FontWeight.normal, fontSize: 16))
-                ),
-              ),
-              SizedBox(height: 15,),
-            ],
-          ),
 
-          actions: <Widget>[
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color: Colors.deepOrangeAccent)
-                  )
-                )
-              ),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: Colors.deepOrangeAccent,
-                ),
-              ),
-              onPressed: (){
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color: Colors.deepOrangeAccent)
-                  )
-                )
-              ),
-              child: Text(
-                'Proceed',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              onPressed: () async{
-                Navigator.of(context).pop();
-                await db.deleteAddress(id);
-                loadAddress();
-              },
-            ),
-          ],
-        );
-      },
+    CoolAlert.show(
+        context: context,
+        type: CoolAlertType.warning,
+        text: "Do you want to delete this address?",
+        confirmBtnColor: Colors.deepOrangeAccent,
+        backgroundColor: Colors.deepOrangeAccent,
+        barrierDismissible: false,
+        showCancelBtn: true,
+        cancelBtnText: "CANCEL",
+        confirmBtnText: "PROCEED",
+        onConfirmBtnTap: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String username = prefs.getString('s_customerId');
+          if (username == null) {
+            Navigator.of(context).push(_signIn());
+          }
+          if (username != null) {
+            Navigator.of(context).pop();
+            await db.deleteAddress(id);
+            loadAddress();
+          }
+        },
+        onCancelBtnTap: () async {
+          Navigator.of(context).pop();
+        }
     );
+    // showDialog<void>(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       shape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.all(Radius.circular(8.0))
+    //       ),
+    //       contentPadding: EdgeInsets.all(0),
+    //       content: Column(
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           Padding(padding: EdgeInsets.only(left: 10, top: 10),
+    //               child: Text('Hello!',style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 20))
+    //           ),
+    //           Divider(thickness: 1, color: Colors.deepOrangeAccent),
+    //           SizedBox(height: 15,),
+    //           SingleChildScrollView(
+    //             child:Padding(
+    //                 padding:EdgeInsets.fromLTRB(20.0, 0.0, 20.0, 0.0),
+    //                 child: Text("Do you want to delete this address?",style: TextStyle(color: Colors.black54, fontWeight: FontWeight.normal, fontSize: 16))
+    //             ),
+    //           ),
+    //           SizedBox(height: 15,),
+    //         ],
+    //       ),
+    //
+    //       actions: <Widget>[
+    //         TextButton(
+    //           style: ButtonStyle(
+    //             backgroundColor: MaterialStateProperty.all(Colors.transparent),
+    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    //               RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.circular(20.0),
+    //                 side: BorderSide(color: Colors.deepOrangeAccent)
+    //               )
+    //             )
+    //           ),
+    //           child: Text(
+    //             'Cancel',
+    //             style: TextStyle(
+    //               color: Colors.deepOrangeAccent,
+    //             ),
+    //           ),
+    //           onPressed: (){
+    //             Navigator.of(context).pop();
+    //           },
+    //         ),
+    //         TextButton(
+    //           style: ButtonStyle(
+    //             backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+    //             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    //               RoundedRectangleBorder(
+    //                 borderRadius: BorderRadius.circular(20.0),
+    //                 side: BorderSide(color: Colors.deepOrangeAccent)
+    //               )
+    //             )
+    //           ),
+    //           child: Text(
+    //             'Proceed',
+    //             style: TextStyle(
+    //               color: Colors.white,
+    //             ),
+    //           ),
+    //           onPressed: () async{
+    //             Navigator.of(context).pop();
+    //             await db.deleteAddress(id);
+    //             loadAddress();
+    //           },
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
   }
 
   Future checkIfHasId() async{
@@ -162,15 +190,16 @@ class _AddressMasterFile extends State<AddressMasterFile> {
       appBar: AppBar(
         titleSpacing: 0,
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.deepOrangeAccent[200], // Status bar
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Your Addresses",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+        title: Text("Your Addresses",style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold,fontSize: 16.0),),
       ),
       body:isLoading
           ? Center(
@@ -240,15 +269,20 @@ class _AddressMasterFile extends State<AddressMasterFile> {
 
                                           Padding(
                                             padding: EdgeInsets.only(top: 5),
-                                            child: Text('${loadAddressList[index]['firstname']} ${loadAddressList[index]['lastname']}',style: TextStyle(fontSize: 16, color: Colors.black),),
+                                            child: Text('${loadAddressList[index]['firstname']} ${loadAddressList[index]['lastname']}',
+                                              style: GoogleFonts.openSans(fontSize: 15, color: Colors.black54, fontWeight: FontWeight.bold),
+                                            ),
                                           ),
 
                                           Padding(
                                             padding: EdgeInsets.only(top: 5, bottom: 5, right: 5),
                                             child: Text('${loadAddressList[index]['street_purok']}, ${loadAddressList[index]['d_brgName']}, ${loadAddressList[index]['d_townName']}, '
-                                              '${loadAddressList[index]['zipcode']}, ${loadAddressList[index]['d_province']}' , overflow: TextOverflow.ellipsis, maxLines: 5, style: TextStyle(fontSize: 14, color: Colors.black54),
+                                              '${loadAddressList[index]['zipcode']}, ${loadAddressList[index]['d_province']}' ,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 5,
+                                              style: GoogleFonts.openSans(fontSize: 14, color: Colors.black54),
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
                                     ),
@@ -266,9 +300,14 @@ class _AddressMasterFile extends State<AddressMasterFile> {
                                                     String username = prefs.getString('s_customerId');
                                                     if(username == null){
 
-                                                      Navigator.of(context).push(_signIn());
+                                                      Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                                     } else {
-                                                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddress(idd: loadAddressList[index]['id'], cusId: loadAddressList[index]['d_customerId'])),);
+
+                                                      Navigator.of(context).push(editAddress(
+                                                          loadAddressList[index]['id'],
+                                                          loadAddressList[index]['d_customerId']
+                                                      )).then((val)=>{onRefresh()});
+                                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => EditAddress(idd: loadAddressList[index]['id'], cusId: loadAddressList[index]['d_customerId'])),);
                                                     }
 
                                               },
@@ -293,7 +332,7 @@ class _AddressMasterFile extends State<AddressMasterFile> {
                                                       String username = prefs.getString('s_customerId');
                                                       if(username == null){
 
-                                                        Navigator.of(context).push(_signIn());
+                                                        Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                                                       } else {
                                                         deleteAddress(loadAddressList[index]['id']);
                                                       }
@@ -439,9 +478,9 @@ class _AddressMasterFile extends State<AddressMasterFile> {
                     String username = prefs.getString('s_customerId');
                     if(username == null){
                       // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                      Navigator.of(context).push(_signIn());
+                      Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                     } else {
-                      await Navigator.of(context).push(addNewAddress());
+                      await Navigator.of(context).push(addNewAddress()).then((val)=>{onRefresh()});
                       loadAddress();
                       checkIfHasId();
                     }
@@ -450,12 +489,13 @@ class _AddressMasterFile extends State<AddressMasterFile> {
                     style: SleekButtonStyle.flat(
                       color: Colors.deepOrange,
                       inverted: false,
-                      rounded: true,
-                      size: SleekButtonSize.big,
+                      rounded: false,
+                      size: SleekButtonSize.normal,
                       context: context,
                     ),
                     child: Center(
-                      child: Text("ADD ADDRESS", style:TextStyle(fontStyle: FontStyle.normal,fontSize: 18.0, fontWeight: FontWeight.bold),
+                      child: Text("ADD ADDRESS",
+                        style:GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -485,9 +525,9 @@ Route addNewAddress() {
   );
 }
 
-Route editAddress() {
+Route editAddress(idd, cusId) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => EditAddress(),
+    pageBuilder: (context, animation, secondaryAnimation) => EditAddress(idd: idd, cusId : cusId),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
@@ -505,7 +545,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

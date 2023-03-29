@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -219,15 +220,27 @@ class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFood
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrange[400],
         elevation: 0.1,
         titleSpacing: 0,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Order Time Frame (Delivery)", style: GoogleFonts.openSans(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 16.0),
+        title: Text("Order Time Frame (Delivery)",
+          style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
       ),
       body: isLoading ?
@@ -248,25 +261,30 @@ class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFood
                   padding: EdgeInsets.zero,
                   children: <Widget>[
 
-                    Divider(thickness: 1, color: Colors.deepOrange),
-
-                    Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Text('${widget.tenantName}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.deepOrangeAccent)),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      height: 40,
+                      color: Colors.deepOrange[300],
+                      child: Text('${widget.tenantName}',
+                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white),
+                      ),
                     ),
 
-                    Divider(thickness: 1, color: Colors.deepOrange),
+                    Container(
+                      height: 40,
+                      color: Colors.grey[200],
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Text('ORDER TRANSACTION DETAILS',
+                            style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                          ),
+                        ),
+                      ),
+                    ),
 
                     Column(
                       children: [
-                        Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 2),
-                            child: Text('ORDER TRANSACTION DETAILS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                          ),
-                        ),
-
-                        Divider(color: Colors.black54),
 
                         Visibility(
                           visible: pending && submit == false && cancel == false && widget.ifCancelled == false,
@@ -275,7 +293,9 @@ class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFood
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('PENDING...', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),),
+                                Text('PENDING...',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),
+                                ),
                               ],
                             ),
                           ),
@@ -288,7 +308,9 @@ class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFood
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('CANCELLED ORDER', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),),
+                                Text('CANCELLED ORDER',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.redAccent),
+                                ),
                               ],
                             ),
                           ),
@@ -300,15 +322,20 @@ class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFood
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: EdgeInsets.only(left: 10, top: 10, bottom: 5, right: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
 
                                     Row(
                                       children: [
-                                        Text('CONTAINER: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                                        Text('$container', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
+                                        Text('CONTAINER: ',
+                                          style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                        ),
+
+                                        Text('$container',
+                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black87),
+                                        ),
                                       ],
                                     ),
 
@@ -316,123 +343,152 @@ class _OrderTimeFrameDeliveryFoodsState extends State<OrderTimeFrameDeliveryFood
                                       child: Row(
                                         children: [
                                           VerticalDivider(color: Colors.black54),
-                                          Text('QTY: ', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                                          Text('$quantity', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
+                                          Text('QTY: ',
+                                            style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                          ),
+                                          Text('$quantity',
+                                            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black87),
+                                          ),
                                         ],
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
 
-                              Divider(color: Colors.black54),
+                              Divider(thickness: 2, color: Colors.grey[200]),
 
                               Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(CupertinoIcons.time, size: 16, color: Colors.black),
-                                      Text(' ORDER TIME FRAME', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: Colors.black)),
-                                    ],
-                                  )
+                                padding: EdgeInsets.symmetric(vertical: 5),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.timer_outlined, size: 20, color: Colors.deepOrangeAccent),
+                                    Text(' ORDER TIME FRAME',
+                                      style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                    ),
+                                  ],
+                                ),
                               ),
 
-                              Divider(color: Colors.black54),
+                              Divider(thickness: 2, color: Colors.grey[200]),
 
                               SizedBox(height: 10),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Order Submission', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                                child: Text('Order Submission',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(Submitted Order by Tenant)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
+                                child: Text('(Submitted Order by Tenant)',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('$submitted', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                                child: Text('$submitted',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black),
+                                ),
                               ),
 
-                              Divider(color: Colors.black54),
+                              SizedBox(height: 15),
 
-                              SizedBox(height: 10),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Preparation / Time Consumed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
-                              ),
-
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(Order Submission -> For Pick-up Tagging)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
-                              ),
-
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('$prepared $prepareMin', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
-                              ),
-
-                              Divider(color: Colors.black54),
-
-                              SizedBox(height: 10),
-
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Picking Assignment / Time Consumed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                                child: Text('Preparation / Time Consumed',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(For Pick-up Tagging -> Rider Set-up)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
-                              ),
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('$r_status $r_statusMin', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
-                              ),
-
-                              Divider(color: Colors.black54),
-
-                              SizedBox(height: 10),
-
-                              Padding(
-                                padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Order Claiming / Time Consumed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                                child: Text('(Order Submission -> For Pick-up Tagging)',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(Rider Set-up -> In Transit Tagging by Tenant)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
+                                child: Text('$prepared $prepareMin',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black),
+                                ),
+                              ),
+
+                              SizedBox(height: 15),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Picking Assignment / Time Consumed',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('$transit $transMin', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                                child: Text('(For Pick-up Tagging -> Rider Set-up)',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                ),
+                              ),
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$r_status $r_statusMin',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black),
+                                ),
                               ),
 
-                              Divider(color: Colors.black54),
-
-                              SizedBox(height: 10),
+                              SizedBox(height: 15),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('Delivery Period / Time Consumed', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                                child: Text('Order Claiming / Time Consumed',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('(In Transit Tagging by Tenant -> Customer)', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent)),
+                                child: Text('(Rider Set-up -> In Transit Tagging by Tenant)',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                ),
                               ),
 
                               Padding(
                                 padding:EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('$delivered $deliveredMin', style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black)),
+                                child: Text('$transit $transMin',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black),
+                                ),
                               ),
 
-                              Divider(color: Colors.black54),
+                              SizedBox(height: 15),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('Delivery Period / Time Consumed',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                ),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('(In Transit Tagging by Tenant -> Customer)',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                ),
+                              ),
+
+                              Padding(
+                                padding:EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('$delivered $deliveredMin',
+                                  style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black),
+                                ),
+                              ),
+
+                              Divider(thickness: 2, color: Colors.grey[200]),
                             ],
                           ),
                         ),

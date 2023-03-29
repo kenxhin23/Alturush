@@ -20,8 +20,8 @@ class RapidA {
     return _instance;
   }
 
-  String server = "https://app1.alturush.com/";
-  // String server = "http://172.16.43.147/rapida";
+  // String server = "https://app1.alturush.com/";
+  String server = "http://172.16.43.147/rapida";
   // String server = "http://10.233.1.58/rapida/";
   // String server = "http://172.16.46.130/rapida";
   // String server = "http://192.168.1.2:3333/rapida";
@@ -1017,6 +1017,15 @@ class RapidA {
     client.close();
   }
 
+  Future updateCartIcoos(id,stk) async{
+    var client = http.Client();
+    await client.post(Uri.parse("$server/updateCartIcoos_r"),body:{
+      'id' : encrypt(id),
+      'stk': encrypt(stk.toString())
+    });
+    client.close();
+  }
+
   Future getCounter() async{
     var client = http.Client();
     String userID;
@@ -1549,6 +1558,17 @@ class RapidA {
     return dataUser;
   }
 
+  Future gcDeliveryFee(townID) async{
+    var client = http.Client();
+    Map dataUser;
+    final response = await client.post(Uri.parse("$server/gcDeliveryFee_r"),body:{
+      'townID'  : encrypt(townID),
+    });
+    dataUser = jsonDecode(response.body);
+    client.close();
+    return dataUser;
+  }
+
   Future submitOrder(
       groupValue,
       deliveryDateData,
@@ -1591,7 +1611,7 @@ class RapidA {
     var client = http.Client();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var userID = prefs.getString('s_customerId');
-    await client.post(Uri.parse("$server/gc_submitOrder2_r"),body:{
+    await client.post(Uri.parse("$server/gc_submitOrderPickup_r"),body:{
       'customerId'       : encrypt(userID),
       'groupValue'       : encrypt(groupValue.toString()),
       'deliveryDateData' : encrypt(deliveryDateData.toString()),

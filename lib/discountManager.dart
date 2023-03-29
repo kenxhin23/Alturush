@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,12 +101,24 @@ class _DiscountManager extends State<DiscountManager> {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
+        iconTheme: new IconThemeData(color: Colors.white,
+          shadows: [
+            Shadow(
+              blurRadius: 1.0,
+              color: Colors.black54,
+              offset: Offset(1.0, 1.0),
+            ),
+          ],
+        ),
         leading: IconButton(
           icon: Image.asset('assets/png/img_552316.png',
-            color: Colors.deepOrangeAccent,
+            color: Colors.white,
             fit: BoxFit.contain,
             height: 25,
             width: 25,
@@ -113,14 +126,9 @@ class _DiscountManager extends State<DiscountManager> {
           onPressed: () {
           }
         ),
-        actions: <Widget>[
-
-          new IconButton(
-            icon: new Icon(Icons.clear, color: Colors.black, size: 23,),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
-        title: Text("Apply Discount",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+        title: Text("Apply Discount",
+          style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+        ),
 
       ),
       body:isLoading
@@ -132,51 +140,55 @@ class _DiscountManager extends State<DiscountManager> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
 
-          Divider(thickness: 1, color: Colors.deepOrangeAccent,),
+          Container(
+            height: 40,
+            color: Colors.deepOrange[300],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: Text("Discount Applied List ",
+                    style: GoogleFonts.openSans(color: Colors.white,fontWeight: FontWeight.bold, fontSize: 15.0),
+                  ),
+                ),
 
-              Padding(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: Text("Discount Applied List ", style: TextStyle(color: Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 15.0)),
-              ),
-
-              SizedBox(height: 30,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                  child:OutlinedButton(
-                    onPressed: () async{
-                      FocusScope.of(context).requestFocus(FocusNode());
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      String username = prefs.getString('s_customerId');
-                      if(username == null){
-                        Navigator.of(context).push(_signIn());
-                      }else{
-                        showAddDiscountDialog(context).then((_)=>{loadId()});
-                        checkIfHasId();
-                        loadId();
-                      }
-                    },
-                    child: Text('+ ADD',  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.white)),
-                    style: ButtonStyle(
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(25))),
-                      overlayColor: MaterialStateProperty.all(Colors.black12),
-                      backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                      side: MaterialStateProperty.all(BorderSide(
-                        color: Colors.deepOrangeAccent,
-                        width: 1.0,
-                        style: BorderStyle.solid,)
+                SizedBox(height: 30,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child:OutlinedButton(
+                      onPressed: () async{
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          Navigator.of(context).push(_signIn());
+                        }else{
+                          showAddDiscountDialog(context).then((_)=>{loadId()});
+                          checkIfHasId();
+                          loadId();
+                        }
+                      },
+                      child: Text('+ ADD',
+                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 13.0, color: Colors.deepOrangeAccent),
+                      ),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
+                        overlayColor: MaterialStateProperty.all(Colors.black12),
+                        backgroundColor: MaterialStateProperty.all(Colors.white),
+                        side: MaterialStateProperty.all(BorderSide(
+                          color: Colors.deepOrangeAccent,
+                          width: 1.0,
+                          style: BorderStyle.solid,)
+                        ),
                       ),
                     ),
                   ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
-
-          Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
           Expanded(
             child: RefreshIndicator(
@@ -187,8 +199,11 @@ class _DiscountManager extends State<DiscountManager> {
                   children: <Widget>[
                     exist == false ? Padding(
                       padding: EdgeInsets.fromLTRB(15, 5, 0, 0),
-                      child: Text('No Discount Details', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, color: Colors.black54),),
+                      child: Text('No Discount Details',
+                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, color: Colors.black54),
+                      ),
                     ) : ListView.builder(
+                      padding: EdgeInsets.all(0),
                       shrinkWrap: true,
                       physics: BouncingScrollPhysics(),
                       itemCount: loadIdList == null ? 0 : loadIdList.length,
@@ -200,7 +215,8 @@ class _DiscountManager extends State<DiscountManager> {
                         }
                         // side.add(false);
                         return Container(
-                          height: 85.0,
+                          padding: EdgeInsets.all(0),
+                          height: 105.0,
                           child: Column(
                             children: <Widget>[
 
@@ -211,7 +227,7 @@ class _DiscountManager extends State<DiscountManager> {
                                   children: [
 
                                     Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
@@ -225,8 +241,8 @@ class _DiscountManager extends State<DiscountManager> {
                                                   imageUrl: loadIdList[index]['d_photo'],
                                                   fit: BoxFit.contain,
                                                   imageBuilder: (context, imageProvider) => Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 55,
+                                                    width: 55,
                                                     decoration: new BoxDecoration(
                                                       image: new DecorationImage(
                                                         image: imageProvider,
@@ -234,15 +250,15 @@ class _DiscountManager extends State<DiscountManager> {
                                                       ),
                                                       borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                                       border: new Border.all(
-                                                        color: Colors.black54,
-                                                        width: 0.5,
+                                                        color: Colors.deepOrangeAccent,
+                                                        width: 1,
                                                       ),
                                                     ),
                                                   ),
-                                                  placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
+                                                  placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey),
                                                   errorWidget: (context, url, error) => Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 55,
+                                                    width: 55,
                                                     decoration: new BoxDecoration(
                                                       image: new DecorationImage(
                                                         image: AssetImage("assets/png/No_image_available.png"),
@@ -250,8 +266,8 @@ class _DiscountManager extends State<DiscountManager> {
                                                       ),
                                                       borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
                                                       border: new Border.all(
-                                                        color: Colors.black54,
-                                                        width: 0.5,
+                                                        color: Colors.deepOrangeAccent,
+                                                        width: 1,
                                                       ),
                                                     ),
                                                   ),
@@ -264,12 +280,18 @@ class _DiscountManager extends State<DiscountManager> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
 
-                                                    Text('${loadIdList[index]['name']} ',style: TextStyle(fontSize: 14, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),),
-                                                    Text('(${loadIdList[index]['discount_name']})',style: TextStyle(fontSize: 15,),),
-                                                    Text('${loadIdList[index]['discount_no']}',style: TextStyle(fontSize: 14, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),),
+                                                    Text('Name: ${loadIdList[index]['name']} ',
+                                                      style: GoogleFonts.openSans(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    Text('Discount Type: (${loadIdList[index]['discount_name']})',
+                                                      style: GoogleFonts.openSans(fontSize: 14),
+                                                    ),
+                                                    Text('ID #: ${loadIdList[index]['discount_no']}',
+                                                      style: GoogleFonts.openSans(fontSize: 14, color: Colors.black),
+                                                    ),
                                                   ],
-                                                )
-                                              )
+                                                ),
+                                              ),
                                             ],
                                           ),
 
@@ -300,7 +322,7 @@ class _DiscountManager extends State<DiscountManager> {
                                       ),
                                     ),
 
-                                    Divider(color: Colors.black54),
+                                    Divider(thickness: 2, color: Colors.grey[200]),
 
                                   ],
                                 ),
@@ -329,14 +351,23 @@ class _DiscountManager extends State<DiscountManager> {
                       Navigator.of(context).pop();
                     },
                     style: SleekButtonStyle.flat(
-                      color: Colors.deepOrange,
+                      color: Colors.deepOrange[400],
                       inverted: false,
-                      rounded: true,
-                      size: SleekButtonSize.big,
+                      rounded: false,
+                      size: SleekButtonSize.normal,
                       context: context,
                     ),
                     child: Center(
-                      child: Text("BACK", style:TextStyle(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 16.0),
+                      child: Text("BACK",
+                        style:GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 16.0,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 1.0,
+                              color: Colors.black54,
+                              offset: Offset(1.0, 1.0),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

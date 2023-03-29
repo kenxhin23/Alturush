@@ -257,7 +257,7 @@ class _ProfileSettings extends State<ProfileSettings>
             child: StatefulBuilder(builder: (BuildContext context, StateSetter state) {
               return AlertDialog(
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8.0))
+                    borderRadius: BorderRadius.all(Radius.circular(15.0))
                 ),
                 contentPadding: EdgeInsets.all(0),
                 titlePadding: EdgeInsets.all(0),
@@ -270,18 +270,26 @@ class _ProfileSettings extends State<ProfileSettings>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                          child: Text('Mobile Number',
-                            style: GoogleFonts.openSans(
-                              fontStyle: FontStyle.normal,
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black54,
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange[400],
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15), topLeft: Radius.circular(15),
                             ),
                           ),
+                          height: 40,
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: Text("Mobile Number",
+                                  style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                        Divider(thickness: 2, color: Colors.deepOrangeAccent),
+
                         Padding(
                           padding: EdgeInsets.only(left: 10, right: 10, top: 20),
                           child: TextFormField(
@@ -350,44 +358,75 @@ class _ProfileSettings extends State<ProfileSettings>
                   )
                 ),
                 actions: <Widget>[
-                  OutlinedButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.black,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                    ),
-                    onPressed: () {
-                      _numberUpdate.clear();
-                      Navigator.pop(context);
-                    },
-                    child: Text("CLOSE", style: GoogleFonts.openSans(
-                        color: Colors.black54,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0),),
-                  ),
-                  OutlinedButton(
-                    style: TextButton.styleFrom(
-                      primary: Colors.white,
-                      backgroundColor: Colors.deepOrangeAccent,
-                      shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(30.0)),
-                    ),
-                    onPressed: () {
-                      state(() {
-                        print(_numberUpdate.text);
-                        if (_keyUpdate.currentState.validate()) {
-                          updateNumber(id);
-                          Navigator.pop(context);
-                          _numberUpdate.clear();
-                        }
-                      });
-                    },
-                    child: Text("SUBMIT", style: GoogleFonts.openSans(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12.0)
-                    ),
-                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(right: 20),
+                        child: SizedBox(
+                          width: 100,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  side: BorderSide(color: Colors.deepOrangeAccent),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              _numberUpdate.clear();
+                              Navigator.pop(context);
+                            },
+                            child: Text('CLOSE',
+                              style: GoogleFonts.openSans(
+                                color: Colors.deepOrange[400],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: SizedBox(
+                          width: 100,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.deepOrange[400]),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  side: BorderSide(color: Colors.deepOrange[400]),
+                                ),
+                              ),
+                            ),
+                            onPressed: () {
+                              state(() {
+                                print(_numberUpdate.text);
+                                if (_keyUpdate.currentState.validate()) {
+                                  updateNumber(id);
+                                  Navigator.pop(context);
+                                  _numberUpdate.clear();
+                                }
+                              });
+                            },
+                            child: Text(
+                              'SUBMIT',
+                              style: GoogleFonts.openSans(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               );
             }),
@@ -400,148 +439,6 @@ class _ProfileSettings extends State<ProfileSettings>
       context: context,
       pageBuilder: (context, animation1, animation2) {}
     );
-
-    // showDialog<void>(
-    //   context: context,
-    //   barrierDismissible: false, // user must tap button!
-    //   builder: (BuildContext context) {
-    //     return StatefulBuilder(builder: (BuildContext context, StateSetter state)
-    //     {
-    //       return AlertDialog(
-    //         shape: RoundedRectangleBorder(
-    //             borderRadius: BorderRadius.all(Radius.circular(8.0))
-    //         ),
-    //         contentPadding: EdgeInsets.all(0),
-    //         titlePadding: EdgeInsets.all(0),
-    //         title: Container(
-    //             height: 140,
-    //             width: 300,
-    //             child: Form(
-    //               key: _keyUpdate,
-    //               child: Column(
-    //                 crossAxisAlignment: CrossAxisAlignment.start,
-    //                 mainAxisSize: MainAxisSize.min,
-    //                 children: [
-    //                   Padding(
-    //                       padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
-    //                       child: Text('Mobile Number',
-    //                         style: GoogleFonts.openSans(
-    //                             fontStyle: FontStyle.normal,
-    //                             fontSize: 15.0,
-    //                             fontWeight: FontWeight.bold,
-    //                             color: Colors.black54),)
-    //                   ),
-    //                   Divider(thickness: 2, color: Colors.deepOrangeAccent),
-    //                   Padding(
-    //                     padding: EdgeInsets.only(left: 10, right: 10, top: 20),
-    //                     child: TextFormField(
-    //                       maxLength: 10,
-    //                       keyboardType: TextInputType.number,
-    //                       inputFormatters: [
-    //                         FilteringTextInputFormatter.deny(
-    //                             new RegExp('[.-]'))
-    //                       ],
-    //                       cursorColor: Colors.deepOrange.withOpacity(0.8),
-    //                       controller: _numberUpdate,
-    //                       validator: (value) {
-    //                         if (value.isEmpty) {
-    //                           return 'Enter Mobile Number';
-    //                         }
-    //                         if (_numberUpdate.text.length < 10 ||
-    //                             _numberUpdate.text[0] == '0' ||
-    //                             _numberUpdate.text[0] == '1' ||
-    //                             _numberUpdate.text[0] == '2' ||
-    //                             _numberUpdate.text[0] == '3' ||
-    //                             _numberUpdate.text[0] == '4' ||
-    //                             _numberUpdate.text[0] == '5' ||
-    //                             _numberUpdate.text[0] == '6' ||
-    //                             _numberUpdate.text[0] == '7' ||
-    //                             _numberUpdate.text[0] == '8') {
-    //                           return 'Enter a valid Mobile Number';
-    //                         }
-    //                         if (checkPhoneNumber == true){
-    //                           return 'Phone number is already in-used';
-    //                         }
-    //                         return null;
-    //                       },
-    //                       onChanged: (text) {
-    //                         checkPhoneIfExist(text);
-    //                       },
-    //                       decoration: InputDecoration(
-    //                         focusedBorder: OutlineInputBorder(
-    //                           borderRadius: BorderRadius.circular(15),
-    //                           borderSide: BorderSide(
-    //                               color: Colors.deepOrange.withOpacity(0.7),
-    //                               width: 2.0),
-    //                         ),
-    //                         contentPadding: const EdgeInsets.symmetric(
-    //                           horizontal: 10,
-    //                           vertical: 10,
-    //                         ),
-    //                         labelText: '+63',
-    //                         labelStyle: TextStyle(color: Colors.black, fontSize: 14),
-    //                         counterText: "",
-    //                         errorText: checkPhoneNumber == true
-    //                             ? phoneNumberExist
-    //                             : null,
-    //                         hintStyle: const TextStyle(fontStyle: FontStyle
-    //                             .normal,
-    //                             fontSize: 14,
-    //                             fontWeight: FontWeight.normal,
-    //                             color: Colors.black),
-    //                         border: OutlineInputBorder(
-    //                           borderRadius: BorderRadius.circular(15),
-    //                         ),
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //             )
-    //         ),
-    //         actions: <Widget>[
-    //           OutlinedButton(
-    //             style: TextButton.styleFrom(
-    //               primary: Colors.black,
-    //               shape: new RoundedRectangleBorder(
-    //                   borderRadius: new BorderRadius.circular(30.0)),
-    //             ),
-    //             onPressed: () {
-    //               _numberUpdate.clear();
-    //               Navigator.pop(context);
-    //             },
-    //             child: Text("CLOSE", style: GoogleFonts.openSans(
-    //                 color: Colors.black54,
-    //                 fontWeight: FontWeight.bold,
-    //                 fontSize: 12.0),),
-    //           ),
-    //           OutlinedButton(
-    //             style: TextButton.styleFrom(
-    //               primary: Colors.white,
-    //               backgroundColor: Colors.deepOrangeAccent,
-    //               shape: new RoundedRectangleBorder(
-    //                   borderRadius: new BorderRadius.circular(30.0)),
-    //             ),
-    //             onPressed: () {
-    //               state(() {
-    //                 print(_numberUpdate.text);
-    //                 if (_keyUpdate.currentState.validate()) {
-    //                   updateNumber(id);
-    //                   Navigator.pop(context);
-    //                   _numberUpdate.clear();
-    //                 }
-    //               });
-    //             },
-    //             child: Text("SUBMIT", style: GoogleFonts.openSans(
-    //                 color: Colors.white,
-    //                 fontWeight: FontWeight.bold,
-    //                 fontSize: 12.0),),
-    //           ),
-    //         ],
-    //       );
-    //     });
-    //   },
-    // );
   }
   addNumberDialog() async{
     FocusScope.of(context).requestFocus(FocusNode());
@@ -553,7 +450,7 @@ class _ProfileSettings extends State<ProfileSettings>
         {
           return AlertDialog(
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8.0))
+                borderRadius: BorderRadius.all(Radius.circular(15.0))
             ),
             contentPadding: EdgeInsets.all(0),
             titlePadding: EdgeInsets.all(0),
@@ -567,18 +464,25 @@ class _ProfileSettings extends State<ProfileSettings>
                   mainAxisSize: MainAxisSize.min,
                   children: [
 
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
-                      child: Text('Mobile Number',
-                        style: GoogleFonts.openSans(
-                          fontStyle: FontStyle.normal,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black54),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange[400],
+                        borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                        ),
+                      ),
+                      height: 40,
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Text("Mobile Number",
+                              style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-
-                    Divider(thickness: 2, color: Colors.deepOrangeAccent),
 
                     Padding(
                       padding: EdgeInsets.only(left: 10, right: 10, top: 20),
@@ -652,41 +556,71 @@ class _ProfileSettings extends State<ProfileSettings>
             ),
             actions: <Widget>[
 
-              OutlinedButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.black,
-                  shape: new RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                  _number.clear();
-                },
-                child: Text("CLOSE", style: GoogleFonts.openSans(
-                    color: Colors.black54,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12.0),),
-              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(right: 20),
+                    child: SizedBox(
+                      width: 100,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: BorderSide(color: Colors.deepOrangeAccent),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          _number.clear();
+                        },
+                        child: Text('CLOSE',
+                          style: GoogleFonts.openSans(
+                            color: Colors.deepOrange[400],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
 
-              OutlinedButton(
-                style: TextButton.styleFrom(
-                  primary: Colors.white,
-                  backgroundColor: Colors.deepOrangeAccent,
-                  shape: new RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)),
-                ),
-                onPressed: () {
-                  if (_key.currentState.validate()) {
-                    uploadNumber();
-                    Navigator.pop(context);
-                    _number.clear();
-                  }
-                },
-                child: Text("SUBMIT", style: GoogleFonts.openSans(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12.0),
-                ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child: SizedBox(
+                      width: 100,
+                      child: TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.deepOrange[400]),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              side: BorderSide(color: Colors.deepOrange[400]),
+                            ),
+                          ),
+                        ),
+                        onPressed: () {
+                          if (_key.currentState.validate()) {
+                            uploadNumber();
+                            Navigator.pop(context);
+                            _number.clear();
+                          }
+                        },
+                        child: Text(
+                          'SUBMIT',
+                          style: GoogleFonts.openSans(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           );
@@ -812,9 +746,9 @@ class _ProfileSettings extends State<ProfileSettings>
                   },
                   child: AlertDialog(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))
+                        borderRadius: BorderRadius.all(Radius.circular(15.0))
                     ),
-                    contentPadding: EdgeInsets.only(top: 5),
+                    contentPadding: EdgeInsets.zero,
                     content: Container(
                         height: 250.0,
                         width: 300.0,
@@ -826,23 +760,29 @@ class _ProfileSettings extends State<ProfileSettings>
                             mainAxisSize: MainAxisSize.min,
                             children: [
 
-                              SizedBox(height: 30,
-                                  child: Row(
-                                    children: [
-
-                                      Padding(
-                                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                        child: Text("Alturush (OTP)", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.deepOrange[400],
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                  ),
+                                ),
+                                height: 40,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10.0),
+                                      child: Text("Alturush (OTP)",
+                                        style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
                                       ),
-                                    ],
-                                  )
+                                    ),
+                                  ],
+                                ),
                               ),
-
-                              Divider(thickness: 1, color: Colors.black54),
 
                               Padding(padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
                                 child: new Text("Enter OTP CODE sent to: $mobileNum",
-                                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0),
+                                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0),
                                 ),
                               ),
 
@@ -926,29 +866,31 @@ class _ProfileSettings extends State<ProfileSettings>
                     ),
                     actions: <Widget>[
 
-                      TextButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      Center(
+                        child: Container(
+                          width: 100,
+                          child: TextButton(
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    side: BorderSide(color: Colors.deepOrangeAccent)
-                                )
-                            )
-                        ),
-                        child: Text(
-                          'SUBMIT',
-                          style: TextStyle(
-                            color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  side: BorderSide(color: Colors.deepOrangeAccent),
+                                ),
+                              ),
+                            ),
+                            child: Text('SUBMIT',
+                              style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                            ),
+                            onPressed: () {
+                              state(() {
+                                if (_key.currentState.validate()) {
+                                  checkOtpCode();
+                                }
+                              });
+                            },
                           ),
                         ),
-                        onPressed: () {
-                          state(() {
-                            if (_key.currentState.validate()) {
-                              checkOtpCode();
-                            }
-                          });
-                        },
                       ),
                     ],
                   ),
@@ -1088,35 +1030,36 @@ class _ProfileSettings extends State<ProfileSettings>
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.deepOrangeAccent, // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.deepOrangeAccent,
         elevation: 0.1,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,),
           onPressed: () => Navigator.of(context).pop(),
         ),
         bottom: TabBar(
           controller: _tabController,
           labelColor: Colors.black,
-          indicatorColor: Colors.deepOrange,
+          indicatorColor: Colors.white,
           tabs: [
             Tab(
-              child: Text(
-                "Profile",
-                style: GoogleFonts.openSans(
-                    fontStyle: FontStyle.normal,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15.0),
+              child: Text("Profile",
+                style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 15.0, color: Colors.white),
               ),
             ),
             Tab(
               child: Text("Contact Numbers",
-                style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 15.0),
+                style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 15.0, color: Colors.white),
               ),
             ),
           ],
         ),
-        title: Text("Profile",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+        title: Text("Your Profile",
+          style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+        ),
       ),
       body: isLoading
           ? Center(
@@ -1129,7 +1072,7 @@ class _ProfileSettings extends State<ProfileSettings>
           controller: _tabController,
           children: [
 
-            //Profile Tabview
+            ///Profile Tabview
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -1145,7 +1088,8 @@ class _ProfileSettings extends State<ProfileSettings>
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
-                            child: new Text("First Name", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: CupertinoColors.black, fontWeight: FontWeight.bold),
+                            child: new Text("First Name",
+                              style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                             ),
                           ),
 
@@ -1165,20 +1109,19 @@ class _ProfileSettings extends State<ProfileSettings>
                               },
                               decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                   borderSide: BorderSide(color: Colors.deepOrange.withOpacity(0.8), width: 2.0),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),),
+                                  borderRadius: BorderRadius.circular(15.0)),
                               ),
                             ),
                           ),
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
-                            child: new Text(
-                              "Last Name",
-                              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                            child: new Text("Last Name",
+                              style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                             ),
                           ),
 
@@ -1198,17 +1141,18 @@ class _ProfileSettings extends State<ProfileSettings>
                               },
                               decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                   borderSide: BorderSide(color: Colors.deepOrange.withOpacity(0.8), width: 2.0),
                                 ),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0),),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                               ),
                             ),
                           ),
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
-                            child: new Text("E-mail Address", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                            child: new Text("E-mail Address",
+                              style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                             ),
                           ),
 
@@ -1227,18 +1171,19 @@ class _ProfileSettings extends State<ProfileSettings>
                               },
                               decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                   borderSide: BorderSide(color: Colors.deepOrange.withOpacity(0.8), width: 2.0),
                                 ),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),),
+                                  borderRadius: BorderRadius.circular(15.0)),
                               ),
                             ),
                           ),
 
                           Padding(
                             padding: EdgeInsets.fromLTRB(35, 10, 5, 0),
-                            child: new Text("Mobile Number", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black, fontWeight: FontWeight.bold),
+                            child: new Text("Mobile Number",
+                              style: GoogleFonts.openSans(fontSize: 15.0, color: Colors.black54, fontWeight: FontWeight.bold),
                             ),
                           ),
 
@@ -1290,10 +1235,10 @@ class _ProfileSettings extends State<ProfileSettings>
                                     : null,
                                 contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25.0),
+                                  borderRadius: BorderRadius.circular(15.0),
                                   borderSide: BorderSide(color: Colors.deepOrange.withOpacity(0.8), width: 2.0),
                                 ),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(25.0),),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                               ),
                             ),
                           ),
@@ -1302,6 +1247,7 @@ class _ProfileSettings extends State<ProfileSettings>
                     ),
                   )
                 ),
+
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                   child: Row(
@@ -1327,12 +1273,13 @@ class _ProfileSettings extends State<ProfileSettings>
                             style: SleekButtonStyle.flat(
                               color: Colors.deepOrange,
                               inverted: false,
-                              rounded: true,
-                              size: SleekButtonSize.big,
+                              rounded: false,
+                              size: SleekButtonSize.normal,
                               context: context,
                             ),
                             child: Center(
-                              child: Text("UPDATE PROFILE", style:TextStyle(fontStyle: FontStyle.normal,fontSize: 18.0, fontWeight: FontWeight.bold),
+                              child: Text("UPDATE PROFILE",
+                                style:GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -1366,7 +1313,7 @@ class _ProfileSettings extends State<ProfileSettings>
               ],
             ),
 
-            //Contact Numbers Tabview
+            ///Contact Numbers Tabview
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -1404,8 +1351,10 @@ class _ProfileSettings extends State<ProfileSettings>
                                         children: [
                                           SizedBox(height: 30,
                                             child: Padding(
-                                                padding: EdgeInsets.only(top: 5),
-                                                child: Text('${getMobileNumbers[index]['mobile_number']}',style: TextStyle(fontSize: 16, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black))
+                                              padding: EdgeInsets.only(top: 5),
+                                              child: Text('${getMobileNumbers[index]['mobile_number']}',
+                                                style: TextStyle(fontSize: 16, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),
+                                              ),
                                             ),
                                           ),
 
@@ -1480,12 +1429,12 @@ class _ProfileSettings extends State<ProfileSettings>
                           style: SleekButtonStyle.flat(
                             color: Colors.deepOrange,
                             inverted: false,
-                            rounded: true,
-                            size: SleekButtonSize.big,
+                            rounded: false,
+                            size: SleekButtonSize.normal,
                             context: context,
                           ),
                           child: Center(
-                            child: Text("ADD", style:TextStyle(fontStyle: FontStyle.normal,fontSize: 18.0, fontWeight: FontWeight.bold),
+                            child: Text("ADD", style:GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),
@@ -1508,7 +1457,7 @@ Route _signIn() {
     pageBuilder: (context, animation, secondaryAnimation) =>
         CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

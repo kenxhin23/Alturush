@@ -256,15 +256,23 @@ class _ProfilePage extends State<ProfilePage> {
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.deepOrangeAccent[200], // Status bar
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white,size: 20,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Account Profile",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text("Account Profile",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),),
         ),
         body: isLoading ?
         Center(
@@ -284,12 +292,17 @@ class _ProfilePage extends State<ProfilePage> {
                   padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
                   child: Container(
                     decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[Colors.deepOrange, Colors.deepOrange[200]]),
                       borderRadius: BorderRadius.circular(15),
                       image: DecorationImage(
                         image: NetworkImage('https://alturush.com/images/ALTURUSH/Alturush%20no%20express.png',),
                         fit:BoxFit.scaleDown,
+
                         alignment: Alignment.topCenter,
-                        colorFilter: ColorFilter.mode(Colors.black54.withOpacity(0.6), BlendMode.dstATop),
+                        colorFilter: ColorFilter.mode(Colors.black54.withOpacity(0.8), BlendMode.dstATop),
                       ),
                     ),
                     child: Card(
@@ -321,6 +334,7 @@ class _ProfilePage extends State<ProfilePage> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(100),
                                           color: Colors.white,
+                                          border: Border.all(color: Colors.white, width: 2),
                                           image: DecorationImage(
                                             image: imageProvider,
                                             fit: BoxFit.fill,
@@ -334,6 +348,7 @@ class _ProfilePage extends State<ProfilePage> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(100),
                                           color: Colors.white,
+                                          border: Border.all(color: Colors.white, width: 2),
                                           image: DecorationImage(
                                             image: AssetImage("assets/jpg/no_photo.jpg"),
                                             fit: BoxFit.fill,
@@ -375,10 +390,12 @@ class _ProfilePage extends State<ProfilePage> {
                             child: new Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Text('$firstName $lastName', style: GoogleFonts.openSans(
-                                  fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 18.0),),
-                                Text('Joined $date', style: GoogleFonts.openSans(fontWeight: FontWeight.normal,
-                                  fontStyle: FontStyle.normal, fontSize: 16.0),),
+                                Text('$firstName $lastName',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 18.0, color: Colors.white),
+                                ),
+                                Text('Joined $date',
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.normal, fontStyle: FontStyle.normal, fontSize: 16.0, color: Colors.white),
+                                ),
                               ],
                             ),
                           ),
@@ -391,13 +408,20 @@ class _ProfilePage extends State<ProfilePage> {
                   )
                 ),
 
-                Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                Divider(thickness: 3, color: Colors.grey[200]),
 
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
                   child: InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(_trackOrder());
+                    onTap: () async {
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String username = prefs.getString('s_customerId');
+                      if(username == null){
+                        await Navigator.of(context).push(_signIn());
+                      } else {
+                        Navigator.of(context).push(_trackOrder());
+                      }
+
                     },
                     child: Card(
                       elevation: 0.0,
@@ -405,8 +429,10 @@ class _ProfilePage extends State<ProfilePage> {
                         padding: EdgeInsets.all(17),
                         child: Row(
                           children: [
-                            Icon(CupertinoIcons.bag),
-                            Text(" Orders History",style: TextStyle(fontSize: 16)),
+                            Icon(CupertinoIcons.bag, color: Colors.deepOrange[300]),
+                            Text(" Orders History",
+                              style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
                           ],
                         ),
                       ),
@@ -417,8 +443,16 @@ class _ProfilePage extends State<ProfilePage> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
                   child: InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(profileSettings());
+                    onTap: () async {
+
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String username = prefs.getString('s_customerId');
+                      if(username == null){
+                        await Navigator.of(context).push(_signIn());
+                      } else {
+                        Navigator.of(context).push(profileSettings());
+                      }
+
                     },
                     child: Card(
                       elevation: 0.0,
@@ -426,8 +460,10 @@ class _ProfilePage extends State<ProfilePage> {
                         padding: EdgeInsets.all(17),
                         child: Row(
                           children: [
-                            Icon(CupertinoIcons.person),
-                            Text(" Profile",style: TextStyle(fontSize: 18)),
+                            Icon(CupertinoIcons.person, color: Colors.deepOrange[300]),
+                            Text(" Profile",
+                              style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
                           ],
                         ),
                       ),
@@ -438,17 +474,27 @@ class _ProfilePage extends State<ProfilePage> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
                   child: InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(addressMasterFileRoute());
+                    onTap: () async {
+
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String username = prefs.getString('s_customerId');
+                      if(username == null){
+                        await Navigator.of(context).push(_signIn());
+                      } else {
+                        Navigator.of(context).push(addressMasterFileRoute());
+                      }
                     },
+
                     child: Card(
                       elevation: 0.0,
                       child: Padding(
                         padding: EdgeInsets.all(17),
                         child: Row(
                           children: [
-                            Icon(CupertinoIcons.map),
-                            Text(" Addresses",style: TextStyle(fontSize: 16)),
+                            Icon(CupertinoIcons.map, color: Colors.deepOrange[300]),
+                            Text(" Addresses",
+                              style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
                           ],
                         ),
                       ),
@@ -459,17 +505,27 @@ class _ProfilePage extends State<ProfilePage> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0.0, 2.0, 0.0, 0.0),
                   child: InkWell(
-                    onTap: (){
-                      Navigator.of(context).push(accountSettings());
+                    onTap: () async {
+
+                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                      String username = prefs.getString('s_customerId');
+                      if(username == null){
+                        await Navigator.of(context).push(_signIn());
+                      } else {
+                        Navigator.of(context).push(accountSettings());
+                      }
                     },
+
                     child: Card(
                       elevation: 0.0,
                       child: Padding(
                         padding: EdgeInsets.all(17),
                         child: Row(
                           children: [
-                            Icon(Icons.settings_outlined),
-                            Text(" Account Settings",style: TextStyle(fontSize: 16)),
+                            Icon(Icons.settings_outlined, color: Colors.deepOrange[300]),
+                            Text(" Account Settings",
+                              style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
                           ],
                         ),
                       ),
@@ -493,8 +549,10 @@ class _ProfilePage extends State<ProfilePage> {
                         padding: EdgeInsets.all(17),
                         child: Row(
                           children: [
-                            Icon(Icons.logout),
-                            Text(" Log out",style: TextStyle(fontSize: 16)),
+                            Icon(Icons.logout, color: Colors.deepOrange[300]),
+                            Text(" Log out",
+                              style: GoogleFonts.openSans(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                            ),
                           ],
                         ),
                       ),
@@ -514,7 +572,7 @@ Route _homepage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => HomePage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -594,7 +652,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

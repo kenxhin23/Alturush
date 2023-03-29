@@ -192,10 +192,11 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
     // getCounter();
     // listenCartCount();
     _tabController = TabController(vsync: this, length: 2);
-    getUserName();
-    getTicketNoOnFoods();
-    getTicketNoOnGoods();
     onRefresh();
+    getUserName();
+    // getTicketNoOnFoods();
+    // getTicketNoOnGoods();
+
     // print(months);
     // getOrderTicketIfExist();
     timer = Timer.periodic(Duration(seconds: 30), (Timer t) => onRefresh());
@@ -221,69 +222,44 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.deepOrangeAccent[200], // Status bar
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.0,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
             controller: _tabController,
-            labelColor: Colors.black,
-            indicatorColor: Colors.deepOrange,
+            labelColor: Colors.white,
+            indicatorColor: Colors.white,
             tabs: [
               Tab(
                 child: Text(
                   "Foods, etc.",
-                  style: GoogleFonts.openSans(
-                      fontStyle: FontStyle.normal,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15.0),
+                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 15.0),
                 ),
               ),
               Tab(
                 child: Text("Goods",
-                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 15.0),
+                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 15.0),
                 ),
               ),
             ],
           ),
-          // actions: [
-          //   cartLoading ?
-          //   Center(
-          //     child:Container(
-          //       height:16.0 ,
-          //       width: 16.0,
-          //       child: CircularProgressIndicator(
-          //         valueColor: new AlwaysStoppedAnimation<Color>(Colors.white),
-          //       ),
-          //     ),
-          //   ) :
-          //   Badge(
-          //     position: BadgePosition.topEnd(top: 5, end: 10),
-          //     animationDuration: Duration(milliseconds: 300),
-          //     animationType: BadgeAnimationType.slide,
-          //     showBadge: showBadge,
-          //     badgeContent: Text('${cartCount.toString()}',
-          //       style: TextStyle(color: Colors.white, fontSize: 10),
-          //     ),
-          //     child: Padding(
-          //       padding: EdgeInsets.only(right: 25),
-          //       child: SizedBox(width: 25,
-          //         child: IconButton(icon: Icon(CupertinoIcons.cart, color: Colors.black54),
-          //           onPressed: () async {
-          //             await Navigator.of(context).push(_loadCart());
-          //             getCounter();
-          //             listenCartCount();
-          //           }
-          //         )
-          //       ),
-          //     )
-          //   )
-          // ],
-          title: Text("Orders History",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+          title: Text("Orders History",
+            style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+          ),
         ),
         body : isLoading ?
         Center(
@@ -307,29 +283,47 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                       //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                       isDense: true,
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(15),
                           borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 5,
                       ),
-                      enabledBorder: const OutlineInputBorder(
-                        // width: 0.0 produces a thin "hairline" border
-                        borderSide: const BorderSide(color: Colors.black54, width: 1),
-                      ),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          // borderSide: const BorderSide(color: Colors.green, width: 0.0),
-                          borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       //Add more decoration as you want here
                       //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                     ),
+                    // InputDecoration(
+                    //   //Add isDense true and zero Padding.
+                    //   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                    //   isDense: true,
+                    //   focusedBorder: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(15),
+                    //       borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                    //   ),
+                    //   contentPadding: const EdgeInsets.symmetric(
+                    //     horizontal: 10,
+                    //     vertical: 5,
+                    //   ),
+                    //   enabledBorder: const OutlineInputBorder(
+                    //     // width: 0.0 produces a thin "hairline" border
+                    //     borderSide: const BorderSide(color: Colors.black54, width: 1),
+                    //   ),
+                    //   border: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(15),
+                    //       // borderSide: const BorderSide(color: Colors.green, width: 0.0),
+                    //       borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
+                    //   ),
+                    //   //Add more decoration as you want here
+                    //   //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                    // ),
                     isExpanded: true,
-                    hint: const Text(
+                    hint: Text(
                       '-- Select Month --',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                      style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.normal, color: Colors.black),
                     ),
                     icon: const Icon(
                       Icons.arrow_drop_down,
@@ -342,7 +336,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                           value: item,
                           child: Text(
                             item,
-                            style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black),
+                            style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
                           ),
                         ))
                         .toList(),
@@ -412,41 +406,20 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
                                       if(username == null){
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                        // await Navigator.of(context).push(_signIn());
-                                      } else {
-                                        getOrderTicketIfExist(ticketId);
-                                        Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ToDeliverFood(
-                                            pend:1,
-                                            ticketNo:ticket,
-                                            ticketId:ticketId,
-                                            mop:mop,
-                                            type:type))).then((val)=>{onRefresh()});
-                                        // getOrderTicketIfExist(ticketId);
-                                        // Navigator.of(context).push(viewUpComingFood(
-                                        //   1,
-                                        //   ticket,
-                                        //   ticketId,
-                                        //   mop,
-                                        //   type,
-                                        // ));
-                                      }
 
-                                      // Future.delayed(const Duration(milliseconds: 100), () {
-                                      //   setState(() {
-                                      //     if (orderTicket == 'true') {
-                                      //       // print('dayon kol');
-                                      //       Navigator.of(context).push(viewUpComingFood(1,
-                                      //           ticket,
-                                      //           ticketId,
-                                      //           mop,
-                                      //           type));
-                                      //     } else if (orderTicket =='false') {
-                                      //       print('ayaw kol');
-                                      //       // Navigator.of(context).push(viewUpComingGood('20734'));
-                                      //     }
-                                      //   });
-                                      // });
+                                        await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+
+                                      } else {
+
+                                        getOrderTicketIfExist(ticketId);
+                                        Navigator.of(context).push(viewUpComingFood(
+                                          1,
+                                          ticket,
+                                          ticketId,
+                                          mop,
+                                          type,
+                                        )).then((val)=>{onRefresh()});
+                                      }
                                     },
                                     child: Visibility(
                                       visible: month == selectedMonth,
@@ -471,14 +444,18 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: <Widget>[
 
-                                                        Text(' ${listGetTicketOnFoods[index]['d_mop']}',style: TextStyle(color: Colors.black),),
+                                                        Text(' ${listGetTicketOnFoods[index]['d_mop']}',
+                                                          style: GoogleFonts.openSans(color: Colors.black),
+                                                        ),
 
                                                         Row(
                                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                           children: [
-                                                            Text(' Ticket # ${listGetTicketOnFoods[index]['d_ticket']}',style: TextStyle(fontSize: 16.0,color: Colors.black, fontWeight: FontWeight.bold)),
+                                                            Text(' Ticket # ${listGetTicketOnFoods[index]['d_ticket']}',
+                                                              style: GoogleFonts.openSans(fontSize: 16.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                                            ),
                                                           ],
-                                                        )
+                                                        ),
                                                       ],
                                                     ),
 
@@ -520,29 +497,47 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                       //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                       isDense: true,
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
+                          borderRadius: BorderRadius.circular(15),
                           borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 10,
                         vertical: 5,
                       ),
-                      enabledBorder: const OutlineInputBorder(
-                        // width: 0.0 produces a thin "hairline" border
-                        borderSide: const BorderSide(color: Colors.black54, width: 1),
-                      ),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          // borderSide: const BorderSide(color: Colors.green, width: 0.0),
-                          borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
+                        borderRadius: BorderRadius.circular(15),
                       ),
                       //Add more decoration as you want here
                       //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                     ),
+                    // InputDecoration(
+                    //   //Add isDense true and zero Padding.
+                    //   //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                    //   isDense: true,
+                    //   focusedBorder: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(5),
+                    //       borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
+                    //   ),
+                    //   contentPadding: const EdgeInsets.symmetric(
+                    //     horizontal: 10,
+                    //     vertical: 5,
+                    //   ),
+                    //   enabledBorder: const OutlineInputBorder(
+                    //     // width: 0.0 produces a thin "hairline" border
+                    //     borderSide: const BorderSide(color: Colors.black54, width: 1),
+                    //   ),
+                    //   border: OutlineInputBorder(
+                    //       borderRadius: BorderRadius.circular(5),
+                    //       // borderSide: const BorderSide(color: Colors.green, width: 0.0),
+                    //       borderSide: BorderSide(color: Colors.grey.withOpacity(0.8), width: 1.0)
+                    //   ),
+                    //   //Add more decoration as you want here
+                    //   //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                    // ),
                     isExpanded: true,
-                    hint: const Text(
+                    hint: Text(
                       '-- Select Month --',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                      style: GoogleFonts.openSans(fontSize: 15, color: Colors.black),
                     ),
                     icon: const Icon(
                       Icons.arrow_drop_down,
@@ -555,7 +550,7 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                           value: item,
                           child: Text(
                             item,
-                            style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black),
+                            style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                           ),
                         ))
                         .toList(),
@@ -625,22 +620,19 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                         SharedPreferences prefs = await SharedPreferences.getInstance();
                                         String username = prefs.getString('s_customerId');
                                         if(username == null){
-                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                          // await Navigator.of(context).push(_signIn());
-                                        } else {
-                                          getOrderTicketIfExist(ticketId);
-                                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new ToDeliverGood(
-                                              ticket   : ticket,
-                                              ticketId : ticketId,
-                                              mop      : mop
-                                          ))).then((val)=>{onRefresh()});
-                                          // Navigator.of(context).push(viewUpComingGood(
-                                          //   ticket,
-                                          //   ticketId,
-                                          //   mop,
-                                          // ));
-                                        }
 
+                                          await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+
+                                        } else {
+
+                                          getOrderTicketIfExist(ticketId);
+
+                                          Navigator.of(context).push(viewUpComingGood(
+                                            ticket,
+                                            ticketId,
+                                            mop,
+                                          )).then((val)=>{onRefresh()});
+                                        }
                                       },
                                       child: Visibility(
                                         visible: month == selectedMonth,
@@ -665,12 +657,16 @@ class _TrackOrder extends State<TrackOrder> with SingleTickerProviderStateMixin{
                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: <Widget>[
 
-                                                          Text(' ${listGetTicketOnGoods[index]['d_mop']}',style: TextStyle(color: Colors.black),),
+                                                          Text(' ${listGetTicketOnGoods[index]['d_mop']}',
+                                                            style: GoogleFonts.openSans(color: Colors.black),
+                                                          ),
 
                                                           Row(
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
-                                                              Text(' Ticket # ${listGetTicketOnGoods[index]['d_ticket']}',style: TextStyle(fontSize: 16.0,color: Colors.black, fontWeight: FontWeight.bold)),
+                                                              Text(' Ticket # ${listGetTicketOnGoods[index]['d_ticket']}',
+                                                                style: GoogleFonts.openSans(fontSize: 16.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                                              ),
                                                             ],
                                                           )
                                                         ],
@@ -800,7 +796,7 @@ Route _loadCart() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => LoadCart(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -816,7 +812,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

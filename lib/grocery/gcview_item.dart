@@ -157,24 +157,40 @@ class _ViewItem extends State<ViewItem>  {
         appBar: AppBar(
           titleSpacing: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.green[300], // Status bar
+            statusBarColor: Colors.green[400], // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.green[400],
           elevation: 0.1,
-          iconTheme: new IconThemeData(color: Colors.black),
-          title: Text("Product Detail(s)",style: GoogleFonts.openSans(color:Colors.green,fontWeight: FontWeight.bold,fontSize: 18.0),),
+          iconTheme: new IconThemeData(color: Colors.white),
+          title: Text("Product Detail(s)",
+            style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold, fontSize: 18.0),
+          ),
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20,
+              shadows: [
+                Shadow(
+                  blurRadius: 1.0,
+                  color: Colors.black54,
+                  offset: Offset(1.0, 1.0),
+                ),
+              ],
+            ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           actions: [
             IconButton(
-              icon: Icon(Icons.search_outlined, color: Colors.black),
+              icon: Icon(Icons.search_outlined, color: Colors.white,
+                shadows: [
+                  Shadow(
+                    blurRadius: 1.0,
+                    color: Colors.black54,
+                    offset: Offset(1.0, 1.0),
+                  ),
+                ],
+              ),
               onPressed: () async {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new GcSearch(
-                    bunitCode : widget.buCode,
-                    groupCode : widget.groupCode))).then((val)=>{onRefresh()});
-                // Navigator.of(context).push(_search(widget.buCode));
+                Navigator.of(context).push(_search(widget.buCode, widget.groupCode)).then((val)=>{onRefresh()});
               }
             ),
           ],
@@ -234,45 +250,19 @@ class _ViewItem extends State<ViewItem>  {
                                   ),
                                 ),
                               ),
-                              // imageLoading
-                              //     ? Padding(
-                              //       padding:EdgeInsets.fromLTRB(0.0, 60.0, 0.0, 60.0),
-                              //       child: Center(
-                              //   child: CircularProgressIndicator(
-                              //       valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-                              //      ),
-                              //     ),
-                              //   ) : Center(
-                              //   child: Image.network(widget.image,height: 250.0,scale:1.8),
-                              // ),
-                              // Padding(
-                              //   padding:EdgeInsets.fromLTRB(20.0, 10.0, 5.0, 5.0),
-                              //   child: Row(
-                              //     children:[
-                              //       Text("Price:",style: TextStyle(fontSize: 17,color: Colors.black,),),
-                              //       SizedBox(width: 10.0),
-                              //       Text('₱ ${priceTemp.toString()}', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,color: Colors.deepOrange,),),
-                              //     ],
-                              //   ),
-                              // ),
-                              // Padding(
-                              //   padding:EdgeInsets.fromLTRB(20.0, 0.0, 5.0, 5.0),
-                              //   child: Row(
-                              //     children:[
-                              //       Text("UOM:",style: TextStyle(fontSize: 17,color: Colors.black,),),
-                              //       SizedBox(width: 10.0),
-                              //       Text(uomTemp, style: TextStyle(fontWeight: FontWeight.bold,fontSize: 17,),),
-                              //     ],
-                              //   ),
-                              // ),
+
                               Padding(
                                 padding: EdgeInsets.fromLTRB(15.0, 0.0, 5.0, 5.0),
-                                child: new Text(widget.prodName.toString(), style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0), textAlign: TextAlign.center,),
+                                child: new Text(widget.prodName.toString(),
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 16.0, color: Colors.black54),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 5.0),
-                                child: new Text("Select Unit of Measure", style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 14.0),),
+                                child: new Text("Select Unit of Measure", style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
@@ -309,7 +299,10 @@ class _ViewItem extends State<ViewItem>  {
                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                     children: [
                                                       Expanded(
-                                                        child: Text('${getUomList[index]['UOM']}', overflow: TextOverflow.ellipsis, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13)),
+                                                        child: Text('${getUomList[index]['UOM']}',
+                                                          overflow: TextOverflow.ellipsis,
+                                                          style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 13),
+                                                        ),
                                                       ),
                                                       Text('₱ ${getUomList[index]['price_with_vat']}', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13))
                                                     ],
@@ -358,7 +351,26 @@ class _ViewItem extends State<ViewItem>  {
 
                   TextButton(
                     onPressed: _counter == 1 ? null : _decrementCounter,
-                    child: new Text('-',style: TextStyle(fontSize: 20,color: Colors.green,),),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: Colors.green[400],
+                      ),
+                      height: 25,
+                      width: 25,
+                      child: Icon(
+                        Icons.remove,
+                        size: 16,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 1.0,
+                            color: Colors.black54,
+                            offset: Offset(1.0, 1.0),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
 
                   Padding(
@@ -373,7 +385,25 @@ class _ViewItem extends State<ViewItem>  {
 
                   TextButton(
                     onPressed: _counter == 999 ? null : _incrementCounter,
-                    child: new Text('+',style: TextStyle(fontSize: 20,color: Colors.green,),),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2),
+                        color: Colors.green[400],
+                      ),
+                      height: 25,
+                      width: 25,
+                      child: Icon(
+                        Icons.add, size: 16,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 1.0,
+                            color: Colors.black54,
+                            offset: Offset(1.0, 1.0),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
 
                   Padding(
@@ -391,22 +421,24 @@ class _ViewItem extends State<ViewItem>  {
                       style: SleekButtonStyle.flat(
                         color: Colors.green,
                         inverted: false,
-                        rounded: true,
-                        size: SleekButtonSize.big,
+                        rounded: false,
+                        size: SleekButtonSize.normal,
                         context: context,
                       ),
                       child: Center(
-                        child:Text("ADD TO CART", style: TextStyle(
-                          shadows: [
-                            Shadow(
-                              blurRadius: 1.0,
-                              color: Colors.black54,
-                              offset: Offset(1.0, 1.0),
-                            ),
-                          ],
-                          fontStyle: FontStyle.normal,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13.0),
+                        child:Text("ADD TO CART",
+                          style: GoogleFonts.openSans(
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.0,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -425,7 +457,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -437,9 +469,11 @@ Route _signIn() {
   );
 }
 
-Route _search(bunitCode) {
+Route _search(bunitCode, groupCode) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(bunitCode: bunitCode),
+    pageBuilder: (context, animation, secondaryAnimation) => GcSearch(
+      bunitCode : bunitCode,
+      groupCode : groupCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       var begin = Offset(1.0, 0.0);
       var end = Offset.zero;

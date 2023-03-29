@@ -18,9 +18,9 @@ import 'create_account_signin.dart';
 class PlaceOrderDelivery extends StatefulWidget {
 
   final paymentMethod;
-  final productID;
+  final tempID;
 
-  const PlaceOrderDelivery({Key key, this.paymentMethod, this.productID}) : super(key: key);
+  const PlaceOrderDelivery({Key key, this.paymentMethod, this.tempID}) : super(key: key);
   @override
   _PlaceOrderDelivery createState() => _PlaceOrderDelivery();
 }
@@ -53,6 +53,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
   List<String> getTenantData      = [];
   List<String> getBuNameData      = [];
   List<String> getTenantNameData  = [];
+  List<String> icoos              = [];
 
   List<TextEditingController> _specialInstruction = [];
   // List<TextEditingController>  _deliveryTime      = [];
@@ -67,11 +68,14 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
   List loadDiscountedPerson = [];
   List loadCartData = [];
   List loadIMainItems = [];
+  List trueTime;
 
   String selectedValue;
   String minimum;
   String min;
   String option;
+  String datePicker ="";
+  String timePicker ="";
 
   double deliveryCharge = 0.00;
   double delivery = 0.00;
@@ -177,7 +181,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
   // }
 
   Future getTenantSegregate2() async{
-    var res = await db.getAmountPerTenant2(widget.productID);
+    var res = await db.getAmountPerTenant2(widget.tempID);
     if (!mounted) return;
     setState(() {
       getTenant = res['user_details'];
@@ -196,7 +200,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
 
 
   updateCartStock(id, stk) async {
-    await db.updateCartStk(id, stk);
+    await db.updateCartIcoos(id, stk);
   }
 
   // Future loadCart() async {
@@ -212,8 +216,14 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
   //   });
   // }
 
+  Future onRefresh() async {
+    loadCart2();
+    getPlaceOrderData();
+    getBuSegregate();
+  }
+
   Future loadCart2() async {
-    var res = await db.loadCartData2(widget.productID);
+    var res = await db.loadCartData2(widget.tempID);
     if (!mounted) return;
     setState(() {
 
@@ -254,7 +264,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
   // }
 
   Future loadTotal2() async {
-    var res = await db.loadSubTotal2(widget.productID);
+    var res = await db.loadSubTotal2(widget.tempID);
     if (!mounted) return;
     setState(() {
       loadTotalData = res['user_details'];
@@ -281,26 +291,35 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-          topRight: Radius.circular(10), topLeft: Radius.circular(10),
+          topRight: Radius.circular(15), topLeft: Radius.circular(15),
         ),
       ),
       builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // loadFlavors
-              // loadAddons
 
-              Padding(
-                padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                child: Text("ADD ONS",
-                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange[400],
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                  ),
+                ),
+                height: 40,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text("ADD ONS",
+                        style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-
-              Divider(thickness: 1, color: Colors.deepOrangeAccent,),
 
               Expanded(
                 child: Scrollbar(
@@ -331,16 +350,18 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                     children: <Widget>[
                                       Expanded(
                                         child: Text('+ ${loadIMainItems[mainItemIndex]['suggestions'][f]['description']}',
-                                          style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
                                         )
                                       ),
-                                      Text('${flavorPrice}', style: TextStyle(fontSize: 14.0)),
+                                      Text('${flavorPrice}',
+                                        style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                      ),
                                     ],
                                   ),
                                 ),
                               );
                             }
-
                           return SizedBox();
                         },
                       ),
@@ -366,10 +387,12 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                   MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
                                     Expanded(child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']}',
-                                        style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    Text('${choicesPrice}', style: TextStyle(fontSize: 14.0)),
+                                    Text('${choicesPrice}',
+                                      style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -384,10 +407,12 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                 children: <Widget>[
                                   Expanded(
                                     child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']} - ${loadIMainItems[mainItemIndex]['choices'][index]['unit_measure']}',
-                                      style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold), overflow: TextOverflow.ellipsis,
                                     )
                                   ),
-                                  Text('${choicesPrice}', style: TextStyle(fontSize: 14.0)),
+                                  Text('${choicesPrice}',
+                                    style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                  ),
                                 ],
                               ),
                             ),
@@ -409,10 +434,13 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                   children: <Widget>[
                                     Expanded(
                                       child: Text('+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']}',
-                                        style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        overflow: TextOverflow.ellipsis,
                                       )
                                     ),
-                                    Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0)),
+                                    Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}',
+                                      style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -426,10 +454,13 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                 children: <Widget>[
                                   Expanded(
                                     child: Text('+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']} ${loadIMainItems[mainItemIndex]['addons'][index]['unit_measure']}',
-                                      style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
-                                    )
+                                      style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                  Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0)),
+                                  Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}',
+                                    style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                  ),
                                 ],
                               ),
                             ),
@@ -598,14 +629,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
         backgroundColor: Colors.deepOrangeAccent,
         barrierDismissible: false,
         onConfirmBtnTap: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          String username = prefs.getString('s_customerId');
-          if (username == null) {
-            Navigator.of(context).push(_signIn());
-          }
-          if (username != null) {
-            Navigator.of(context).pop();
-          }
+          Navigator.of(context).pop();
         },
         onCancelBtnTap: () async {
         }
@@ -659,7 +683,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
        String username = prefs.getString('s_customerId');
        if(username == null){
 
-         Navigator.of(context).push(_signIn());
+         Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
 
        } else {
 
@@ -678,14 +702,13 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
            grandTotal,
            specialInstruction,
            deliveryCharge,
-           widget.productID,
+           widget.tempID,
            )
-         );
+         ).then((val)=>{onRefresh()});
        }
     }
   }
 
-  List trueTime;
   getTrueTime() async{
     var res = await db.getTrueTime();
     if (!mounted) return;
@@ -700,10 +723,10 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
     selectedDiscountType.clear();
     super.initState();
     // loadCart();
-    loadCart2();
-    getPlaceOrderData();
-    getBuSegregate();
-    print(widget.productID);
+    onRefresh();
+
+    print(widget.paymentMethod);
+    print(widget.tempID);
     initController();
     stock = 0;
     print(stock);
@@ -739,27 +762,38 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
       onWillPop: () async{
         Navigator.pop(context);
         return true;
-     },
+      },
       child: Scaffold(
-      appBar: AppBar(
-        titleSpacing: 0,
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
-        elevation: 0.1,
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
-          onPressed: () => Navigator.of(context).pop(),
+        appBar: AppBar(
+          titleSpacing: 0,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+          ),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
+          elevation: 0.1,
+          leading: IconButton(
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: Text("Review Checkout Form (Delivery)",
+            style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+          ),
         ),
-        title: Padding(
-          padding: EdgeInsets.all(0),
-          child: Text("Review Checkout Form (Delivery)",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0)),
-        )
-     ),
-      body: isLoading ? Center(
-        child: CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
-        ),
-       ) :
+        body: isLoading ? Center(
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+          ),
+        ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -769,7 +803,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                 key: _formKey,
                 child: RefreshIndicator(
                   color: Colors.deepOrangeAccent,
-                  onRefresh: loadCart2,
+                  onRefresh: onRefresh,
                   child: Scrollbar(
                     child: ListView.builder(
                       itemCount: getTenant == null ? 0 : getTenant.length,
@@ -789,33 +823,39 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                             crossAxisAlignment : CrossAxisAlignment.start,
                             children: <Widget>[
 
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent,),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Text('${getTenant[index0]['tenant_name'].toString()} - ${getTenant[index0]['acroname'].toString()}',
-                                  style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 15.0),
-                                ),
-                              ),
-
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                              Container(
+                                height: 40,
+                                color: Colors.deepOrange[300],
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Product Details',
-                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                    Text('Total Price',
-                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      child: Text('${getTenant[index0]['tenant_name'].toString()} - ${getTenant[index0]['acroname'].toString()}',
+                                        style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
 
-                              Divider(),
+                              Container(
+                                height: 40,
+                                color: Colors.deepOrange[100],
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Product Details',
+                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      ),
+                                      Text('Total Price',
+                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
 
                               ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
@@ -879,7 +919,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                       Padding(
                                                         padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                                                         child: Text("₱ ${loadCartData[index]['main_item']['price'].toString()}",
-                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black,),
+                                                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black54),
                                                         ),
                                                       ),
                                                     ],
@@ -897,9 +937,11 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                           Flexible(
                                                             child: Padding(
                                                               padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                                                              child: RichText(overflow: TextOverflow.ellipsis, maxLines: 2, text: TextSpan(
-                                                                style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
-                                                                text: '${loadCartData[index]['main_item']['product_name']}'),
+                                                              child: RichText(
+                                                                text: TextSpan(
+                                                                  style: GoogleFonts.openSans(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 13),
+                                                                  text: '${loadCartData[index]['main_item']['product_name']}'),
+                                                                overflow: TextOverflow.ellipsis, maxLines: 2,
                                                               ),
                                                             ),
                                                           ),
@@ -907,8 +949,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 2, 20, 0),
                                                             child: Text("₱ ${loadCartData[index]['main_item']['total_price'].toString()}",
-                                                              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                                  color: Colors.deepOrangeAccent),
+                                                              style: TextStyle(fontSize: 13, color: Colors.black87),
                                                             ),
                                                           ),
                                                         ],
@@ -919,7 +960,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
                                                             child: Text('Quantity: ${loadCartData[index]['main_item']['quantity'].toString()}',
-                                                              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black),
+                                                              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                                             ),
                                                           ),
                                                         ],
@@ -988,8 +1029,9 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                                     //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
                                                                   ),
                                                                   isExpanded: false,
-                                                                  hint: Text(
-                                                                      option, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12, fontWeight: FontWeight.normal, color: Colors.black)),
+                                                                  hint: Text(option,
+                                                                    style: GoogleFonts.openSans(fontSize: 12, color: Colors.black54),
+                                                                  ),
                                                                   icon: const Icon(
                                                                     Icons.arrow_drop_down,
                                                                     color: Colors.black45,
@@ -999,14 +1041,15 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                                     .map((item) =>
                                                                     DropdownMenuItem<String>(
                                                                       value: item,
-                                                                      child: Scrollbar(
-                                                                        child: Container(
-                                                                          padding: EdgeInsets.all(0),
-                                                                          width: 70,
-                                                                          child:Text(item, style: TextStyle(fontStyle: FontStyle.normal, fontSize: 12.0, fontWeight: FontWeight.normal, color: Colors.black)),
+                                                                      child: Container(
+                                                                        margin: EdgeInsets.all(0),
+                                                                        padding: EdgeInsets.all(0),
+                                                                        width: 70,
+                                                                        child:Text(item,
+                                                                          style: GoogleFonts.openSans(fontSize: 11.0, color: Colors.black54),
                                                                         ),
-                                                                      )
-                                                                    )
+                                                                      ),
+                                                                    ),
                                                                   )
                                                                       .toList(),
                                                                   // ignore: missing_return
@@ -1014,6 +1057,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                                     setState(() {
                                                                       selectedValue = value;
                                                                       stock  = _option.indexOf(value);
+
                                                                       print(stock);
                                                                       print(loadCartData[index]['main_item']['product_id']);
 
@@ -1050,34 +1094,45 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                 }
                               ),
 
-                              Divider(thickness: 1, color: Colors.black54),
+                              Divider(thickness: 2, color: Colors.grey[200]),
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
 
-                                  Padding(
-                                    padding: EdgeInsets.only(left: 10),
-                                    child: Text("Total Amount", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                                  ),
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Text("Total Amount",
+                                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                      ),
+                                    ),
 
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 20),
-                                    child: Text("₱ ${getTenant[index0]['total']}", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.deepOrangeAccent)),
-                                  ),
-                                ],
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 20),
+                                      child: Text("₱ ${getTenant[index0]['total']}",
+                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black87),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
 
-                              Divider(thickness: 1, color: Colors.black54),
+                              Divider(thickness: 2, color: Colors.grey[200]),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10, 0, 5, 5),
-                                child: new Text("Setup Date & Time for Delivery", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                                child: new Text("Setup Date & Time for Delivery",
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
-                                child: new Text("Delivery date*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.black)),
+                                child: new Text("Delivery date*",
+                                  style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black87),
+                                ),
                               ),
 
                               Padding(
@@ -1085,7 +1140,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                 child: InkWell(
                                   onTap: (){
 
-                                    // _deliveryTime[index0].clear();
+                                    _deliveryTime.clear();
 
                                     FocusScope.of(context).requestFocus(FocusNode());
 
@@ -1099,21 +1154,33 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                             child: AlertDialog(
                                               contentPadding: EdgeInsets.all(0),
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                                  borderRadius: BorderRadius.all(Radius.circular(15.0))
                                               ),
-                                              titlePadding: const EdgeInsets.only(left: 10, top: 10, bottom: 0),
-                                              title: Text("Set date for this delivery",style: TextStyle(fontSize: 15.0, color: Colors.deepOrangeAccent),
+                                              titlePadding: const EdgeInsets.all(0),
+                                              title: Container(
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.deepOrange[400],
+                                                  borderRadius: BorderRadius.only(
+                                                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.only(left: 15, top: 10),
+                                                  child: Text("Set date for this delivery",
+                                                    style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                  ),
+                                                ),
                                               ),
                                               content: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-
-                                                  Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                                                  SizedBox(height: 10),
 
                                                   Container(
                                                     padding: EdgeInsets.all(0),
-                                                    height:150.0, // Change as per your requirement
+                                                    height:220.0, // Change as per your requirement
                                                     width: 300.0, // Change as per your requirement
                                                     child: Scrollbar(
                                                       child:ListView.builder(
@@ -1125,14 +1192,19 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                           n = index1;
                                                           var d1 = DateTime.parse(trueTime[0]['date_today']);
                                                           var d2 = new DateTime(d1.year, d1.month, d1.day + n);
+                                                          ///for database
                                                           final DateFormat formatter = DateFormat('yyyy-MM-dd');
                                                           final String formatted = formatter.format(d2);
+                                                          ///for app display
+                                                          final DateFormat formatter2 = DateFormat('MMMM d, y, EEEE');
+                                                          final String formatted2 = formatter2.format(d2);
                                                           return InkWell(
                                                             onTap: (){
                                                               // while(deliveryDateData.length > getTenant.length-1){
                                                               //   deliveryDateData.removeAt(index0);
                                                               // }
-                                                              _deliveryDate.text = formatted;
+                                                              _deliveryDate.text = formatted2;
+                                                              datePicker = formatted;
                                                               print(_deliveryDate.text);
                                                               // deliveryDateData.insert(index0, _deliveryDate[index0].text);
 
@@ -1159,17 +1231,18 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                             child: Column(
                                                               crossAxisAlignment: CrossAxisAlignment.start,
                                                               children: <Widget>[
-
                                                                 Row(
                                                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                   children: <Widget>[
-
                                                                     Padding(
-                                                                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                                                      child: Text('${formatted.toString()}',style: TextStyle(fontSize: 15.0),),
+                                                                      padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                                                      child: Text('${formatted2.toString()}',
+                                                                        style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                      ),
                                                                     ),
-                                                                  ]
+                                                                  ],
                                                                 ),
+                                                                Divider(thickness: 2, color: Colors.grey[200]),
                                                               ],
                                                             ),
                                                           );
@@ -1189,15 +1262,12 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                         RoundedRectangleBorder(
                                                           borderRadius: BorderRadius.circular(20.0),
-                                                          side: BorderSide(color: Colors.deepOrangeAccent)
-                                                        )
-                                                      )
-                                                    ),
-                                                    child: Text(
-                                                      'Clear',
-                                                      style: TextStyle(
-                                                        color: Colors.white,
+                                                          side: BorderSide(color: Colors.deepOrangeAccent),
+                                                        ),
                                                       ),
+                                                    ),
+                                                    child: Text('Clear',
+                                                      style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                                                     ),
                                                     onPressed: () {
                                                       _deliveryDate.clear();
@@ -1220,7 +1290,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                   child: IgnorePointer(
                                     child: new TextFormField(
                                       textInputAction: TextInputAction.done,
-                                      style: TextStyle(fontSize: 13),
+                                      style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                       cursorColor: Colors.deepOrange,
                                       controller: _deliveryDate,
                                       validator: (value) {
@@ -1230,12 +1300,12 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                         return null;
                                       },
                                       decoration: InputDecoration(
-                                        prefixIcon: Icon(Icons.date_range,color: Colors.deepOrangeAccent,),
+                                        prefixIcon: Icon(Icons.date_range,color: Colors.deepOrange[400]),
                                         contentPadding: EdgeInsets.all(0),
                                         focusedBorder:OutlineInputBorder(
                                           borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                         ),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                       ),
                                     ),
                                   ),
@@ -1244,7 +1314,9 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 5, 5),
-                                child: new Text("Delivery time*", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.black)),
+                                child: new Text("Delivery time*",
+                                  style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black87),
+                                ),
                               ),
 
                               Padding(
@@ -1261,10 +1333,9 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                         timeInSecForIosWeb: 2,
                                         backgroundColor: Colors.black.withOpacity(0.7),
                                         textColor: Colors.white,
-                                        fontSize: 16.0
+                                        fontSize: 16.0,
                                       );
-                                    }
-                                    else{
+                                    } else {
                                       FocusScope.of(context).requestFocus(FocusNode());
 
                                       showGeneralDialog(
@@ -1277,19 +1348,32 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                               child: AlertDialog(
                                                 contentPadding: EdgeInsets.all(0),
                                                 shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.all(Radius.circular(8.0))
+                                                    borderRadius: BorderRadius.all(Radius.circular(15.0))
                                                 ),
-                                                titlePadding: const EdgeInsets.only(left: 10, top: 10, bottom: 0),
-                                                title: Text("Set time for this delivery",style: TextStyle(fontSize: 15.0, color: Colors.deepOrangeAccent)),
+                                                titlePadding: const EdgeInsets.all(0),
+                                                title: Container(
+                                                  height: 40,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.deepOrange[400],
+                                                    borderRadius: BorderRadius.only(
+                                                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                                                    ),
+                                                  ),
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 15, top: 10),
+                                                    child: Text("Set time for this delivery",
+                                                      style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                    ),
+                                                  ),
+                                                ),
                                                 content: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   mainAxisSize: MainAxisSize.min,
                                                   children: [
-
-                                                    Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                                                    SizedBox(height: 10),
 
                                                     Container(
-                                                      height:200.0, // Change as per your requirement
+                                                      height:220.0, // Change as per your requirement
                                                       width: 300.0, // Change as per your requirement
                                                       child: Scrollbar(
                                                         child:  ListView.builder(
@@ -1304,44 +1388,43 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                             final dtFrom = DateTime(now.year, now.month, now.day, _globalTime2+t, 0+00, now.minute, now.second);
                                                             // final dtTo = DateTime(now.year, now.month, now.day, 8+t, 0+30);
                                                             final format = DateFormat.jm();  //"6:00 AM"
+                                                            final formatt = DateFormat.Hm(); //"6:
                                                             String from = format.format(dtFrom);
+                                                            String fromm = formatt.format(dtFrom);
 
                                                             return InkWell(
                                                               onTap: (){
-                                                                // while(deliveryTimeData.length > getTenant.length-1){
-                                                                //   deliveryTimeData.removeAt(index0);
-                                                                // }
+
                                                                 _deliveryTime.text = from;
                                                                 print(_deliveryTime.text);
-                                                                // deliveryTimeData.insert(index0, _deliveryTime[index0].text);
 
                                                                 Navigator.of(context).pop();
                                                               },
                                                               child: Column(
                                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: <Widget>[
-
                                                                   Row (
                                                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                     children: <Widget>[
-
                                                                       Padding(
-                                                                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                                                                        child: Text('${from.toString()}',style: TextStyle(fontSize: 14.0),),
+                                                                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+                                                                        child: Text('${from.toString()}',
+                                                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                        ),
                                                                       ),
-                                                                    ]
+                                                                    ],
                                                                   ),
+                                                                  Divider(thickness: 2, color: Colors.grey[200]),
                                                                 ],
                                                               ),
                                                             );
-                                                          }
+                                                          },
                                                         ),
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                                 actions: <Widget>[
-
                                                   Padding(
                                                     padding: EdgeInsets.only(right: 5),
                                                     child: TextButton(
@@ -1350,15 +1433,12 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                           RoundedRectangleBorder(
                                                             borderRadius: BorderRadius.circular(20.0),
-                                                            side: BorderSide(color: Colors.deepOrangeAccent)
-                                                          )
-                                                        )
-                                                      ),
-                                                      child: Text(
-                                                        'Clear',
-                                                        style: TextStyle(
-                                                          color: Colors.white,
+                                                            side: BorderSide(color: Colors.deepOrangeAccent),
+                                                          ),
                                                         ),
+                                                      ),
+                                                      child: Text('Clear',
+                                                        style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
                                                       ),
                                                       onPressed: () {
                                                         _deliveryTime.clear();
@@ -1367,7 +1447,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                                     ),
                                                   ),
                                                 ],
-                                              )
+                                              ),
                                             ),
                                           );
                                         },
@@ -1381,7 +1461,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                   },
                                   child: IgnorePointer(
                                     child: new TextFormField(
-                                      style: TextStyle(fontSize: 13),
+                                      style: GoogleFonts.openSans(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.black54),
                                       textInputAction: TextInputAction.done,
                                       cursorColor: Colors.deepOrange,
                                       controller: _deliveryTime,
@@ -1397,7 +1477,7 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                         focusedBorder:OutlineInputBorder(
                                           borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                         ),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                       ),
                                     ),
                                   ),
@@ -1405,8 +1485,10 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                               ),
 
                               Padding(
-                                padding: EdgeInsets.fromLTRB(10, 5, 5, 0),
-                                child: new Text("Special Instruction", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black)),
+                                padding: EdgeInsets.only(left: 10),
+                                child: new Text("Special Instruction",
+                                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
                               ),
 
                               Padding(
@@ -1417,16 +1499,16 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                                   textInputAction: TextInputAction.done,
                                   cursorColor: Colors.deepOrange,
                                   controller: _specialInstruction[index0],
+                                  style: GoogleFonts.openSans(fontSize: 13),
                                   maxLines: 4,
-                                  style: TextStyle(fontSize: 13),
                                   decoration: InputDecoration(
-                                    hintStyle: TextStyle(fontSize: 13),
+                                    hintStyle: GoogleFonts.openSans(fontSize: 13),
                                     hintText:"Special instruction",
                                     contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 10.0),
                                     focusedBorder:OutlineInputBorder(
                                       borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
                                     ),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(15.0)),
                                   ),
                                 ),
                               ),
@@ -1447,21 +1529,17 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
 
                   Flexible(
                     child: SleekButton(
-                      onTap: () async{
+                      onTap: () async {
 
                         SharedPreferences prefs = await SharedPreferences.getInstance();
                         String username = prefs.getString('s_customerId');
                         if(username == null){
-                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                          Navigator.of(context).push(_signIn());
+                          Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                         } else {
                           if (_formKey.currentState.validate()) {
-                            // Navigator.of(context).push(_gcPickUpFinal(groupValue,_deliveryTime.text,_deliveryDate.text,_modeOfPayment.text));
                             submitPlaceOrder();
                           }
                           for (int i=0; i<getTenant.length; i++){
-                            // print(_specialInstruction[i].text);
-                            // special.add(_specialInstruction[i].text);
                             while(specialInstruction.length > getTenant.length-1){
                               specialInstruction.removeAt(i);
                             }
@@ -1475,24 +1553,27 @@ class _PlaceOrderDelivery extends State<PlaceOrderDelivery> with SingleTickerPro
                         // print(getBuNameData);
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.deepOrange,
+                        color: Colors.deepOrange[400],
                         inverted: false,
-                        rounded: true,
-                        size: SleekButtonSize.big,
+                        rounded: false,
+                        size: SleekButtonSize.normal,
                         context: context,
                       ),
                       child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("NEXT",
-                            style: GoogleFonts.openSans(
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0),
-                            ),
-                          ],
-                        )
+                        child: Text("NEXT",
+                          style: GoogleFonts.openSans(
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                            shadows: [
+                              Shadow(
+                                blurRadius: 1.0,
+                                color: Colors.black54,
+                                offset: Offset(1.0, 1.0),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -1534,19 +1615,19 @@ Route _submitOrder(
     productID) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => SubmitOrder(
-      paymentMethod: paymentMethod,
-      deliveryDateData:deliveryDateData,
-      deliveryTimeData:deliveryTimeData,
-      getTenantData:getTenantData,
-      getTenantNameData:getTenantNameData,
-      getBuNameData:getBuNameData,
-      subtotal:subtotal,
-      grandTotal:grandTotal,
-      specialInstruction:specialInstruction,
-      deliveryCharge:deliveryCharge,
-      productID : productID),
+      paymentMethod       : paymentMethod,
+      deliveryDateData    : deliveryDateData,
+      deliveryTimeData    : deliveryTimeData,
+      getTenantData       : getTenantData,
+      getTenantNameData   : getTenantNameData,
+      getBuNameData       : getBuNameData,
+      subtotal            : subtotal,
+      grandTotal          : grandTotal,
+      specialInstruction  : specialInstruction,
+      deliveryCharge      : deliveryCharge,
+      productID           : productID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1594,7 +1675,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

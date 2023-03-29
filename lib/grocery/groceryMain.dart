@@ -842,7 +842,7 @@ Route _gcViewCart(){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcLoadCart(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -875,7 +875,7 @@ Route _loadGC(logo,categoryName,categoryNo,businessUnit,bUnitCode){
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GcLoadStore(logo:logo,categoryName:categoryName,categoryNo:categoryNo,businessUnit:businessUnit,bUnitCode:bUnitCode),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -939,7 +939,7 @@ Route _signIn() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -955,7 +955,7 @@ Route _foodRoute(_globalCatID) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => MyHomePage(globalCatID:_globalCatID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -971,7 +971,7 @@ Route _groceryRoute(_groceryRoute) {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => GroceryMain(groceryRoute:_groceryRoute),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

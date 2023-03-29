@@ -350,26 +350,35 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+            topRight: Radius.circular(15), topLeft: Radius.circular(15)),
       ),
       builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.5,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // loadFlavors
               // loadAddons
-              Padding(
-                padding: EdgeInsets.fromLTRB(10.0, 10.0, 0.0, 0.0),
-                child: Text(
-                  "ADD ONS",
-                  style: TextStyle(
-                      fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange[400],
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                  ),
+                ),
+                height: 40,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 10.0),
+                      child: Text("ADD ONS",
+                        style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-
-              Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
               Expanded(
                 child: Scrollbar(
@@ -406,10 +415,13 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                       Expanded(
                                         child: Text('+ ${loadIMainItems[mainItemIndex]['suggestions'][f]['description']}',
-                                          style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                      Text('$flavorPrice', style: TextStyle(fontSize: 14.0)),
+                                      Text('$flavorPrice',
+                                        style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -450,10 +462,13 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                     Expanded(
                                       child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']}',
-                                        style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    Text('$choicesPrice', style: TextStyle(fontSize: 14.0))
+                                    Text('$choicesPrice',
+                                      style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -470,11 +485,12 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
 
                                   Expanded(
                                     child: Text('+ ${loadIMainItems[mainItemIndex]['choices'][index]['product_name']} - ${loadIMainItems[mainItemIndex]['choices'][index]['unit_measure']}',
-                                      style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis,
                                     )
                                   ),
 
-                                  Text('$choicesPrice', style: TextStyle(fontSize: 14.0),
+                                  Text('$choicesPrice', style: TextStyle(fontSize: 14.0, color: Colors.black87),
                                   ),
                                 ],
                               ),
@@ -501,13 +517,15 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                   children: <Widget>[
 
                                     Expanded(
-                                      child: Text(
-                                        '+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']}',
-                                        style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
+                                      child: Text('+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']}',
+                                        style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
                                       )
                                     ),
 
-                                    Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0)),
+                                    Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}',
+                                      style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -523,10 +541,10 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                 children: <Widget>[
 
                                   Expanded(
-                                    child: Text(
-                                      '+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']} ${loadIMainItems[mainItemIndex]['addons'][index]['unit_measure']}',
-                                      style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,
-                                    )
+                                    child: Text('+ ${loadIMainItems[mainItemIndex]['addons'][index]['product_name']} ${loadIMainItems[mainItemIndex]['addons'][index]['unit_measure']}',
+                                      style: GoogleFonts.openSans(fontSize: 14.0, color: Colors.black54, fontWeight: FontWeight.bold),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
 
                                   Text('₱ ${loadIMainItems[mainItemIndex]['addons'][index]['addon_price']}', style: TextStyle(fontSize: 14.0))
@@ -538,8 +556,8 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                       ),
                     ],
                   ),
-                )
-              )
+                ),
+              ),
             ],
           ),
         );
@@ -562,23 +580,35 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
       context: context,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
-            topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+            topRight: Radius.circular(15), topLeft: Radius.circular(15)),
       ),
       builder: (ctx) {
         return Container(
-          height: MediaQuery.of(context).size.height * 0.4,
+          height: MediaQuery.of(context).size.height * 0.5,
           child:Container(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 10.0),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 0.0, 15.0, 0.0),
-                  child: Text("YOUR STORES",
-                    style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrange[400],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                    ),
+                  ),
+                  height: 40.0,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10.0),
+                    child: Row(
+                      children: [
+                        Text("YOUR STORE(S)",
+                          style: GoogleFonts.openSans(fontSize: 18.0, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Divider(thickness: 1, color: Colors.deepOrangeAccent),
+
                 Expanded(
                   child: Scrollbar(
                     child: ListView(
@@ -604,66 +634,57 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
 
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('${lGetAmountPerTenant[index]['tenant_name']} - ${lGetAmountPerTenant[index]['acroname']}',
-                                            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)
-                                        ),
-                                      ],
+                                  Container(
+                                    height: 35,
+                                    color: Colors.deepOrange[200],
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                      child: Row(
+                                        children: [
+                                          Text('${lGetAmountPerTenant[index]['tenant_name']} - ${lGetAmountPerTenant[index]['acroname']}',
+                                            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
 
-                                  Divider(thickness: 1, color: Colors.black54),
-
                                   Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
 
                                         Text('No. of Item(s):',
-                                          style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
+                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                         ),
 
                                         Text('${lGetAmountPerTenant[index]['count']}',
-                                          style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
+                                          style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black87),
                                         ),
                                       ],
                                     ),
                                   ),
 
-                                  Divider(color: Colors.black54),
+                                  Container(
+                                    height: 30,
+                                    color: Colors.grey[200],
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
 
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
+                                          Text('Subtotal Amount:',
+                                            style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                          ),
 
-                                        Text('Subtotal Amount:',
-                                          style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
-                                        ),
-
-                                        Text('₱${lGetAmountPerTenant[index]['total']}',
-                                          style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal)
-                                        ),
-                                      ],
+                                          Text('₱${lGetAmountPerTenant[index]['total']}',
+                                            style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black87),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-
-                                  Visibility(
-                                    visible: placeOrder.isEmpty ? true : false,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-
-                                        Divider(color: Colors.black54)
-
-                                      ],
-                                    )
                                   ),
 
                                   Column(
@@ -675,32 +696,33 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
 
-                                            Divider(color: Colors.black54),
-
                                             Row(
                                               children: [
 
                                                 Padding(
-                                                  padding: EdgeInsets.only(left: 10),
+                                                  padding: EdgeInsets.only(left: 10, top: 10),
                                                   child: Text('Minimum order reached',
-                                                    style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.green)
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.green),
                                                   ),
                                                 ),
 
-                                                Text(' / ',
-                                                  style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10),
+                                                  child: Text(' / ',
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
+                                                  ),
                                                 ),
 
-                                                Text('For delivery only',
-                                                  style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10),
+                                                  child: Text('For delivery only',
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
+                                                  ),
                                                 ),
                                               ],
                                             ),
-
-                                            Divider(color: Colors.black54),
-
                                           ],
-                                        )
+                                        ),
                                       ),
 
                                       Visibility(
@@ -709,30 +731,31 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
 
-                                            Divider(color: Colors.black54),
-
                                             Row(
                                               children: [
 
                                                 Padding(
-                                                  padding: EdgeInsets.only(left: 10),
+                                                  padding: EdgeInsets.only(left: 10, top: 10),
                                                   child: Text('Does not reached minimum order',
-                                                      style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.redAccent)
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.redAccent),
                                                   ),
                                                 ),
 
-                                                Text(' / ',
-                                                    style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10),
+                                                  child: Text(' / ',
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
+                                                  ),
                                                 ),
 
-                                                Text('For delivery only',
-                                                    style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)
+                                                Padding(
+                                                  padding: EdgeInsets.only(top: 10),
+                                                  child: Text('For delivery only',
+                                                    style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black54),
+                                                  ),
                                                 ),
                                               ],
                                             ),
-
-                                            Divider(color: Colors.black54),
-
                                           ],
                                         ),
                                       ),
@@ -777,6 +800,8 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
 
+
+                    ///Delivery Foods
                     GestureDetector(
                       onTap: () {
                         // getPlaceOrderData();
@@ -850,8 +875,8 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             }
                           });
                           Navigator.pop(context);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderDelivery(paymentMethod : _selectOption, productID : tempID)),).then((val)=>{onRefresh()});
-                          // Navigator.of(context).push(_placeOrderDelivery(loadIMainItems, _selectOption));
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderDelivery(paymentMethod : _selectOption, tempID : tempID)),).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(_placeOrderDelivery(_selectOption, tempID)).then((val)=>{onRefresh()});
                         }
                       },
                       child: Container(
@@ -874,6 +899,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                       ),
                     ),
 
+                    ///Pick-up Foods
                     GestureDetector(
                       onTap: () {
                         print(getBuLength.length);
@@ -902,7 +928,8 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                               SharedPreferences prefs = await SharedPreferences.getInstance();
                               String username = prefs.getString('s_customerId');
                               if (username == null) {
-                                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                                await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+
                               }
                               if (username != null) {
                                 Navigator.of(context).pop();
@@ -921,7 +948,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             }
                           });
                           Navigator.pop(context);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (_)=>new PlaceOrderPickUp(paymentMethod : _selectOption, productID : tempID)),).then((val)=>{onRefresh()});
+                          Navigator.of(context).push(_placeOrderPickUp(_selectOption, tempID)).then((val)=>{onRefresh()});
                         }
                       },
                       child: Container(
@@ -1146,21 +1173,38 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+          ),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("My Cart", style: GoogleFonts.openSans(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 16.0),
+          title: Text("My Cart", style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
           ),
           actions: <Widget>[
             IconButton(
-              onPressed: () {
-                Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddressMasterFile())).then((val)=>{onRefresh()});
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                String username = prefs.getString("s_customerId");
+                if (username == null) {
+                  Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
+                }
+                Navigator.of(context).push(_addressMasterfile()).then((val)=>{onRefresh()});
               },
-              icon: Icon(Icons.edit_location_outlined, color: Colors.deepOrangeAccent,),
+              icon: Icon(Icons.edit_location_outlined, color: Colors.white),
             ),
           ],
         ),
@@ -1188,127 +1232,99 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                           child: Column(
                             crossAxisAlignment : CrossAxisAlignment.start,
                             children: <Widget>[
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent),
+
                               InkWell(
-                                // onTap: () async {
-                                //   // print(getBu[index0]['d_tenant_id']);
-                                //
-                                //   for (int q=0;q<loadCartData.length;q++) {
-                                //     // print(loadCartData[q]['main_item']);
-                                //     if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
-                                //
-                                //       print(loadCartData[q]['main_item']['id']);
-                                //       // print(loadCartData[q]['main_item']['product_id']);
-                                //       // print(loadCartData[q]['main_item']['uom_id']);
-                                //       // print(loadCartData[q]['main_item']['quantity']);
-                                //       // print(loadCartData[q]['main_item']['price']);
-                                //       // print(loadCartData[q]['main_item']['measurement']);
-                                //       // print(loadCartData[q]['main_item']['total_price']);
-                                //       // print(loadIMainItems[q]['flavors'][0]['temp_order_id']);
-                                //       // print(loadIMainItems[q]['flavors'][0]['flavor_id']);
-                                //
-                                //       for (int f=0;f<loadIMainItems.length;f++) {
-                                //         if (f == q) {
-                                //           print(loadCartData[q]['flavors'][0]['addon_price']);
-                                //         }
-                                //       }
-                                //
-                                //       for (int j=0;j<loadIMainItems[q]['choices'].length;j++){
-                                //         // print(j);
-                                //         // print(loadIMainItems[q]['choices'][j]['addon_price']);
-                                //         // print(loadIMainItems[q]['choices'][j]['choice_id']);
-                                //         // print(loadIMainItems[q]['choices'][j]['uom_id']);
-                                //       }
-                                //
-                                //       for (int i=0;i<loadIMainItems[q]['addons'].length;i++) {
-                                //         // print(i);
-                                //         // print(loadIMainItems[q]['addons'][i]['addon_id']);
-                                //         // print(loadIMainItems[q]['addons'][i]['uom_id']);
-                                //         // print(loadIMainItems[q]['addons'][i]['addon_sides']);
-                                //         // print(loadIMainItems[q]['addons'][i]['addon_dessert']);
-                                //         // print(loadIMainItems[q]['addons'][i]['addon_drinks']);
-                                //         // print(loadIMainItems[q]['addons'][i]['upgrade']);
-                                //         print(loadIMainItems[q]['addons'][i]['addon_price']);
-                                //       }
-                                //     }
-                                //   }
-                                // },
-                                child: Row(
-                                  children: [
 
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: SizedBox(width: 20, height: 20,
-                                        child: Checkbox(
-                                          activeColor: Colors.deepOrangeAccent,
-                                          value: side[index0],
-                                          onChanged: (value) {
-                                            setState(() {
-                                              side[index0] = value;
-
-                                              for (int q=0;q<loadCartData.length;q++) {
-
-                                                if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
-                                                  side1[q] = false;
-                                                  tempID.remove(loadCartData[q]['main_item']['temp_id']);
-                                                }
-                                              }
-
-                                              if (value){
-                                                print(value);
-                                                loadMethods();
-
-                                                for (int q=0;q<loadIMainItems.length;q++) {
-
-                                                  if (getBu[index0]['d_tenant_id'] == loadIMainItems[q]['main_item']['tenant_id']){
-                                                    side1[q] = true;
-                                                    tempID.add(loadCartData[q]['main_item']['temp_id']);
-                                                  }
-                                                }
-                                              } else {
-                                                print(value);
-                                                loadMethods();
-
-                                                for (int q=0;q<loadCartData.length;q++) {
-
-                                                  if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
-                                                    side1[q] = false;
-                                                    tempID.remove(loadCartData[q]['main_item']['temp_id']);
-                                                  }
-                                                }
-                                              }
-                                              print(tempID);
-                                            });
-                                          }
+                                child: Container(
+                                  color: Colors.deepOrange[300],
+                                  height: 40,
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 10, top: 5),
+                                        child: Text('${getBu[index0]['d_tenant_name']} - ${getBu[index0]['d_acroname']}',
+                                            style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15.0)
                                         ),
                                       ),
-                                    ),
+                                    ],
+                                  ),
+                                ),
+                              ),
 
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 10),
-                                      child: Text('${getBu[index0]['d_tenant_name']} - ${getBu[index0]['d_acroname']}',
-                                          style: TextStyle(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 15.0)
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Divider(thickness: 1, color: Colors.deepOrangeAccent,),
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('Product Details',
-                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                    Text('Total Price',
-                                      style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black),
-                                    ),
-                                  ],
+                                padding: EdgeInsets.zero,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  height: 40,
+                                  color: Colors.deepOrange[100],
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.zero,
+                                            child: SizedBox(width: 20, height: 20,
+                                              child: Checkbox(
+                                                  activeColor: Colors.deepOrangeAccent,
+                                                  value: side[index0],
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      side[index0] = value;
+
+                                                      for (int q=0;q<loadCartData.length;q++) {
+
+                                                        if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
+                                                          side1[q] = false;
+                                                          tempID.remove(loadCartData[q]['main_item']['temp_id']);
+                                                        }
+                                                      }
+
+                                                      if (value){
+                                                        print(value);
+                                                        loadMethods();
+
+                                                        for (int q=0;q<loadIMainItems.length;q++) {
+
+                                                          if (getBu[index0]['d_tenant_id'] == loadIMainItems[q]['main_item']['tenant_id']){
+                                                            side1[q] = true;
+                                                            tempID.add(loadCartData[q]['main_item']['temp_id']);
+                                                          }
+                                                        }
+                                                      } else {
+                                                        print(value);
+                                                        loadMethods();
+
+                                                        for (int q=0;q<loadCartData.length;q++) {
+
+                                                          if (getBu[index0]['d_tenant_id'] == loadCartData[q]['main_item']['tenant_id']){
+                                                            side1[q] = false;
+                                                            tempID.remove(loadCartData[q]['main_item']['temp_id']);
+                                                          }
+                                                        }
+                                                      }
+                                                      print(tempID);
+                                                    });
+                                                  }
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: EdgeInsets.only(left: 10),
+                                            child: Text('Product Details',
+                                              style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text('Total Price',
+                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal ,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              Divider(color: Colors.black54),
+
                               ListView.builder(
                                 physics: NeverScrollableScrollPhysics(), //
                                 shrinkWrap: true,
@@ -1323,44 +1339,8 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                  }
 
                                   side1.add(false);
-                                return InkWell(
+                                  return InkWell(
 
-                                  // onTap: () {
-                                  //
-                                  //   // print(loadCartData[index]['main_item']['product_id']);
-                                  //   // print(loadCartData[index]['main_item']['uom_id']);
-                                  //   // print(loadCartData[index]['main_item']['quantity']);
-                                  //   // print(loadCartData[index]['main_item']['price']);
-                                  //   // print(loadCartData[index]['main_item']['measurement']);
-                                  //   // print(loadCartData[index]['main_item']['total_price']);
-                                  //
-                                  //   for (int f=0;f<loadIMainItems.length;f++) {
-                                  //     if (f == index) {
-                                  //       // print(loadIMainItems[index]['flavors'][0]['temp_order_id']);
-                                  //       // print(loadIMainItems[index]['flavors'][0]['flavor_id']);
-                                  //       print(loadCartData[index]['flavors'][0]['addon_price']);
-                                  //     }
-                                  //   }
-                                  //
-                                  //   for (int j=0;j<loadIMainItems[index]['choices'].length;j++){
-                                  //     // print(j);
-                                  //     print(loadIMainItems[index]['choices'][j]['addon_price']);
-                                  //     // print(loadIMainItems[index]['choices'][j]['choice_id']);
-                                  //     // print(loadIMainItems[index]['choices'][j]['uom_id']);
-                                  //   }
-                                  //
-                                  //   for (int i=0;i<loadIMainItems[index]['addons'].length;i++) {
-                                  //     // print(i);
-                                  //     print(loadIMainItems[index]['addons'][i]['addon_id']);
-                                  //     print(loadIMainItems[index]['addons'][i]['uom_id']);
-                                  //     print(loadIMainItems[index]['addons'][i]['addon_sides']);
-                                  //     print(loadIMainItems[index]['addons'][i]['addon_dessert']);
-                                  //     print(loadIMainItems[index]['addons'][i]['addon_drinks']);
-                                  //     print(loadIMainItems[index]['addons'][i]['upgrade']);
-                                  //     print(loadIMainItems[index]['addons'][i]['addon_price']);
-                                  //   }
-                                  //
-                                  // },
                                   child: Visibility(
                                     visible: loadCartData[index]['main_item']['tenant_id'] != getBu[index0]['d_tenant_id'] ? false : true,
                                     child: Container(
@@ -1448,7 +1428,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                         padding: EdgeInsets.fromLTRB(5, 5, 10, 0),
                                                         child: Text("₱ ${loadCartData[index]['main_item']['price'].toString()}",
                                                           style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13,
-                                                              color: Colors.black),
+                                                              color: Colors.black54),
                                                         ),
                                                       ),
                                                     ],
@@ -1471,7 +1451,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                                      overflow: TextOverflow.ellipsis,
                                                                      maxLines: 2,
                                                                      text: TextSpan(
-                                                                       style: TextStyle(color: Colors.black, fontWeight: FontWeight.normal, fontSize: 12),
+                                                                       style: GoogleFonts.openSans(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 13),
                                                                        text: '${loadCartData[index]['main_item']['product_name']} $unit ',
                                                                      ),
                                                                    ),
@@ -1485,7 +1465,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(0, 2, 15, 0),
                                                             child: Text("₱ ${loadCartData[index]['main_item']['total_price'].toString()}",
-                                                              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.deepOrangeAccent),
+                                                              style: TextStyle(fontWeight: FontWeight.normal, fontSize: 13, color: Colors.black87),
                                                             ),
                                                           ),
                                                         ],
@@ -1497,14 +1477,30 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                           Row(
                                                             children: <Widget>[
                                                               Padding(
-                                                                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                                padding: EdgeInsets.zero,
                                                                 child: Container(
                                                                   padding: EdgeInsets.all(0),
-                                                                  width: 25.0,
-                                                                  child: TextButton(style: TextButton.styleFrom(backgroundColor: Colors.white12,
-                                                                    primary: Colors.black, onSurface: Colors.red,
+                                                                  width: 50.0,
+                                                                  child: TextButton(style: TextButton.styleFrom(
+                                                                    foregroundColor: Colors.white, disabledForegroundColor: Colors.black54.withOpacity(0.38),
                                                                   ),
-                                                                    child: Text('-', style: TextStyle(fontSize: 16.0)),
+                                                                    child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(2),
+                                                                        color: Colors.deepOrange[300],
+                                                                      ),
+                                                                      height: 25,
+                                                                      width: 25,
+                                                                      child: Icon(Icons.remove, size: 16,
+                                                                        shadows: [
+                                                                          Shadow(
+                                                                            blurRadius: 1.0,
+                                                                            color: Colors.black54,
+                                                                            offset: Offset(1.0, 1.0),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
                                                                     onPressed: side1[index] ? null :
                                                                         () async {
                                                                       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1532,29 +1528,45 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                                           });
                                                                         });
                                                                       }
-
                                                                     },
                                                                   ),
                                                                 ),
                                                               ),
                                                               Padding(
-                                                                padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
+                                                                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                                                                 child: Text(
                                                                   loadCartData[index]['main_item']['quantity'].toString(),
-                                                                  style: TextStyle(fontSize: 13.0),
+                                                                  style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
                                                                 ),
                                                               ),
 
                                                               Padding(
-                                                                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                                padding:EdgeInsets.zero,
                                                                 child:
                                                                 Container(
-                                                                  width: 30.0,
+                                                                  padding: EdgeInsets.all(0),
+                                                                  width: 50.0,
                                                                   child: TextButton(
-                                                                    style: TextButton.styleFrom(backgroundColor: Colors.white12,
-                                                                      primary: Colors.black, onSurface: Colors.red,
+                                                                    style: TextButton.styleFrom(
+                                                                      foregroundColor: Colors.white, disabledForegroundColor: Colors.black54.withOpacity(0.38),
                                                                     ),
-                                                                    child: Text('+', style: TextStyle(fontSize: 15.0)),
+                                                                    child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                        borderRadius: BorderRadius.circular(2),
+                                                                        color: Colors.deepOrange[300],
+                                                                      ),
+                                                                      height: 25,
+                                                                      width: 25,
+                                                                      child: Icon(Icons.add, size: 16,
+                                                                        shadows: [
+                                                                          Shadow(
+                                                                            blurRadius: 1.0,
+                                                                            color: Colors.black54,
+                                                                            offset: Offset(1.0, 1.0),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    ),
                                                                     onPressed: side1[index] ? null :
                                                                         () async {
                                                                       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -1640,10 +1652,10 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                               // visible: loadCartData[index]['addon_length'] == 0 ? false : true,
                                                               child:
                                                               Padding(
-                                                                padding: EdgeInsets.fromLTRB(8, 0, 10, 0),
+                                                                padding: EdgeInsets.fromLTRB(15, 0, 10, 0),
                                                                 child:
                                                                 Container(
-                                                                  width: 60.0,
+                                                                  width: 65.0,
                                                                   child: SizedBox(
                                                                     height: 30,
                                                                     child: TextButton(
@@ -1651,7 +1663,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                                                         padding: MaterialStateProperty.all(EdgeInsets.all(0)),
                                                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                                                             RoundedRectangleBorder(
-                                                                                borderRadius: BorderRadius.circular(20.0),
+                                                                                borderRadius: BorderRadius.circular(15.0),
                                                                                 side: BorderSide(color: Colors.deepOrangeAccent)
                                                                             )
                                                                         ),
@@ -1685,26 +1697,35 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                     ),
                                   ),
                                 );
-                                }
+                                },
                               ),
-                              Divider(color: Colors.black54),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text("Total Amount", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-                                ),
 
-                                Padding(
-                                  padding: EdgeInsets.only(right: 15),
-                                  child: Text("₱ ${getBu[index0]['total']}", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)),
-                                )
-                                ],
+                              Divider(thickness: 2, color: Colors.grey[200]),
+
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(left: 10),
+                                      child: Text("Total Amount",
+                                        style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      ),
+                                    ),
+
+                                    Padding(
+                                      padding: EdgeInsets.only(right: 15),
+                                      child: Text("₱ ${getBu[index0]['total']}",
+                                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Divider(color: Colors.black54),
-                            ]
-                          )
+                              Divider(thickness: 2, color: Colors.grey[200]),
+                            ],
+                          ),
                         );
                       }
                     ),
@@ -1720,72 +1741,98 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Divider(thickness: 1, color: Colors.black54),
+
                       Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                        child: Text("TOTAL SUMMARY", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black )),
+                        padding: EdgeInsets.zero,
+                        child: Container(
+                          height: 35,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                          ),
+                          child: Center(
+                            child: Text("TOTAL SUMMARY",
+                              style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
+                          ),
+                        ),
                       ),
-                      Divider(thickness: 1, color: Colors.black54),
+
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('No. of Store(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)),
-
-                            Text('$stores',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.deepOrangeAccent)),
+                            Text('No. of Store(s)',
+                              style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
+                            Text('$stores',
+                              style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black87),
+                            ),
                           ],
                         ),
                       ),
-                      Divider(color: Colors.black54),
+
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                        padding: EdgeInsets.fromLTRB(15, 0, 15, 15),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('No. of Item(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)),
-
-                            Text('$items',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.deepOrangeAccent)),
+                            Text('No. of Item(s)',
+                              style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
+                            Text('$items',
+                              style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black87),
+                            ),
                           ],
                         ),
                       ),
-                      Divider(color: Colors.black54),
-                      Padding(
-                          padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                              child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total Amount Order',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black)),
 
-                            Text('₱ ${oCcy.format(grandTotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.deepOrangeAccent)),
-                          ],
-                        ),
-                      ),
-                      Divider(color: Colors.black54),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
+                        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('TOTAL AMOUNT TO PAY',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black)),
-
-                            Text('₱ ${oCcy.format(grandTotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent)),
+                            Text('Total Amount Order',
+                              style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                            ),
+                            Text('₱ ${oCcy.format(grandTotal)}',
+                              style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black87),
+                            ),
                           ],
                         ),
                       ),
 
-                      Divider(color: Colors.black54),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10),
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 15),
+                          height: 30,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('TOTAL AMOUNT TO PAY',
+                                style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+                              ),
+                              Text('₱ ${oCcy.format(grandTotal)}',
+                                style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
 
                       Padding(
                         padding: EdgeInsets.only(left: 10, right: 10),
-                        child:
-                        DropdownButtonFormField(
+                        child: DropdownButtonFormField(
                           decoration: InputDecoration(
                             //Add isDense true and zero Padding.
                             //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
                             isDense: true,
                             focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
+                                borderRadius: BorderRadius.circular(15),
                                 borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
                             ),
                             contentPadding: const EdgeInsets.symmetric(
@@ -1793,7 +1840,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                               vertical: 5,
                             ),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(5),
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             //Add more decoration as you want here
                             //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
@@ -1801,7 +1848,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                           isExpanded: true,
                           hint: const Text(
                             'PAYMENT METHOD',
-                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black),
+                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.black54),
                           ),
                           icon: const Icon(
                             Icons.arrow_drop_down,
@@ -1814,7 +1861,7 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                                 value: item,
                                 child: Text(
                                   item,
-                                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black),
+                                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 13.0, fontWeight: FontWeight.normal, color: Colors.black54),
                                 ),
                               ))
                               .toList(),
@@ -1869,9 +1916,9 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                             displayBottomSheet(context);
                           },
                           style: SleekButtonStyle.flat(
-                            color: Colors.deepOrange,
+                            color: Colors.deepOrange[400],
                             inverted: false,
-                            rounded: true,
+                            rounded: false,
                             size: SleekButtonSize.normal,
                             context: context,
                           ),
@@ -1880,7 +1927,8 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                               fit: BoxFit.contain,
                               height: 20,
                               width: 20,
-                              color: Colors.white,),
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -1924,16 +1972,24 @@ class _LoadCart extends State<LoadCart> with TickerProviderStateMixin {
                               }
                             },
                             style: SleekButtonStyle.flat(
-                              color: Colors.deepOrange,
+                              color: Colors.deepOrange[400],
                               inverted: false,
-                              rounded: true,
+                              rounded: false,
                               size: SleekButtonSize.normal,
                               context: context,
                             ),
                             child: Center(
                               child: Text(
                                 "PROCESS CHECKOUT",
-                                style: TextStyle(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 16.0),
+                                style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 16.0,
+                                  shadows: [
+                                    Shadow(
+                                      blurRadius: 1.0,
+                                      color: Colors.black54,
+                                      offset: Offset(1.0, 1.0),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -1965,11 +2021,13 @@ Widget _myRadioButton({String title, int value, Function onChanged}) {
   );
 }
 
-Route _placeOrderPickUp(paymentMethod) {
+Route _placeOrderPickUp(paymentMethod, tempID) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => PlaceOrderPickUp(paymentMethod: paymentMethod),
+    pageBuilder: (context, animation, secondaryAnimation) => PlaceOrderPickUp(
+      paymentMethod : paymentMethod,
+      tempID        : tempID),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -1981,11 +2039,13 @@ Route _placeOrderPickUp(paymentMethod) {
   );
 }
 
-Route _placeOrderDelivery(List loadIMainItems, paymentMethod) {
+Route _placeOrderDelivery(paymentMethod, tempID) {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => PlaceOrderDelivery(paymentMethod: paymentMethod),
+    pageBuilder: (context, animation, secondaryAnimation) => PlaceOrderDelivery(
+      paymentMethod : paymentMethod,
+      tempID        : tempID,),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -2001,7 +2061,7 @@ Route _profilePage() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => ProfilePage(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -2018,7 +2078,24 @@ Route _signIn() {
     pageBuilder: (context, animation, secondaryAnimation) =>
         CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
+      var end = Offset.zero;
+      var curve = Curves.decelerate;
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
+}
+
+Route _addressMasterfile() {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) =>
+        AddressMasterFile(),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

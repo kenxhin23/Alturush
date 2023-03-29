@@ -321,8 +321,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String username = prefs.getString('s_customerId');
         if (username == null) {
-          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-          // Navigator.of(context).push(_signIn());
+          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+          Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
         }
         if (username != null) {
           Navigator.of(context).pop();
@@ -336,8 +336,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String username = prefs.getString('s_customerId');
     if (username == null) {
-      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-      // Navigator.of(context).push(_signIn());
+      // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+      Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
     } else if(amountTender.text.isEmpty) {
       return showDialog<void>(
         context: context,
@@ -393,8 +393,8 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String username = prefs.getString('s_customerId');
           if (username == null) {
-            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-            // Navigator.of(context).push(_signIn());
+            // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+            Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
           }
           if (username != null) {
             Navigator.of(context).pop();
@@ -461,7 +461,7 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
       isDismissible: true,
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(topRight:  Radius.circular(10),topLeft:  Radius.circular(10)),
+        borderRadius: BorderRadius.only(topRight: Radius.circular(15), topLeft: Radius.circular(15)),
       ),
       builder: (ctx) {
         return StatefulBuilder(builder: (BuildContext context, StateSetter state) {
@@ -471,41 +471,47 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children:[
 
-                SizedBox(height: 5),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrangeAccent,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
-                  child: SizedBox(height: 35,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      Text("Select your address",
+                        style: GoogleFonts.openSans(fontSize: 16.0, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
 
-                        Text("Select your address",style: TextStyle(fontSize: 16.0,fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),),
-
-                        OutlinedButton(
-                          style: ButtonStyle(
-                            padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                            shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(20))),
-                            backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                            overlayColor: MaterialStateProperty.all(Colors.black12),
-                            side: MaterialStateProperty.all(BorderSide(
-                              color: Colors.deepOrangeAccent,
-                              width: 1.0,
-                              style: BorderStyle.solid,)),
+                      OutlinedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
+                          backgroundColor: MaterialStateProperty.all(Colors.white),
+                          overlayColor: MaterialStateProperty.all(Colors.black12),
+                          side: MaterialStateProperty.all(BorderSide(
+                            color: Colors.deepOrangeAccent,
+                            width: 1.0,
+                            style: BorderStyle.solid),
                           ),
-                          onPressed:(){
-                            Navigator.pop(context);
-                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
-                            refreshKey.currentState.show();
-                          },
-                          child:Text("+ Add new",style: TextStyle(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 14.0),),
                         ),
-                      ],
-                    )
-                  )
+                        onPressed:(){
+                          Navigator.pop(context);
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
+                          refreshKey.currentState.show();
+                        },
+                        child:Text("+ Add new",
+                          style: GoogleFonts.openSans(color:Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 14.0),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-
-                Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
                 Expanded(
                   child: Scrollbar(
@@ -516,10 +522,6 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                       itemBuilder: (BuildContext context, int index) {
 
                         return InkWell(
-                          onTap: () async {
-
-                          },
-
                           child: Card(
                             margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                             child: RadioListTile(
@@ -536,20 +538,27 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.only(top: 5,),
-                                        child: Text('${getItemsData[index]['firstname']} ${getItemsData[index]['lastname']}',style: TextStyle(fontSize: 14, color: Colors.black),),
+                                        padding: EdgeInsets.only(top: 5),
+                                        child: Text('${getItemsData[index]['firstname']} ${getItemsData[index]['lastname']}',
+                                          style: GoogleFonts.openSans(fontSize: 14, color: Colors.black),
+                                        ),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.symmetric(vertical: 5),
                                         child: Text('${getItemsData[index]['street_purok']}, ${getItemsData[index]['d_brgName']}, \n${getItemsData[index]['d_townName']}, '
-                                            '${getItemsData[index]['zipcode']}, ${getItemsData[index]['d_province']}' ,overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 13, color: Colors.black54)),
-                                      )
+                                          '${getItemsData[index]['zipcode']}, ${getItemsData[index]['d_province']}',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(right: 10),
-                                    child: Text('${getItemsData[index]['d_contact']}',style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black)),
-                                  )
+                                    child: Text('${getItemsData[index]['d_contact']}',
+                                      style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black),
+                                    ),
+                                  ),
                                 ],
                               ),
                               value: index,
@@ -588,7 +597,7 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                       },
                     ),
                   ),
-                )
+                ),
               ],
             ),
           );
@@ -719,62 +728,6 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
         loadId();
       },
     );
-    // showDialog<void>(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return AlertDialog(
-    //       shape: RoundedRectangleBorder(
-    //           borderRadius: BorderRadius.all(Radius.circular(8.0))),
-    //       contentPadding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 20.0),
-    //       title: Row(
-    //         children: <Widget>[
-    //           Text(
-    //             'Hello!',
-    //             style: TextStyle(fontSize: 18.0),
-    //           ),
-    //         ],
-    //       ),
-    //       content: SingleChildScrollView(
-    //         child: ListBody(
-    //           children: <Widget>[
-    //             Padding(
-    //               padding: EdgeInsets.fromLTRB(25.0, 0.0, 20.0, 0.0),
-    //               child: Center(
-    //                   child:
-    //                   Text(("Are you sure you want to remove this ID?"))),
-    //             ),
-    //           ],
-    //         ),
-    //       ),
-    //       actions: <Widget>[
-    //         TextButton(
-    //           child: Text(
-    //             'Cancel',
-    //             style: TextStyle(
-    //               color: Colors.deepOrange,
-    //             ),
-    //           ),
-    //           onPressed: () {
-    //             Navigator.of(context).pop();
-    //           },
-    //         ),
-    //         TextButton(
-    //             child: Text(
-    //               'Proceed',
-    //               style: TextStyle(
-    //                 color: Colors.deepOrange,
-    //               ),
-    //             ),
-    //             onPressed: () async {
-    //               print(discountID);
-    //               Navigator.of(context).pop();
-    //               await db.deleteDiscountID(discountID);
-    //               loadId();
-    //             }),
-    //       ],
-    //     );
-    //   },
-    // );
   }
 
   @override
@@ -819,558 +772,635 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
       child: Scaffold(
         appBar: AppBar(
           titleSpacing: 0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.deepOrangeAccent, // Status bar
+            statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+          ),
+          iconTheme: new IconThemeData(color: Colors.white,
+            shadows: [
+              Shadow(
+                blurRadius: 1.0,
+                color: Colors.black54,
+                offset: Offset(1.0, 1.0),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.deepOrangeAccent,
           elevation: 0.1,
           leading: IconButton(
-            icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+            icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: Text("Summary (Delivery)", style: GoogleFonts.openSans(color: Colors.deepOrangeAccent, fontWeight: FontWeight.bold, fontSize: 16.0),
+          title: Text("Summary (Delivery)",
+            style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
           ),
         ),
-        body: isLoading ?
-        Center(
+        body: isLoading ? Center(
           child: CircularProgressIndicator(
-            valueColor:
-              new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
+            valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
           ),
         ) :
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-          Expanded(
-            child: Form(
-              key: _formKey,
-              child: RefreshIndicator(
-                color: Colors.deepOrangeAccent,
-                key: refreshKey,
-                onRefresh: onRefresh,
-                child: Scrollbar(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: RefreshIndicator(
+                  color: Colors.deepOrangeAccent,
+                  key: refreshKey,
+                  onRefresh: onRefresh,
+                  child: Scrollbar(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      children: <Widget>[
 
-                      Divider(thickness: 1, color: Colors.deepOrangeAccent,),
-
-                      SizedBox(height: 30,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                              child: new Text("CUSTOMER ADDRESS",
-                                style: TextStyle(color: Colors.deepOrangeAccent, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
-                              child: SizedBox(width: 175,
-                                child: OutlinedButton.icon(
-                                  onPressed: () async{
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    String username = prefs.getString('s_customerId');
-                                    if(username == null){
-                                      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                      // Navigator.of(context).push(_signIn());
-                                    }else{
-                                      getPlaceOrderData();
-                                      displayAddresses(context).then((_) => {onRefresh()});
-                                    }
-                                  },
-                                  label: Text('MANAGE ADDRESS',  style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 12.0, color: Colors.white)),
-                                  style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                    backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                                    overlayColor: MaterialStateProperty.all(Colors.black12),
-                                    side: MaterialStateProperty.all(BorderSide(
-                                      color: Colors.deepOrangeAccent,
-                                      width: 1.0,
-                                      style: BorderStyle.solid,)),
-                                  ),
-                                  icon: Wrap(
-                                    children: [
-                                      Icon(Icons.settings_outlined, color: Colors.white, size: 18,)
-                                    ],
-                                  ),
-                                )
-                              )
-                            ),
-                          ],
-                        )
-                      ),
-
-                      Divider(thickness: 1, color: Colors.deepOrangeAccent,),
-
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text("Customer: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                            Text("${userName.toString()}", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0)),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text("Contact Number: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                            Text("${placeContactNo.toString()}", style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0)),
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
-                        child: Row(
-                          children: <Widget>[
-                            Text("Address: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0),),
-                            Flexible(child: Text("$street, $placeOrderBrg, $placeOrderTown, $placeOrderProvince",
-                              style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14.0))
-                            )
-                          ],
-                        )
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
-                        child: Row(
-                          children: <Widget>[Text("Landmark: ", style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 14.0)),
-                            Flexible(child: Text("${placeRemarks.toString()}", style: TextStyle(fontSize: 14.0), overflow: TextOverflow.ellipsis,)
-                            ),
-                          ],
-                        )
-                      ),
-
-                      Divider(thickness: 1, color: Colors.deepOrangeAccent,),
-
-                      SizedBox(height: 30,
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 6, 0, 0),
-                            child: Text("TOTAL SUMMARY", style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent ),),
-                          )),
-
-                      Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('No. of Store(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            Text('$stores',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(color: Colors.black54),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('No. of Item(s)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            Text('$items',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(color: Colors.black54),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Total Amount Order',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            Text('₱ ${oCcy.format(widget.subtotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(color: Colors.black54),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Delivery  Fee",style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            Text('₱ ${oCcy.format(deliveryCharge)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(color: Colors.black54),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('TOTAL AMOUNT TO PAY',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            Text('₱ ${oCcy.format(grandTotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(color: Colors.black54),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('PAYMENT METHOD',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            Text('Pay via CASH ON DELIVERY (COD)',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 13.0, fontWeight: FontWeight.normal)),
-                          ],
-                        ),
-                      ),
-
-                      Divider(color: Colors.black54),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('AMOUNT TENDER  ',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
-                            SizedBox(width: 175, height: 35,
-                              child: new TextFormField(
-                                onTap: () {
-                                  amountTender.clear();
-                                  changeFor.clear();
-                                },
-                                textAlign: TextAlign.end,
-                                textInputAction: TextInputAction.done,
-                                cursorColor: Colors.deepOrange,
-                                controller: amountTender,
-                                style: TextStyle(fontSize: 13),
-                                onChanged: (value)  => change(value),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    CoolAlert.show(
-                                      context: context,
-                                      type: CoolAlertType.error,
-                                      text: "Please enter amount",
-                                      confirmBtnColor: Colors.deepOrangeAccent,
-                                      backgroundColor: Colors.deepOrangeAccent,
-                                      barrierDismissible: false,
-                                      confirmBtnText: 'Okay',
-                                      onConfirmBtnTap: () async {
-                                        Navigator.of(context, rootNavigator: true).pop();
-                                      },
-                                    );
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.number,
-                                decoration: InputDecoration(
-                                  // prefixIcon: Icon(Icons.insert_chart,color: Colors.grey,),
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                                  focusedBorder:OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
-                                  ),
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-
-
-                      Divider(color: Colors.black54),
-
-                      SizedBox(height: 30,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
+                        Container(
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange[300],
+                          ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text('CHANGE',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                                child: new Text("DELIVERY ADDRESS",
+                                  style: GoogleFonts.openSans(color: Colors.white, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
+                                ),
+                              ),
 
-                              SizedBox(width: 175,
-                                child: TextFormField(
-                                  textAlign: TextAlign.end,
-                                  enabled: false,
-                                  cursorColor: Colors.deepOrange,
-                                  controller: changeFor,
-                                  style: TextStyle(fontSize: 13),
-                                  decoration: InputDecoration(
-                                    // prefixIcon: Icon(Icons.insert_chart,color: Colors.grey,),
-                                    contentPadding: EdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                                    focusedBorder:OutlineInputBorder(
-                                      borderSide: BorderSide(color: Colors.deepOrange, width: 2.0),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(5, 0, 15, 0),
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 175,
+                                  child: OutlinedButton.icon(
+                                    onPressed: () async{
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      String username = prefs.getString('s_customerId');
+                                      if(username == null){
+                                        Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
+                                      }else{
+                                        getPlaceOrderData();
+                                        displayAddresses(context).then((_) => {onRefresh()});
+                                      }
+                                    },
+                                    label: Text('MANAGE ADDRESS',
+                                      style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 12.0, color: Colors.deepOrangeAccent),
                                     ),
-                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                                    style: ButtonStyle(
+                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                      side: MaterialStateProperty.all(BorderSide(
+                                        color: Colors.deepOrangeAccent,
+                                        width: 1.0,
+                                        style: BorderStyle.solid),
+                                      ),
+                                    ),
+                                    icon: Wrap(
+                                      children: [
+                                        Icon(Icons.settings_outlined, color: Colors.deepOrangeAccent, size: 18,)
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                        )
-                      ),
+                        ),
 
-                      Divider(thickness: 1, color: Colors.deepOrangeAccent),
-
-                      SizedBox(height: 30,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                              child: new Text("APPLY DISCOUNT",
-                                style: TextStyle(color: Colors.deepOrangeAccent, fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10.0, 15.0, 10.0, 5.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Recipient: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
                               ),
-                            ),
+                              Text("${userName.toString()}",
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
 
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-                              child: SizedBox(width: 175,
-                                child: OutlinedButton.icon(
-                                  onPressed: () async{
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    String username = prefs.getString('s_customerId');
-                                    if(username == null){
-                                      Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                      // Navigator.of(context).push(_signIn());
-                                    }else{
-                                      // applyDiscount();
-                                      showApplyDiscountDialog(context).then((_)=>{loadId()});
-                                    }
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Contact Number: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Text("${placeContactNo.toString()}",
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 5.0),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Address: ",
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Flexible(
+                                child: Text("$street, $placeOrderBrg, $placeOrderTown, $placeOrderProvince",
+                                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(10, 10, 10, 5),
+                          child: Row(
+                            children: <Widget>[
+                              Text("Landmark: ",
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                              ),
+                              Flexible(
+                                child: Text("${placeRemarks.toString()}",
+                                  maxLines: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 5,
+                        ),
+
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.zero,
+                                child: Text("TOTAL SUMMARY",
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('No. of Store(s)',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('$stores',
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('No. of Item(s)',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('$items',
+                                style: TextStyle(fontSize: 14.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Total Amount Order',
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('₱ ${oCcy.format(widget.subtotal)}',
+                                style: TextStyle(fontSize: 13.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Delivery  Fee",
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('₱ ${oCcy.format(deliveryCharge)}',
+                                style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.normal),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15, right: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('TOTAL AMOUNT TO PAY',
+                                  style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.deepOrangeAccent),
+                                ),
+                                Text('₱ ${oCcy.format(grandTotal)}',
+                                  style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black87),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('PAYMENT METHOD',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              Text('Pay via CASH ON DELIVERY (COD)',
+                                style: TextStyle(fontSize: 13.0, color: Colors.black87),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Padding(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('AMOUNT TENDER',
+                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                              ),
+                              SizedBox(
+                                width: 175,
+                                height: 35,
+                                child: new TextFormField(
+                                  onTap: () {
+                                    amountTender.clear();
+                                    changeFor.clear();
                                   },
-                                  label: Text('MANAGE DISCOUNT',  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.white)),
-                                  style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                                    backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                                    overlayColor: MaterialStateProperty.all(Colors.black12),
-                                    side: MaterialStateProperty.all(BorderSide(
-                                      color: Colors.deepOrangeAccent,
-                                      width: 1.0,
-                                      style: BorderStyle.solid,)),
+                                  textAlign: TextAlign.end,
+                                  textInputAction: TextInputAction.done,
+                                  cursorColor: Colors.deepOrange,
+                                  controller: amountTender,
+                                  style: TextStyle(fontSize: 13),
+                                  onChanged: (value)  => change(value),
+                                  validator: (value) {
+                                    if (value.isEmpty) {
+                                      CoolAlert.show(
+                                        context: context,
+                                        type: CoolAlertType.error,
+                                        text: "Please enter amount",
+                                        confirmBtnColor: Colors.deepOrangeAccent,
+                                        backgroundColor: Colors.deepOrangeAccent,
+                                        barrierDismissible: false,
+                                        confirmBtnText: 'Okay',
+                                        onConfirmBtnTap: () async {
+                                          Navigator.of(context, rootNavigator: true).pop();
+                                        },
+                                      );
+                                    }
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.number,
+                                  decoration: InputDecoration(
+                                    // prefixIcon: Icon(Icons.insert_chart,color: Colors.grey,),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 10.0),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                        color: Colors.deepOrange,
+                                        width: 2.0,
+                                      ),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(3.0),
+                                    ),
                                   ),
-                                  icon: Wrap(
-                                    children: [
-                                      Icon(Icons.settings_outlined, color: Colors.white, size: 16,)
-                                    ],
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 50,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 15, right: 15, top: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text('CHANGE',
+                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                ),
+                                SizedBox(
+                                  width: 175,
+                                  child: TextFormField(
+                                    textAlign: TextAlign.end,
+                                    enabled: false,
+                                    cursorColor: Colors.deepOrange,
+                                    controller: changeFor,
+                                    style: TextStyle(fontSize: 13),
+                                    decoration: InputDecoration(
+                                      // prefixIcon: Icon(Icons.insert_chart,color: Colors.grey,),
+                                      contentPadding: EdgeInsets.symmetric(
+                                        horizontal: 10.0,
+                                      ),
+                                      focusedBorder:OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.deepOrange,
+                                          width: 2.0,
+                                        ),
+                                      ),
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(3.0),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 15),
+
+                        Container(
+                          height: 40,
+                          color: Colors.deepOrange[300],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                                child: new Text("APPLY DISCOUNT",
+                                  style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.white),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: EdgeInsets.only(right: 15),
+                                child: SizedBox(
+                                  height: 30,
+                                  width: 175,
+                                  child: OutlinedButton.icon(
+                                    onPressed: () async{
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      String username = prefs.getString('s_customerId');
+                                      if(username == null){
+                                        Navigator.of(context).push(_signIn()).then((val) => {onRefresh()});
+                                      } else {
+                                        showApplyDiscountDialog(context).then((_) => {onRefresh()});
+                                      }
+                                    },
+                                    label: Text('MANAGE DISCOUNT',
+                                      style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 12.0, color: Colors.deepOrangeAccent),
+                                    ),
+                                    style: ButtonStyle(
+                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                                      overlayColor: MaterialStateProperty.all(Colors.black12),
+                                      side: MaterialStateProperty.all(BorderSide(
+                                        color: Colors.deepOrangeAccent,
+                                        width: 1.0,
+                                        style: BorderStyle.solid),
+                                      ),
+                                    ),
+                                    icon: Wrap(
+                                      children: [
+                                        Icon(Icons.settings_outlined, color: Colors.deepOrangeAccent, size: 18.0),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )
-                      ),
+                            ],
+                          ),
+                        ),
 
-                      Divider(thickness: 1, color: Colors.deepOrangeAccent),
+                        SizedBox(
+                          height: 10,
+                        ),
 
-                      RefreshIndicator(
-                        color: Colors.deepOrangeAccent,
-                        onRefresh: loadId,
-                        child: Scrollbar(
-                          child: ListView(
-                            shrinkWrap: true,
-                            children: <Widget>[
-                              exist == false ? Padding(
-                                padding: EdgeInsets.only(left: 10, top: 5),
-                                child: Text('No Discount Details', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, color: Colors.black54),),
-                              ) :
-                              ListView.builder(
-                                padding: EdgeInsets.all(0),
-                                shrinkWrap: true,
-                                physics: BouncingScrollPhysics(),
-                                itemCount: loadIdList == null ? 0 : loadIdList.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  var q = index;
-                                  q++;
-                                  if (selectedDiscountType.isEmpty){
+                        RefreshIndicator(
+                          color: Colors.deepOrangeAccent,
+                          onRefresh: loadId,
+                          child: Scrollbar(
+                            child: ListView(
+                              shrinkWrap: true,
+                              children: <Widget>[
+                                exist == false ? Padding(
+                                  padding: EdgeInsets.only(left: 10, top: 5),
+                                  child: Text('No Discount Details',
+                                    style: TextStyle(fontSize: 14, color: Colors.black54),
+                                  ),
+                                ) : ListView.builder(
+                                  padding: EdgeInsets.all(0),
+                                  shrinkWrap: true,
+                                  physics: BouncingScrollPhysics(),
+                                  itemCount: loadIdList == null ? 0 : loadIdList.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    var q = index;
+                                    q++;
+                                    if (selectedDiscountType.isEmpty){
 
-                                    side.insert(index, false);
-                                  }
-                                  // side.add(false);
-                                  return Container(
-                                    height: 85.0,
-                                    child: Column(
-                                      children: <Widget>[
-                                        ListTile(
-                                          contentPadding: EdgeInsets.all(0),
-                                          title: Column(
-                                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              // SizedBox(height: 5,),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Row(
-                                                      children: [
+                                      side.insert(index, false);
+                                    }
+                                    // side.add(false);
+                                    return Container(
+                                      height: 85.0,
+                                      child: Column(
+                                        children: <Widget>[
+                                          ListTile(
+                                            contentPadding: EdgeInsets.all(0),
+                                            title: Column(
+                                              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
 
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: 5),
-                                                          child: CachedNetworkImage(
-                                                            imageUrl: loadIdList[index]['d_photo'],
-                                                            fit: BoxFit.contain,
-                                                            imageBuilder: (context, imageProvider) => Container(
-                                                              height: 50,
-                                                              width: 50,
-                                                              decoration: new BoxDecoration(
-                                                                image: new DecorationImage(
-                                                                  image: imageProvider,
-                                                                  fit: BoxFit.cover,
-                                                                ),
-                                                                borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                                                border: new Border.all(
-                                                                  color: Colors.black54,
-                                                                  width: 0.5,
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+
+                                                      Row(
+                                                        children: [
+
+                                                          Padding(
+                                                            padding: EdgeInsets.only(left: 5),
+                                                            child: CachedNetworkImage(
+                                                              imageUrl: loadIdList[index]['d_photo'],
+                                                              fit: BoxFit.contain,
+                                                              imageBuilder: (context, imageProvider) => Container(
+                                                                height: 55,
+                                                                width: 55,
+                                                                decoration: new BoxDecoration(
+                                                                  image: new DecorationImage(
+                                                                    image: imageProvider,
+                                                                    fit: BoxFit.cover,
+                                                                  ),
+                                                                  borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                                                                  border: new Border.all(
+                                                                    color: Colors.deepOrangeAccent,
+                                                                    width: 1,
+                                                                  ),
                                                                 ),
                                                               ),
-                                                            ),
-                                                            placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
-                                                            errorWidget: (context, url, error) => Container(
-                                                              height: 50,
-                                                              width: 50,
-                                                              decoration: new BoxDecoration(
-                                                                image: new DecorationImage(
-                                                                  image: AssetImage("assets/png/No_image_available.png"),
-                                                                  fit: BoxFit.cover,
-                                                                ),
-                                                                borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                                                border: new Border.all(
-                                                                  color: Colors.black54,
-                                                                  width: 0.5,
+                                                              placeholder: (context, url,) => const CircularProgressIndicator(color: Colors.grey,),
+                                                              errorWidget: (context, url, error) => Container(
+                                                                height: 55,
+                                                                width: 55,
+                                                                decoration: new BoxDecoration(
+                                                                  image: new DecorationImage(
+                                                                    image: AssetImage("assets/png/No_image_available.png"),
+                                                                    fit: BoxFit.cover,
+                                                                  ),
+                                                                  borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                                                                  border: new Border.all(
+                                                                    color: Colors.deepOrangeAccent,
+                                                                    width: 1,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
                                                           ),
+
+                                                          Padding(
+                                                            padding: EdgeInsets.only(left: 15),
+                                                            child: Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text('Name: ${loadIdList[index]['name']} ',
+                                                                  style: GoogleFonts.openSans(fontSize: 14, color: Colors.black87),
+                                                                ),
+                                                                Text('Discount Type: (${loadIdList[index]['discount_name']})',
+                                                                  style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                                                ),
+                                                                Text('ID Number: ${loadIdList[index]['discount_no']}',
+                                                                  style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+
+                                                      SizedBox(
+                                                        width: 25,
+                                                        child: RawMaterialButton(
+                                                          onPressed:
+                                                              () async {
+                                                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                                                            String username = prefs.getString('s_customerId');
+                                                            if (username == null) {
+                                                              await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
+                                                            } else {
+                                                              removeDiscountId(loadIdList[index]['id']);
+                                                            }
+                                                          },
+                                                          elevation: 1.0,
+                                                          child: Icon(
+                                                            CupertinoIcons.delete, size: 25.0,
+                                                            color: Colors.redAccent,
+                                                          ),
+                                                          shape: CircleBorder(),
                                                         ),
-
-                                                        // Container(
-                                                        //   width: 50.0,
-                                                        //   height: 50.0,
-                                                        //   decoration: new BoxDecoration(
-                                                        //     image: new DecorationImage(
-                                                        //       image: new NetworkImage(loadIdList[index]['d_photo']),
-                                                        //       fit: BoxFit.cover,
-                                                        //     ),
-                                                        //     borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
-                                                        //     border: new Border.all(
-                                                        //       color: Colors.black54,
-                                                        //       width: 0.5,
-                                                        //     ),
-                                                        //   ),
-                                                        // ),
-
-                                                        Padding(
-                                                          padding: EdgeInsets.only(left: 15),
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text('${loadIdList[index]['name']} ',style: TextStyle(fontSize: 14, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),),
-                                                              Text('(${loadIdList[index]['discount_name']})',style: TextStyle(fontSize: 13)),
-                                                              Text('${loadIdList[index]['discount_no']}',style: TextStyle(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black),),
-                                                            ],
-                                                          )
-                                                        )
-                                                      ],
-                                                    ),
-
-                                                    SizedBox(width: 25,
-                                                      child: RawMaterialButton(
-                                                        onPressed:
-                                                            () async {
-                                                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                                                          String username = prefs.getString('s_customerId');
-                                                          if (username == null) {
-                                                            Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                                                            // await Navigator.of(context).push(_signIn());
-                                                          } else {
-
-                                                            removeDiscountId(loadIdList[index]['id']);
-
-                                                          }
-                                                        },
-                                                        elevation: 1.0,
-                                                        child:
-                                                        Icon(
-                                                          CupertinoIcons.delete, size: 25.0,
-                                                          color: Colors.redAccent,
-                                                        ),
-                                                        shape:
-                                                        CircleBorder(),
-                                                      )
-                                                    )
-                                                  ],
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                              Divider(color: Colors.black54),
-                                            ],
+                                                Divider(color: Colors.black54),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }
-                              ),
-                            ],
+                                        ],
+                                      ),
+                                    );
+                                  }
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      )
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              )
+                )
+              ),
             ),
-          ),
 
             Padding(
               padding:
-                  EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+                EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
               child: Row(
                 children: <Widget>[
                   Flexible(
                     child: SleekButton(
                       onTap: () async {
-                        setState(() {
-                          getTotal2();
 
-                          if(subTotalTenant.contains(true)) {
-                            print('no');
-                            CoolAlert.show(
-                              context: context,
-                              type: CoolAlertType.error,
-                              text: "Your address didn't reached the minimum amount per tenant",
-                              confirmBtnColor: Colors.deepOrangeAccent,
-                              backgroundColor: Colors.deepOrangeAccent,
-                              barrierDismissible: false,
-                              onConfirmBtnTap: () async {
-                                // subTotalTenant.clear();
-                                Navigator.of(context).pop();
-                              },
-                            );
-                          } else {
-                            print('yes');
-                            if (_formKey.currentState.validate()){
-                              if (widget.grandTotal <=  oCcy.parse(amountTender.text)) {
-                                placeOrderNow();
-                              } else if (widget.grandTotal > oCcy.parse(amountTender.text)) {
-                                insufficientAmount();
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString("s_customerId");
+                        if (username == null) {
+                          Navigator.of(context).push(_signIn()).then((value) => {onRefresh()});
+                        } else {
+                          setState(() {
+                            getTotal2();
+                            if(subTotalTenant.contains(true)) {
+                              print('no');
+                              CoolAlert.show(
+                                context: context,
+                                type: CoolAlertType.error,
+                                text: "Your address didn't reached the minimum amount per tenant",
+                                confirmBtnColor: Colors.deepOrangeAccent,
+                                backgroundColor: Colors.deepOrangeAccent,
+                                barrierDismissible: false,
+                                onConfirmBtnTap: () async {
+                                  // subTotalTenant.clear();
+                                  Navigator.of(context).pop();
+                                },
+                              );
+                            } else {
+                              print('yes');
+                              if (_formKey.currentState.validate()){
+                                if (widget.grandTotal <=  oCcy.parse(amountTender.text)) {
+                                  placeOrderNow();
+                                } else if (widget.grandTotal > oCcy.parse(amountTender.text)) {
+                                  insufficientAmount();
+                                }
                               }
                             }
-                          }
-
-                        });
+                          });
+                        }
                       },
                       style: SleekButtonStyle.flat(
-                        color: Colors.deepOrange,
+                        color: Colors.deepOrange[400],
                         inverted: false,
-                        rounded: true,
+                        rounded: false,
                         size: SleekButtonSize.normal,
                         context: context,
                       ),
@@ -1378,16 +1408,32 @@ class _SubmitOrder extends State<SubmitOrder> with TickerProviderStateMixin {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(CupertinoIcons.paperplane),
+                            Icon(CupertinoIcons.paperplane, size: 20,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
                             SizedBox(width: 5),
                             Text("CHECKOUT",
-                            style: TextStyle(
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16.0),
+                              style: GoogleFonts.openSans(
+                                fontStyle: FontStyle.normal,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 1.0,
+                                    color: Colors.black54,
+                                    offset: Offset(1.0, 1.0),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
-                        )
+                        ),
                       ),
                     ),
                   ),
@@ -1472,9 +1518,9 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
-      contentPadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.zero,
       content: Container(
         height: 400.0,
         width: 300.0,
@@ -1483,16 +1529,24 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(height: 30,
+
+            Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.deepOrangeAccent,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                ),
+              ),
               child: Row(
                 children: [
-                  SizedBox(height: 30 , width: 30,
+                  SizedBox(
+                    height: 30,
+                    width: 30,
                     child: IconButton(
-                      onPressed: (){
-                      },
                       padding: EdgeInsets.symmetric(horizontal: 5),
                       icon: Image.asset('assets/png/img_552316.png',
-                      color: Colors.black54,
+                      color: Colors.white,
                       fit: BoxFit.contain,
                       height: 30,
                       width: 30,
@@ -1501,51 +1555,59 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
                   ),
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Text("Apply Discount ", style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                    child: Text("Apply Discount ",
+                      style: GoogleFonts.openSans(color: Colors.white,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),
+                    ),
                   ),
                 ],
               )
             ),
-            Divider(thickness: 1, color: Colors.deepOrangeAccent),
-            SizedBox(height: 30,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Text("Discount Applied List ", style: TextStyle(color: Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+
+            Container(
+              color: Colors.grey[200],
+              height: 35,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: Text("Discount Applied List ",
+                      style: GoogleFonts.openSans(color: Colors.black54, fontWeight: FontWeight.bold, fontSize: 15.0),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child:OutlinedButton(
-                        onPressed: () async{
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          SharedPreferences prefs = await SharedPreferences.getInstance();
-                          String username = prefs.getString('s_customerId');
-                          if(username == null){
-                            // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
-                            Navigator.of(context).push(_signIn());
-                          }else{
-                            showAddDiscountDialog(context).then((_)=>{loadID()});
-                            checkIfHasId();
-                          }
-                        },
-                        child: Text('+ ADD',  style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.white)),
-                        style: ButtonStyle(
-                          shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(25))),
-                          overlayColor: MaterialStateProperty.all(Colors.black12),
-                          backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-                          side: MaterialStateProperty.all(BorderSide(
-                            color: Colors.deepOrangeAccent,
-                            width: 1.0,
-                            style: BorderStyle.solid,)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 5, 10, 5),
+                    child:OutlinedButton(
+                      onPressed: () async{
+                        FocusScope.of(context).requestFocus(FocusNode());
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        String username = prefs.getString('s_customerId');
+                        if(username == null){
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
+                          await Navigator.of(context).push(_signIn());
+                        }else{
+                          showAddDiscountDialog(context).then((_)=>{loadID()});
+                          checkIfHasId();
+                        }
+                      },
+                      child: Text('+ ADD',
+                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 13.0, color: Colors.white),
+                      ),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
+                        overlayColor: MaterialStateProperty.all(Colors.black12),
+                        backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                        side: MaterialStateProperty.all(BorderSide(
+                          color: Colors.deepOrangeAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
                         ),
                       ),
                     ),
-                  ],
-                )
+                  ),
+                ],
+              ),
             ),
-            Divider(thickness: 1, color: Colors.deepOrangeAccent),
 
             Expanded(
               child: RefreshIndicator(
@@ -1572,7 +1634,8 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                SizedBox(height: 40,
+                                SizedBox(
+                                  height: 65,
                                   child:
                                   CheckboxListTile(
                                     visualDensity: const VisualDensity(
@@ -1582,17 +1645,24 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
                                     contentPadding: EdgeInsets.only(left: 5),
                                     activeColor: Colors.deepOrange,
                                     title: Transform.translate(
-                                        offset: const Offset(-5, 1),
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(vertical: 5),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text('${loadIdList[index]['name']} (${loadIdList[index]['discount_name']})',style: TextStyle(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black)),
-                                              Text('${loadIdList[index]['discount_no']}',style: TextStyle(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black)),
-                                            ],
-                                          ),
-                                        )
+                                      offset: const Offset(-5, 1),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(vertical: 5),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text('Name: ${loadIdList[index]['name']} ',
+                                              style: GoogleFonts.openSans(fontSize: 13, color: Colors.black87),
+                                            ),
+                                            Text('Discount Type: (${loadIdList[index]['discount_name']})',
+                                              style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54),
+                                            ),
+                                            Text('ID #: ${loadIdList[index]['discount_no']}',
+                                              style: GoogleFonts.openSans(fontSize: 13, fontStyle: FontStyle.normal, fontWeight: FontWeight.normal, color: Colors.black54),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                     value: side[index],
                                     onChanged: (bool value){
@@ -1611,60 +1681,92 @@ class _ApplyDiscountDialogState extends State<ApplyDiscountDialog> with SingleTi
                                     controlAffinity: ListTileControlAffinity.leading,
                                   ),
                                 ),
+                                Divider(thickness: 2, color: Colors.grey[200]),
                               ],
                             ),
                           );
-                        }
+                        },
                       ),
                     ],
-                  )
+                  ),
                 ),
               ),
-            )
+            ),
           ],
-        )
+        ),
       ),
       actions: <Widget>[
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.black,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            for (int i=0;i<selectedDiscountType.length;i++){
-              side[i] = false;
-            }
-            selectedDiscountType.clear();
 
-            Navigator.pop(context);
-          },
-          child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 12.0),),
-        ),
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.deepOrangeAccent,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            if (selectedDiscountType.isEmpty){
-              print('pili pd discount');
-              Fluttertoast.showToast(
-                  msg: "No discount applied!",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.BOTTOM,
-                  timeInSecForIosWeb: 2,
-                  backgroundColor: Colors.black.withOpacity(0.7),
-                  textColor: Colors.white,
-                  fontSize: 16.0
-              );
-            } else {
-              print(selectedDiscountType);
-              print('very gud');
-              Navigator.of(context).pop();
-            }
-          },
-          child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                          side: BorderSide(color: Colors.deepOrangeAccent)
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    for (int i=0;i<selectedDiscountType.length;i++){
+                      side[i] = false;
+                    }
+                    selectedDiscountType.clear();
+
+                    Navigator.pop(context);
+                  },
+                  child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 12.0),
+                  ),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.deepOrange[400]),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: Colors.deepOrange[400]),
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    if (selectedDiscountType.isEmpty){
+                      print('pili pd discount');
+                      Fluttertoast.showToast(
+                          msg: "No discount applied!",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 2,
+                          backgroundColor: Colors.black.withOpacity(0.7),
+                          textColor: Colors.white,
+                          fontSize: 16.0
+                      );
+                    } else {
+                      print(selectedDiscountType);
+                      print('very gud');
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -1832,7 +1934,7 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String username = prefs.getString('s_customerId');
         if (username == null) {
-          Navigator.of(context).push(_signIn());
+          await Navigator.of(context).push(_signIn());
         }
         if (username != null) {
           Navigator.of(context, rootNavigator: true).pop();
@@ -1864,262 +1966,321 @@ class _AddDiscountDialogState extends State<AddDiscountDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
-      contentPadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.zero,
       content: Container(
-          height: 400.0,
-          width: 300.0,
-          child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 30,
-                      child: Row(
-                        children: [
-                          SizedBox(height: 30 , width: 30,
-                            child: IconButton(
-                              onPressed: (){
-                              },
-                              padding: EdgeInsets.symmetric(horizontal: 5),
-                              icon: Image.asset('assets/png/img_552316.png',
-                                color: Colors.black54,
-                                fit: BoxFit.contain,
-                                height: 30,
-                                width: 30,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child: Text("Apply Discount ", style: TextStyle(color: Colors.black54,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
-                          ),
-                        ],
-                      )
+        height: 400.0,
+        width: 300.0,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.deepOrangeAccent,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
                   ),
-                  Divider(thickness: 1, color: Colors.deepOrangeAccent),
-                  Expanded(
-                      child: Scrollbar(
-                        child: ListView(
-                          shrinkWrap: true,
-                          children: <Widget>[
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
-                                child: Text('Discount Type',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
-                            ),
-                            SizedBox(height: 40,
-                              child: Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: DropdownButtonFormField(
-                                  decoration: InputDecoration(
-                                    //Add isDense true and zero Padding.
-                                    //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
-                                    isDense: true,
-                                    focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1)
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 10,
-                                    ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      //Add more decoration as you want here
-                                      //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
-                                    ),
-                                    isExpanded: true,
-                                    hint: const Text(
-                                      'Select Discount Type', style: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-                                    ),
-                                    icon: const Icon(
-                                      Icons.arrow_drop_down,
-                                      color: Colors.black45,
-                                    ),
-                                    iconSize: 25,
-                                    items: _loadDiscount
-                                        .map((item) =>
-                                        DropdownMenuItem<String>(
-                                          value: item,
-                                          child: Text(
-                                            item,
-                                            style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black),
-                                          ),
-                                        ))
-                                        .toList(),
-                                    // ignore: missing_return
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return 'Please select discount type!';
-                                      }
-                                    },
-                                    onChanged: (value) {
-                                      setState(() {
-                                        selectedValue = value;
-                                        id = _loadDiscount.indexOf(value);
-                                        print(id + 1);
-
-                                        getDiscountID(selectedValue);
-                                      });
-                                      //Do something when changing the item if you want.
-                                    },
-                                    onSaved: (value) {
-                                      selectedValue = value.toString();
-                                      print(selectedValue);
-                                    },
-                                ),
-                              ),
-                            ),
-
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                                child: Text('Full Name',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
-                            ),
-                            SizedBox(height: 40,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: TextFormField(
-                                  textCapitalization: TextCapitalization.words,
-                                  textInputAction: TextInputAction.done,
-                                  cursorColor: Colors.deepOrange.withOpacity(0.8),
-                                  controller: _name,
-                                  decoration: InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                      borderSide: BorderSide(
-                                          color: Colors.deepOrange.withOpacity(0.7),
-                                          width: 2.0),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 10,
-                                    ),
-                                    hintText: 'Full Name ex. (Lastname, Firstname)',
-                                    hintStyle: const TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value.isEmpty) {
-                                      return 'Please enter some value!';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                                child: Text('ID. Picture',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
-                            ),
-                            SizedBox(height: 40,
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                child:InkWell(
-                                  onTap: (){
-                                    FocusScope.of(context).requestFocus(FocusNode());
-                                    camera();
-                                  },
-                                  child: IgnorePointer(
-                                    child: TextFormField(
-                                      textInputAction: TextInputAction.done,
-                                      cursorColor: Colors.deepOrange.withOpacity(0.5),
-                                      controller: _imageTxt,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please capture an image!';
-                                        }
-                                        return null;
-                                      },
-                                      decoration: InputDecoration(
-                                        hintText: 'No File Choosen',
-                                        hintStyle: const TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-                                        contentPadding: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
-                                        prefixIcon: Icon(Icons.camera_alt_outlined,color: Colors.grey,),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.deepOrange.withOpacity(0.5),
-                                              width: 2.0),
-                                        ),
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(15)),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                                padding: EdgeInsets.fromLTRB(20, 10, 0, 10),
-                                child: Text('ID. Number',style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black),)
-                            ),
-                            SizedBox(height: 40,
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                  child:TextFormField(
-                                    cursorColor: Colors.deepOrange.withOpacity(0.8),
-                                    controller: _idNumber,
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Please enter some value!';
-                                      }
-                                      return null;
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: 'ID. Number',
-                                      hintStyle: TextStyle(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
-                                      contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                      focusedBorder: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                        borderSide: BorderSide(
-                                            color: Colors.deepOrange.withOpacity(0.7),
-                                            width: 2.0),
-                                      ),
-                                      border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(15.0)),
-                                    ),
-                                  ),
-                                )
-                            ),
-                          ],
+                ),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: 30,
+                      width: 30,
+                      child: IconButton(
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        icon: Image.asset('assets/png/img_552316.png',
+                          color: Colors.white,
+                          fit: BoxFit.contain,
+                          height: 30,
+                          width: 30,
                         ),
-                      )
-                  )
-                ],
-              )
-          )
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      child: Text("Apply Discount ",
+                        style: GoogleFonts.openSans(color: Colors.white,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              Expanded(
+                child: Scrollbar(
+                  child: ListView(
+                    padding: EdgeInsets.only(top: 10),
+                    shrinkWrap: true,
+                    children: <Widget>[
+
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 10),
+                        child: Text('Discount Type',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+
+                      SizedBox(height: 40,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                          child: DropdownButtonFormField(
+                            decoration: InputDecoration(
+                              //Add isDense true and zero Padding.
+                              //Add Horizontal padding using buttonPadding and Vertical padding by increasing buttonHeight instead of add Padding here so that The whole TextField Button become clickable, and also the dropdown menu open under The whole TextField Button.
+                              isDense: true,
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.deepOrangeAccent.withOpacity(0.8), width: 1),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 10,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              //Add more decoration as you want here
+                              //Add label If you want but add hint outside the decoration to be aligned in the button perfectly.
+                            ),
+                            isExpanded: true,
+                            hint: Text(
+                              'Select Discount Type', style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                            ),
+                            icon: const Icon(
+                              Icons.arrow_drop_down,
+                              color: Colors.black45,
+                            ),
+                            iconSize: 25,
+                            items: _loadDiscount
+                              .map((item) =>
+                              DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.normal, color: Colors.black),
+                                ),
+                              ))
+                                .toList(),
+                            // ignore: missing_return
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select discount type!';
+                              }
+                            },
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValue = value;
+                                id = _loadDiscount.indexOf(value);
+                                print(id + 1);
+
+                                getDiscountID(selectedValue);
+                              });
+                              //Do something when changing the item if you want.
+                            },
+                            onSaved: (value) {
+                              selectedValue = value.toString();
+                              print(selectedValue);
+                            },
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                        child: Text('Full Name',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+
+                      SizedBox(height: 40,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            textInputAction: TextInputAction.done,
+                            cursorColor: Colors.deepOrange.withOpacity(0.8),
+                            controller: _name,
+                            style: GoogleFonts.openSans(fontSize: 14),
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(
+                                    color: Colors.deepOrange.withOpacity(0.7),
+                                    width: 2.0),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 10,
+                              ),
+                              hintText: 'Full Name ex. (Lastname, Firstname)',
+                              hintStyle: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some value!';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                        child: Text('ID. Picture',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+
+                      SizedBox(height: 40,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child:InkWell(
+                            onTap: (){
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              camera();
+                            },
+                            child: IgnorePointer(
+                              child: TextFormField(
+                                textInputAction: TextInputAction.done,
+                                cursorColor: Colors.deepOrange.withOpacity(0.5),
+                                controller: _imageTxt,
+                                style: GoogleFonts.openSans(fontSize: 14),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Please capture an image!';
+                                  }
+                                  return null;
+                                },
+                                decoration: InputDecoration(
+                                  hintText: 'No File Choosen',
+                                  hintStyle: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                                  contentPadding: EdgeInsets.fromLTRB(0, 10.0, 0, 0),
+                                  prefixIcon: Icon(Icons.camera_alt_outlined,color: Colors.grey,),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.deepOrange.withOpacity(0.5),
+                                        width: 2.0),
+                                  ),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
+                        child: Text('ID. Number',
+                          style: GoogleFonts.openSans(fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+
+                      SizedBox(height: 40,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child:TextFormField(
+                            cursorColor: Colors.deepOrange.withOpacity(0.8),
+                            controller: _idNumber,
+                            style: GoogleFonts.openSans(fontSize: 14),
+                            validator: (value) {
+                              if (value.isEmpty) {
+                                return 'Please enter some value!';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'ID. Number',
+                              hintStyle: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),
+                              contentPadding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide(
+                                  color: Colors.deepOrange.withOpacity(0.7),
+                                  width: 2.0),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
       actions: <Widget>[
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.black,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            Navigator.pop(context);
-          },
-          child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.black54,fontWeight: FontWeight.bold,fontSize: 12.0),),
-        ),
-        OutlinedButton(
-          style: TextButton.styleFrom(
-            primary: Colors.white,
-            backgroundColor: Colors.deepOrangeAccent,
-            shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-          ),
-          onPressed:(){
-            if (_formKey.currentState.validate()) {
-              uploadId();
-            }
-            // _name.clear();
-            // _imageTxt.clear();
-            // _idNumber.clear();
-          },
-          child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            Padding(
+              padding: EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: Colors.deepOrangeAccent),
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    Navigator.pop(context);
+                  },
+                  child:Text("CLOSE",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 12.0),),
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: EdgeInsets.only(left: 20),
+              child: SizedBox(
+                width: 100,
+                child: TextButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.deepOrange[400]),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        side: BorderSide(color: Colors.deepOrange[400]),
+                      ),
+                    ),
+                  ),
+                  onPressed:(){
+                    if (_formKey.currentState.validate()) {
+                      uploadId();
+                    }
+                    // _name.clear();
+                    // _imageTxt.clear();
+                    // _idNumber.clear();
+                  },
+                  child:Text("APPLY",style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 12.0),),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );
@@ -2130,7 +2291,7 @@ Route _trackOrder() {
   return PageRouteBuilder(
     pageBuilder: (context, animation, secondaryAnimation) => TrackOrder(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
@@ -2147,7 +2308,7 @@ Route _signIn() {
     pageBuilder: (context, animation, secondaryAnimation) =>
         CreateAccountSignIn(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(0.0, 1.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.decelerate;
       var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));

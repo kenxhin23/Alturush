@@ -821,8 +821,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                     height: 60.0,
                     child: Center(
                       child: CircularProgressIndicator(
-                        valueColor: new AlwaysStoppedAnimation<Color>(
-                            Colors.deepOrange),
+                        valueColor: new AlwaysStoppedAnimation<Color>(Colors.deepOrange),
                       ),
                     ),
                   )
@@ -855,13 +854,10 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
     SharedPreferences prefs = await SharedPreferences.getInstance();
     lastAttempt = prefs.getInt(lastAttemptKey);
     lastAttempt2 = prefs.getInt(lastAttemptKey2);
-    print(difference);
-    print(lastAttempt);
-    print(now);
-    print(lastAttempt2);
 
     var userID = prefs.getString('s_customerId');
     var res = await db.checkLogin(_usernameLogIn.text, _passwordLogIn.text);
+    print("res sa checklogin");
     print(res);
     String lastUsername = prefs.getString('username');
     if (res == 'accountblocked') {
@@ -1083,173 +1079,174 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
       builder: (BuildContext context) {
 
         return StatefulBuilder(
-            builder : (BuildContext context, StateSetter state) {
+          builder : (BuildContext context, StateSetter state) {
 
-              _stateSetter = state;
-              String strDigits(int n) => n.toString().padLeft(2, '0');
-              // final days = strDigits(myDuration.inDays);
-              // // Step 7
-              final hours = strDigits(myDuration2.inHours.remainder(24));
-              final minutes = strDigits(myDuration2.inMinutes.remainder(60));
-              final seconds = strDigits(myDuration2.inSeconds.remainder(60));
+            _stateSetter = state;
+            String strDigits(int n) => n.toString().padLeft(2, '0');
+            // final days = strDigits(myDuration.inDays);
+            // // Step 7
+            final hours = strDigits(myDuration2.inHours.remainder(24));
+            final minutes = strDigits(myDuration2.inMinutes.remainder(60));
+            final seconds = strDigits(myDuration2.inSeconds.remainder(60));
 
-              return WillPopScope(
-                onWillPop: () async{
-                  stopTimer2();
-                  return true;
-                },
-                child: AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(8.0))
-                  ),
-                  contentPadding: EdgeInsets.only(top: 5),
-                  content: Container(
-                      height: 250.0,
-                      width: 300.0,
-                      child: Form(
-                        key: _key,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(height: 30,
-                                child: Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                      child: Text("Alturush (OTP)", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
-                                    ),
-                                  ],
-                                )
-                            ),
-                            Divider(thickness: 1, color: Colors.black54),
-
-                            Padding(padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                              child: new Text("Enter OTP CODE sent to: $mobileNumber",
-                                style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0),
-                              ),
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-                              child: new TextFormField(
-                                textInputAction: TextInputAction.done,
-                                cursorColor: Colors.deepOrange.withOpacity(0.8),
-                                controller: otpCode,
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Please enter OTP code';
-                                  }
-                                  return null;
-                                },
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                                  // errorText: checkUserName == true ? userExist : null,
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.deepOrange.withOpacity(0.8),
-                                        width: 2.0),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
-                                ),
-                              ),
-                            ),
-
-                            Visibility(
-                              visible: otp,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10),
-                                child: Row(
-                                  children: [
-                                    Text("Didn't receive code? ", style: TextStyle(fontSize: 15, color: Colors.black)),
-                                    TextButton(
-                                      style: TextButton.styleFrom(
-                                        padding: EdgeInsets.all(0),
-                                      ),
-                                      child: Text(
-                                        'RESEND OTP',
-                                        style: TextStyle(fontSize: 15,
-                                          color: Colors.deepOrangeAccent,
-                                        ),
-                                      ),
-                                      onPressed: (){
-                                        sendOtp();
-                                        state(() {
-                                          resetTimer2();
-                                          startTimer2();
-                                          otp = false;
-                                          resend = true;
-                                        });
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-
-                            Visibility(
-                              visible: resend,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 10, top: 15),
-                                child: Row(
-                                  children: [
-                                    Text('Resend OTP in ',
-                                      style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
-                                    ),
-                                    Text('$minutes:$seconds',
-                                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: 15),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(
-                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                side: BorderSide(color: Colors.deepOrangeAccent)
-                            )
-                        ),
-                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                              (Set<MaterialState> states) {
-                            if (states.contains(MaterialState.disabled))
-                              return Colors.grey[400];
-                            else {
-                              return Colors.deepOrangeAccent;
-                            }
-                            return null; // Use the component's default.
-                          },
-                        ),
-
-                      ),
-
-                      child: Text(
-                        'SUBMIT',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          if (_key.currentState.validate()) {
-                            getUserDetails();
-                            verifyOtpCode();
-                          }
-                        });
-                      },
-                    ),
-                  ],
+            return WillPopScope(
+              onWillPop: () async{
+                stopTimer2();
+                return true;
+              },
+              child: AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0))
                 ),
-              );
-            }
+                contentPadding: EdgeInsets.only(top: 5),
+                content: Container(
+                    height: 250.0,
+                    width: 300.0,
+                    child: Form(
+                      key: _key,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: 30,
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                                  child: Text("Alturush (OTP)", style: GoogleFonts.openSans(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Divider(thickness: 1, color: Colors.black54),
+
+                          Padding(padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
+                            child: new Text("Enter OTP CODE sent to: $mobileNumber",
+                              style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                            child: new TextFormField(
+                              textInputAction: TextInputAction.done,
+                              cursorColor: Colors.deepOrange.withOpacity(0.8),
+                              controller: otpCode,
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Please enter OTP code';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                                // errorText: checkUserName == true ? userExist : null,
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.deepOrange.withOpacity(0.8),
+                                      width: 2.0),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0)),
+                              ),
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: otp,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Row(
+                                children: [
+                                  Text("Didn't receive code? ", style: TextStyle(fontSize: 15, color: Colors.black)),
+                                  TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.all(0),
+                                    ),
+                                    child: Text(
+                                      'RESEND OTP',
+                                      style: TextStyle(fontSize: 15,
+                                        color: Colors.deepOrangeAccent,
+                                      ),
+                                    ),
+                                    onPressed: (){
+                                      sendOtp();
+                                      state(() {
+                                        resetTimer2();
+                                        startTimer2();
+                                        otp = false;
+                                        resend = true;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          Visibility(
+                            visible: resend,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 10, top: 15),
+                              child: Row(
+                                children: [
+                                  Text('Resend OTP in ',
+                                    style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),
+                                  ),
+                                  Text('$minutes:$seconds',
+                                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.redAccent, fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                              side: BorderSide(color: Colors.deepOrangeAccent)
+                          )
+                      ),
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.disabled))
+                            return Colors.grey[400];
+                          else {
+                            return Colors.deepOrangeAccent;
+                          }
+                          return null; // Use the component's default.
+                        },
+                      ),
+
+                    ),
+
+                    child: Text(
+                      'SUBMIT',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () async {
+                      setState(() {
+                        if (_key.currentState.validate()) {
+                          getUserDetails(_usernameLogIn.text);
+                          verifyOtpCode();
+                        }
+                      });
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
         );
       },
     );
@@ -1321,7 +1318,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
           builder : (BuildContext context, StateSetter state) {
             return AlertDialog(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8.0))
+                  borderRadius: BorderRadius.all(Radius.circular(15.0))
               ),
               contentPadding: EdgeInsets.only(top: 5),
               content: Container(
@@ -1334,15 +1331,22 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      SizedBox(height: 30,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                                child: Text("Account Recovery", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
-                              ),
-                            ],
-                          )
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.deepOrange[400],
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                          ),
+                        ),
+                        height: 30,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              child: Text("Account Recovery", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                            ),
+                          ],
+                        ),
                       ),
                       Divider(thickness: 1, color: Colors.black54),
 
@@ -1418,7 +1422,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
     );
   }
 
-  Future getUserDetails() async{
+  Future getUserDetails(userName) async{
     var res = await db.getUserDetails(userName);
     if (!mounted) return;
     setState(() {
@@ -1427,7 +1431,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
       var re = RegExp(r'\d(?!\d{0,2}$)'); // keep last 3 digits
       mobileNumber = realMobileNumber.replaceAll(re, '*'); // ------789
       userID = mobileList[0]['user_id'];
-      // print(mobileList);
+      print(mobileList);
     });
   }
 
@@ -1442,7 +1446,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
       userID = mobileList[0]['user_id'];
       submitOTPNumber(realMobileNumber);
       print('ang user details kay');
-      // print(mobileList);
+      print(mobileList);
     });
   }
 
@@ -1476,52 +1480,62 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
       length: 2,
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(120.0),
+          preferredSize: Size.fromHeight(90.0),
           child: AppBar(
             titleSpacing: 0,
             systemOverlayStyle: SystemUiOverlayStyle(
               statusBarColor: Colors.deepOrangeAccent[200], // Status bar
             ),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.deepOrange[400],
             elevation: 0.1,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-                size: 23,
+            leading: Padding(
+              padding: EdgeInsets.only(top: 5),
+              child: IconButton(
+                icon: Icon(
+                  CupertinoIcons.left_chevron,
+                  color: Colors.white,
+                  size: 23,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 1.0,
+                      color: Colors.black54,
+                      offset: Offset(1.0, 1.0),
+                    ),
+                  ],
+                ),
+                onPressed: () => Navigator.of(context).maybePop(),
               ),
-              onPressed: () => Navigator.of(context).maybePop(),
             ),
             bottom: TabBar(
               controller: _tabController,
               labelColor: Colors.black,
-              indicatorColor: Colors.deepOrange,
+              indicatorColor: Colors.white,
               tabs: [
 
                 Tab(
-                  child: Text("Log in",
-                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
+                  child: Text("LOGIN",
+                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.white),
                   ),
                 ),
 
                 Tab(
-                  child: Text("Sign up",
-                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0),
+                  child: Text("SIGN UP",
+                    style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.white),
                   ),
                 ),
               ],
             ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-
-                Image.asset(
-                  'assets/png/alturush_text_logo.png',
-                  fit: BoxFit.contain,
-                  height: 30,
-                ),
-              ],
-            ),
+            // title: Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: [
+            //
+            //     Image.asset(
+            //       'assets/png/alturush_text_logo.png',
+            //       fit: BoxFit.contain,
+            //       height: 30,
+            //     ),
+            //   ],
+            // ),
           ),
         ),
         body:
@@ -1557,7 +1571,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                     //   ),
                     //  ),
 
-                    SizedBox(height: 50),
+                    SizedBox(height: 120),
 
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -1566,6 +1580,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         textInputAction: TextInputAction.done,
                         cursorColor: Colors.deepOrange.withOpacity(0.8),
                         controller: _usernameLogIn,
+                        style: GoogleFonts.openSans(color: Colors.black87),
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Enter Username';
@@ -1574,7 +1589,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         },
                         decoration: InputDecoration(
                           hintText: 'Username',
-                          prefixIcon: Icon(CupertinoIcons.person, color: Colors.black54,),
+                          prefixIcon: Icon(CupertinoIcons.person, color: Colors.deepOrange[300],),
                           contentPadding:
                           EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                           focusedBorder: OutlineInputBorder(
@@ -1601,6 +1616,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         cursorColor: Colors.deepOrange.withOpacity(0.8),
                         obscureText: _isHidden,
                         controller: _passwordLogIn,
+                        style: GoogleFonts.openSans(color: Colors.black87),
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Enter Password';
@@ -1609,7 +1625,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         },
                         decoration: InputDecoration(
                           hintText: 'Password',
-                          prefixIcon: Icon(CupertinoIcons.lock, color: Colors.black54,),
+                          prefixIcon: Icon(CupertinoIcons.lock, color: Colors.deepOrange[300],),
                           suffix: InkWell(
                             onTap: _togglePassword,
                             child: Padding(
@@ -1631,7 +1647,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                     ),
 
                     Padding(
-                      padding: EdgeInsets.fromLTRB(30.0, 35.0, 30.0, 30.0),
+                      padding: EdgeInsets.fromLTRB(30.0, 100.0, 30.0, 30.0),
                       child: SleekButton(
 
                         onTap: ()
@@ -1639,25 +1655,33 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                           print('wrong attemp ni');
                           print(wrongAttempt);
                           if (_formKey.currentState.validate()) {
-                            getUserDetails();
                             userName = _usernameLogIn.text;
+                            getUserDetails(_usernameLogIn.text);
                             _signInCheck();
                           }
                         },
                         style: SleekButtonStyle.flat(
-                          color: Colors.deepOrange,
+                          color: Colors.deepOrange[400],
                           inverted: false,
-                          rounded: true,
-                          size: SleekButtonSize.big,
+                          rounded: false,
+                          size: SleekButtonSize.normal,
                           context: context,
                         ),
                         child: Center(
                           child: Text(
-                            "Login",
+                            "LOGIN",
                             style: GoogleFonts.openSans(
-                                fontStyle: FontStyle.normal,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 19.0),
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -1681,7 +1705,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                           showAccountRecoveryDialog(context);
                           // Navigator.of(context).push(enterUsername(login));
                         },
-                        child: Text("Forgot username/password?",style: TextStyle(color: Colors.black54))
+                        child: Text("Forgot username/password?",style: TextStyle(fontSize: 15, color: Colors.deepOrange[200]))
                       ),
                     ),
                   ],
@@ -1695,7 +1719,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                   children: <Widget>[
 
                     SizedBox(
-                      height: 15.0,
+                      height: 30.0,
                     ),
 
                     Padding(
@@ -1705,6 +1729,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         textInputAction: TextInputAction.done,
                         cursorColor: Colors.deepOrange.withOpacity(0.8),
                         controller: firstName,
+                        style: GoogleFonts.openSans(color: Colors.black87),
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Enter First Name';
@@ -1745,6 +1770,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                               cursorColor:
                               Colors.deepOrange.withOpacity(0.8),
                               controller: lastName,
+                              style: GoogleFonts.openSans(color: Colors.black87),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Enter Last Name';
@@ -1780,6 +1806,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                               cursorColor:
                               Colors.deepOrange.withOpacity(0.8),
                               controller: email,
+                              style: GoogleFonts.openSans(color: Colors.black87),
                               onChanged: (text) {
                                 checkEmailIfExist(text);
                               },
@@ -1814,6 +1841,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                             cursorColor: Colors.deepOrange.withOpacity(0.8),
                             readOnly: true,
                             controller: birthday,
+                            style: GoogleFonts.openSans(color: Colors.black87),
                             validator: (value) {
                               if (value.isEmpty) {
                                 return 'Enter Birthday';
@@ -1856,6 +1884,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                               ],
                               cursorColor: Colors.deepOrange.withOpacity(0.8),
                               controller: contactNumber,
+                              style: GoogleFonts.openSans(color: Colors.black87),
                               validator: (value) {
                                 if (value.isEmpty) {
                                   return 'Enter Mobile Number';
@@ -1917,6 +1946,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         textInputAction: TextInputAction.done,
                         cursorColor: Colors.deepOrange.withOpacity(0.8),
                         controller: username,
+                        style: GoogleFonts.openSans(color: Colors.black87),
                         validator: (value) {
                           if (value.isEmpty) {
                             return 'Enter Username';
@@ -1957,6 +1987,7 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                         cursorColor: Colors.deepOrange.withOpacity(0.8),
                         obscureText: _isHidden,
                         controller: password,
+                        style: GoogleFonts.openSans(color: Colors.black87),
                         validator: (value) {
                           Pattern pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
                           RegExp regex = new RegExp(pattern);
@@ -2022,10 +2053,10 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
 
                         },
                         style: SleekButtonStyle.flat(
-                          color: Colors.deepOrange,
+                          color: Colors.deepOrange[400],
                           inverted: false,
-                          rounded: true,
-                          size: SleekButtonSize.big,
+                          rounded: false,
+                          size: SleekButtonSize.normal,
                           context: context,
                         ),
                         child: Center(
@@ -2034,7 +2065,15 @@ class _CreateAccountSignIn extends State<CreateAccountSignIn>
                             style: GoogleFonts.openSans(
                               fontStyle: FontStyle.normal,
                               fontWeight: FontWeight.bold,
-                              fontSize: 19.0),
+                              fontSize: 18.0,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 1.0,
+                                  color: Colors.black54,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       )
@@ -2155,103 +2194,116 @@ class _AccountRecoveryDialogState extends State<AccountRecoveryDialog> {
 
   @override
   Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+         borderRadius: BorderRadius.all(Radius.circular(15.0))
+      ),
+      contentPadding: EdgeInsets.zero,
+      content: Container(
+        height: 160.0,
+        width: 300.0,
+        child: Form(
+          key: _key,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
 
-   return AlertDialog(
-     shape: RoundedRectangleBorder(
-         borderRadius: BorderRadius.all(Radius.circular(8.0))
-     ),
-     contentPadding: EdgeInsets.only(top: 5),
-     content: Container(
-       height: 160.0,
-       width: 300.0,
-       child: Form(
-         key: _key,
-         child: Column(
-           mainAxisAlignment: MainAxisAlignment.start,
-           crossAxisAlignment: CrossAxisAlignment.stretch,
-           mainAxisSize: MainAxisSize.min,
-           children: [
+              Container(
+                height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrange[400],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                    ),
+                  ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                      child: Text("Account Recovery",
+                        style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 16.0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
 
-             SizedBox(height: 30,
-               child: Row(
-                 children: [
+              Padding(padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
+                child: new Text("Enter Username",
+                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                ),
+              ),
 
-                   Padding(
-                     padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                     child: Text("Account Recovery", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
-                   ),
-                 ],
-               )
-             ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                child: new TextFormField(
+                  textInputAction: TextInputAction.done,
+                  cursorColor: Colors.deepOrange.withOpacity(0.8),
+                  controller: findUsername,
+                  style: GoogleFonts.openSans(color: Colors.black54),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter username';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
+                    errorText: boolSignInErrorTextEmail == false ? signUpErrorText : null,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Colors.deepOrange.withOpacity(0.8),
+                        width: 2.0),
+                    ),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      ),
+      actions: <Widget>[
 
-             Divider(thickness: 1, color: Colors.black54),
-
-             Padding(padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
-               child: new Text("Enter Username",
-                 style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold),
-               ),
-             ),
-
-             Padding(
-               padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
-               child: new TextFormField(
-                 textInputAction: TextInputAction.done,
-                 cursorColor: Colors.deepOrange.withOpacity(0.8),
-                 controller: findUsername,
-                 validator: (value) {
-                   if (value.isEmpty) {
-                     return 'Please enter username';
-                   }
-                   return null;
-                 },
-                 decoration: InputDecoration(
-                   contentPadding: EdgeInsets.fromLTRB(10.0, 5.0, 10.0, 5.0),
-                   errorText: boolSignInErrorTextEmail == false ? signUpErrorText : null,
-                   focusedBorder: OutlineInputBorder(
-                     borderSide: BorderSide(
-                         color: Colors.deepOrange.withOpacity(0.8),
-                         width: 2.0),
-                   ),
-                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
+        Center(
+          child: SizedBox(
+            width: 100,
+            child: TextButton(
+             style: ButtonStyle(
+               backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                 RoundedRectangleBorder(
+                   borderRadius: BorderRadius.circular(10.0),
+                   side: BorderSide(color: Colors.deepOrangeAccent),
                  ),
                ),
              ),
-           ],
-         ),
-       )
-     ),
-     actions: <Widget>[
-
-       TextButton(
-         style: ButtonStyle(
-           backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-             RoundedRectangleBorder(
-               borderRadius: BorderRadius.circular(20.0),
-               side: BorderSide(color: Colors.deepOrangeAccent)
-             )
-           )
-         ),
-         child: Text(
-           'SUBMIT',
-           style: TextStyle(
-             color: Colors.white,
+             child: Text(
+               'SUBMIT',
+               style: GoogleFonts.openSans(
+                 color: Colors.white,
+                 fontWeight: FontWeight.bold,
+                 fontSize: 14,
+               ),
+             ),
+             onPressed: () {
+               print(findUsername.text);
+               setState(() {
+                 // startTimer();
+               });
+               if (_key.currentState.validate()) {
+                 checkUserIfExist(findUsername.text);
+                 // sendOtp();
+                 getUserDetails2();
+               }
+             },
            ),
-         ),
-         onPressed: () {
-           print(findUsername.text);
-           setState(() {
-             // startTimer();
-           });
-           if (_key.currentState.validate()) {
-             checkUserIfExist(findUsername.text);
-             // sendOtp();
-             getUserDetails2();
-           }
-         },
-       ),
-     ],
-   );
+          ),
+        ),
+      ],
+    );
   }
 
   showOtpDialog(BuildContext context) {
@@ -2406,9 +2458,9 @@ class _OtpDialogState extends State<OtpDialog> {
 
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
-      contentPadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.zero,
       content: Container(
         height: 250.0,
         width: 300.0,
@@ -2420,21 +2472,30 @@ class _OtpDialogState extends State<OtpDialog> {
             mainAxisSize: MainAxisSize.min,
             children: [
 
-              SizedBox(height: 30,
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.deepOrange[400],
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                  ),
+                ),
                 child: Row(
                   children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                      child: Text("Confirmation", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                      child: Text("Confirmation",
+                        style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontStyle: FontStyle.normal, fontSize: 16.0),
+                      ),
                     ),
                   ],
-                )
+                ),
               ),
-              Divider(thickness: 1, color: Colors.black54),
+              // Divider(thickness: 1, color: Colors.black54),
 
-              Padding(padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
+              Padding(padding: EdgeInsets.fromLTRB(10, 10, 0, 10),
                 child: new Text("Enter OTP CODE sent to: $mobileNumber",
-                  style: TextStyle(fontStyle: FontStyle.normal, fontSize: 15.0),
+                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, color: Colors.black54),
                 ),
               ),
 
@@ -2446,11 +2507,12 @@ class _OtpDialogState extends State<OtpDialog> {
               // ),
 
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                 child: new TextFormField(
                   textInputAction: TextInputAction.done,
                   cursorColor: Colors.deepOrange.withOpacity(0.8),
                   controller: otpCode,
+                  style: GoogleFonts.openSans(color: Colors.black87),
                   validator: (value) {
                     if (value.isEmpty) {
                       return 'Please enter OTP Code';
@@ -2476,20 +2538,20 @@ class _OtpDialogState extends State<OtpDialog> {
                   padding: EdgeInsets.only(left: 10),
                   child: Row(
                     children: [
-                      Text("Didn't receive code?", style: TextStyle(fontSize: 15, color: Colors.black)),
+                      Text("Didn't receive code?", style: GoogleFonts.openSans(fontSize: 15, color: Colors.black54)),
                       SizedBox(width: 100,
                         child: TextButton(
                           style: ButtonStyle(
-                              padding: MaterialStateProperty.all(EdgeInsets.all(0)),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      side: BorderSide(color: Colors.transparent)
-                                  )
-                              )
+                            padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                                side: BorderSide(color: Colors.transparent),
+                              ),
+                            ),
                           ),
                           child: Text(' RESEND OTP',
-                            style: TextStyle(fontSize: 15,
+                            style: GoogleFonts.openSans(fontSize: 15,
                               color: Colors.deepOrangeAccent,
                             ),
                           ),
@@ -2530,29 +2592,36 @@ class _OtpDialogState extends State<OtpDialog> {
       ),
       actions: <Widget>[
 
-        TextButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                  side: BorderSide(color: Colors.deepOrangeAccent)
-                )
-              )
-          ),
-          child: Text(
-            'SUBMIT',
-            style: TextStyle(
-              color: Colors.white,
+        Center(
+          child: SizedBox(
+            width: 100,
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(color: Colors.deepOrangeAccent),
+                  ),
+                ),
+              ),
+              child: Text(
+                'SUBMIT',
+                style: GoogleFonts.openSans(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              onPressed: () {
+
+                if (_key.currentState.validate()) {
+                  checkOtpCode();
+                }
+
+              },
             ),
           ),
-          onPressed: () {
-
-            if (_key.currentState.validate()) {
-              checkOtpCode();
-            }
-
-          },
         ),
       ],
     );
@@ -2637,9 +2706,9 @@ class _showPasswordDialogState  extends State<showPasswordDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8.0))
+          borderRadius: BorderRadius.all(Radius.circular(15.0))
       ),
-      contentPadding: EdgeInsets.only(top: 5),
+      contentPadding: EdgeInsets.zero,
       content: Container(
           height: 275.0,
           width: 300.0,
@@ -2651,33 +2720,41 @@ class _showPasswordDialogState  extends State<showPasswordDialog> {
               mainAxisSize: MainAxisSize.min,
               children: [
 
-                SizedBox(height: 30,
-                    child: Row(
-                      children: [
+                Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.deepOrange[400],
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(15), topLeft: Radius.circular(15),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
 
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          child: Text("Reset Password", style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
-                        ),
-                      ],
-                    )
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Text("Reset Password", style: GoogleFonts.openSans(color: Colors.white,fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 16.0),),
+                      ),
+                    ],
+                  ),
                 ),
 
-                Divider(thickness: 1, color: Colors.black54),
+                // Divider(thickness: 1, color: Colors.black54),
 
                 Padding(
-                  padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                  child: new Text("New password", style: TextStyle(
-                    fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold),
+                  padding: EdgeInsets.fromLTRB(10, 10, 5, 5),
+                  child: new Text("New password", style: GoogleFonts.openSans(
+                    fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
                 ),
 
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                   child: new TextFormField(
                     textInputAction: TextInputAction.done,
                     cursorColor: Colors.deepOrange.withOpacity(0.8),
                     controller: newPassWord,
+                    style: GoogleFonts.openSans(color: Colors.black87),
                     obscureText: _isHidden,
                     validator: (value) {
                       Pattern pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
@@ -2724,17 +2801,18 @@ class _showPasswordDialogState  extends State<showPasswordDialog> {
 
                 Padding(
                   padding: EdgeInsets.fromLTRB(10, 5, 5, 5),
-                  child: new Text("Confirm password", style: TextStyle(
-                    fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold),
+                  child: new Text("Confirm password", style: GoogleFonts.openSans(
+                    fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold, color: Colors.black54),
                   ),
                 ),
 
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
                   child: new TextFormField(
                     textInputAction: TextInputAction.done,
                     cursorColor: Colors.deepOrange.withOpacity(0.8),
                     controller: confirmPassWord,
+                    style: GoogleFonts.openSans(color: Colors.black87),
                     obscureText: _isHidden,
                     validator: (value) {
                       if (value.isEmpty) {
@@ -2763,29 +2841,35 @@ class _showPasswordDialogState  extends State<showPasswordDialog> {
       ),
       actions: <Widget>[
 
-        TextButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        Center(
+          child: SizedBox(
+            width: 100,
+            child: TextButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                      side: BorderSide(color: Colors.deepOrangeAccent)
-                  )
-              )
-          ),
-          child: Text(
-            'SUBMIT',
-            style: TextStyle(
-              color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    side: BorderSide(color: Colors.deepOrangeAccent),
+                  ),
+                ),
+              ),
+              child: Text('SUBMIT',
+                style: GoogleFonts.openSans(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              onPressed: () {
+
+                if (_key.currentState.validate()) {
+                  changePassword();
+                  // checkOtpCode();
+                }
+              },
             ),
           ),
-          onPressed: () {
-
-            if (_key.currentState.validate()) {
-              changePassword();
-              // checkOtpCode();
-            }
-          },
         ),
       ],
     );
