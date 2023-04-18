@@ -226,7 +226,7 @@ class _OrderTimeFramePickupFoodsState extends State<OrderTimeFramePickupFoods>{
                         Visibility(
                           visible: submit || taggedpickup && cancel == false,
                           child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 5),
+                            padding: EdgeInsets.symmetric(vertical: 10),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

@@ -351,7 +351,7 @@ class _OrderSummaryPickupFoodsState extends State<OrderSummaryPickupFoods> {
                                   Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 10),
                                     child: Text(pickupSched,
-                                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                      style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
                                     ),
                                   ),
                                 ],

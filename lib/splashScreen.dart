@@ -402,7 +402,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                       backgroundColor: MaterialStateProperty.all(Colors.deepOrangeAccent),
                       overlayColor: MaterialStateProperty.all(Colors.black12),
                       side: MaterialStateProperty.all(BorderSide(
-                        color: Colors.white,
+                        color: Colors.deepOrange,
                         width: 1.0,
                         style: BorderStyle.solid,)),
                     ),

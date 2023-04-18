@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -156,15 +157,27 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        brightness: Brightness.light,
-        backgroundColor: Colors.white,
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.green[400], // Status bar
+          statusBarIconBrightness: Brightness.light ,  // Only honored in Android M and above
+        ),
+        backgroundColor: Colors.green[400],
         elevation: 0.1,
+        iconTheme: new IconThemeData(color: Colors.white,
+          shadows: [
+            Shadow(
+              blurRadius: 1.0,
+              color: Colors.black54,
+              offset: Offset(1.0, 1.0),
+            ),
+          ],
+        ),
         titleSpacing: 0,
         leading: IconButton(
-          icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
+          icon: Icon(CupertinoIcons.left_chevron, color: Colors.white, size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('Summary (Pickup)', style: GoogleFonts.openSans(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 16.0),
+        title: Text('Summary (Pickup)', style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
         ),
       ),
       body: isLoading
@@ -187,54 +200,70 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Text('TICKET NO.', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),),
+                      child: Text('TICKET NO.',
+                        style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                      ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(widget.ticket, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text(widget.ticket,
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
                     ),
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Text('ORDER SUBMITTED', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),),
+                      child: Text('ORDER SUBMITTED',
+                        style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                      ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text('$submitted', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text('$submitted',
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
                     ),
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Text('CUSTOMER INFORMATION', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),),
+                      child: Text('CUSTOMER INFORMATION',
+                        style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                      ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("$firstname $lastname", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text("$firstname $lastname",
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
                     ),
-
-                    SizedBox(height: 5),
-
+                    SizedBox(
+                      height: 5,
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("$mobileNumber", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text("$mobileNumber",
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
                     ),
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Text('CUSTOMER ADDRESS', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),),
+                      child: Text('CUSTOMER ADDRESS',
+                        style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                      ),
                     ),
-
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("$houseNo$street, $barangay, $town, $province $zipcode", style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal, color: Colors.black),),
+                      child: Text("$houseNo$street, $barangay, $town, $province $zipcode",
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
                     ),
 
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                      child: Text('SCHEDULE FOR PICK-UP', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),),
+                      child: Text('SCHEDULE FOR PICK-UP',
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                      ),
                     ),
 
                     ListView.builder(
@@ -261,40 +290,46 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Divider(thickness: 1, color: Colors.green,),
 
-                              Padding(
+                              Container(
+                                height: 30,
+                                color: Colors.green[300],
                                 padding: EdgeInsets.symmetric(horizontal: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text('${loadSchedule[index]['bu_name']}',
-                                        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.green)
+                                        style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.white)
                                     ),
                                   ],
                                 ),
                               ),
 
-                              Divider(thickness: 1, color: Colors.green,),
 
                               Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text('Picked-up Time', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                    Text('Picked-up Time',
+                                      style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                    ),
                                     Row(
                                       children: [
-                                        Text(pickupStart, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                        Text(' - ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                        Text(pickupEnd, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                        Text(pickupStart,
+                                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        ),
+                                        Text(' - ',
+                                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        ),
+                                        Text(pickupEnd,
+                                          style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        ),
                                       ],
                                     ),
                                   ],
                                 ),
                               ),
-
-                              Divider(),
 
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -302,13 +337,17 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
 
                                   Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text('Picked-up Schedule', style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
+                                    child: Text('Picked-up Schedule',
+                                      style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                    ),
                                   ),
 
                                   Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text(pickupSched, style: TextStyle(fontSize: 14, fontWeight: FontWeight.normal)),
-                                  )
+                                    child: Text(pickupSched,
+                                      style: GoogleFonts.openSans(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black54),
+                                    ),
+                                  ),
                                 ],
                               ),
 
@@ -351,113 +390,127 @@ class _OrderSummaryPickupGoodsState extends State<OrderSummaryPickupGoods> {
                     visible: status == '0',
                     child: Column(
                       children: <Widget>[
-                        Divider(thickness: 1, color: Colors.black54),
 
-                        Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Text('ORDER SUMMARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black)),
+                        Container(
+                          height: 40,
+                          color: Colors.grey[200],
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text('ORDER SUMMARY',
+                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                              ),
+                            ),
                           ),
                         ),
 
-                        Divider(thickness: 1, color: Colors.green),
-
-                        SizedBox(height: 5),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('SUBTOTAL', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                              padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                              child: Text('SUBTOTAL',
+                                style: TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
                             ),
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(subTotal)}', style: TextStyle(fontSize: 13, color: Colors.green)),
-                            )
+                              child: Text('₱ ${oCcy.format(subTotal)}',
+                                  style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
+                            ),
                           ],
                         ),
-
-                        Divider(color: Colors.black54),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text("PICKING FEE", style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                              padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 5),
+                              child: Text("PICKING FEE",
+                                style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
                             ),
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(pickingFee)}', style: TextStyle(fontSize: 13, color: Colors.green)),
-                            )
+                              child: Text('₱ ${oCcy.format(pickingFee)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
+                            ),
                           ],
                         ),
 
-                        Divider(color: Colors.black54),
+                        Container(
+                          height: 30,
+                          color: Colors.grey[200],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10, right: 10),
+                                    child: Text('TOTAL AMOUNT',
+                                      style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  // Padding(
+                                  //   padding: EdgeInsets.only(left: 5),
+                                  //   child: Text("discounted", style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
+                                  // ),
+                                ],
+                              ),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-
-                            Row(
-                              children: [
-
-                                Padding(
-                                  padding: EdgeInsets.only(left: 10),
-                                  child: Text('TOTAL AMOUNT', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold)),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                child: Text('₱ ${oCcy.format(grandTotal)}',
+                                  style: TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.bold),
                                 ),
-
-                                // Padding(
-                                //   padding: EdgeInsets.only(left: 5),
-                                //   child: Text("discounted", style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
-                                // ),
-                              ],
-                            ),
-
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(grandTotal)}', style: TextStyle(fontSize: 13, color: Colors.green, fontWeight: FontWeight.bold)),
-                            )
-                          ],
+                              ),
+                            ],
+                          ),
                         ),
-
-                        Divider(color: Colors.black54),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('AMOUNT TENDER', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                              padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                              child: Text('AMOUNT TENDER',
+                                style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
                             ),
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(amountTender)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                              child: Text('₱ ${oCcy.format(amountTender)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
                             ),
                           ],
                         ),
-
-                        Divider(color: Colors.black54),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
 
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('CHANGE', style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.normal)),
+                              padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                              child: Text('CHANGE',
+                                style: GoogleFonts.openSans(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+                              ),
                             ),
 
                             Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10),
-                              child: Text('₱ ${oCcy.format(change)}', style: TextStyle(fontSize: 13, color: Colors.green)),
+                              child: Text('₱ ${oCcy.format(change)}',
+                                style: TextStyle(fontSize: 13, color: Colors.black87),
+                              ),
                             ),
                           ],
                         ),
