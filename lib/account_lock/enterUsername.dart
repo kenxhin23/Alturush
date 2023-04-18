@@ -130,7 +130,8 @@ class _EnterUsername extends State<EnterUsername> {
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: Colors.deepOrange.withOpacity(0.8),
-                              width: 2.0),
+                              width: 2.0,
+                            ),
                           ),
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
                         ),
@@ -161,8 +162,7 @@ class _EnterUsername extends State<EnterUsername> {
                 context: context,
               ),
               child: Center(
-                child: Text(
-                  "SUBMIT",
+                child: Text("SUBMIT",
                   style: TextStyle(
                     fontStyle: FontStyle.normal,
                     fontSize: 16.0, fontWeight: FontWeight.bold,

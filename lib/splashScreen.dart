@@ -24,17 +24,17 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
   List globalCat;
   List loadProfileData;
   List getVersion;
-  String firstName="";
+
   var isLoading = true;
   var isVisible = true;
   var locationString;
-  String profilePhoto;
-  String currentVersion;
-  String dbVersion;
-  String changelog;
-  String version;
 
-
+  String firstName      ="";
+  String profilePhoto   ="";
+  String currentVersion ="";
+  String dbVersion      ="";
+  String changelog      ="";
+  String version        ="";
 
   // void selectType(BuildContext context ,width ,height) async{
   //   getGlobalCat();
@@ -124,9 +124,11 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                 ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('Close',style: TextStyle(
-                      color: Colors.black,
-                    ),),
+                    child: Text('Close',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                     onPressed: () async{
                       // Navigator.of(context).pop();
                       SystemNavigator.pop();
@@ -140,7 +142,6 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
       });
     }
   }
-
 
   // Future getGlobalCat() async{
   //   var res = await db.getGlobalCat();
@@ -169,8 +170,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
         isLoading = false;
         isVisible = true;
       });
-    }
-    else{
+    } else {
       locationString = "Location";
       firstName = "";
       profilePhoto = "";
@@ -194,23 +194,23 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
         if (dbVersion != version) {
           print('need update');
           CoolAlert.show(
-              context: context,
-              type: CoolAlertType.info,
-              text: "New update: ver.$dbVersion \nChangelog: $changelog",
-              confirmBtnColor: Colors.deepOrangeAccent,
-              backgroundColor: Colors.deepOrangeAccent,
-              barrierDismissible: false,
-              showCancelBtn: true,
-              confirmBtnText: "Update",
-              onConfirmBtnTap: () async {
-                Navigator.of(context).pop();
-                print('go to update');
-                _launchURL();
-              },
-              onCancelBtnTap: () async {
-                print('no update');
-                Navigator.of(context).pop();
-              }
+            context: context,
+            type: CoolAlertType.info,
+            text: "New update: ver.$dbVersion \nChangelog: $changelog",
+            confirmBtnColor: Colors.deepOrangeAccent,
+            backgroundColor: Colors.deepOrangeAccent,
+            barrierDismissible: false,
+            showCancelBtn: true,
+            confirmBtnText: "Update",
+            onConfirmBtnTap: () async {
+              Navigator.of(context).pop();
+              print('go to update');
+              _launchURL();
+            },
+            onCancelBtnTap: () async {
+              print('no update');
+              Navigator.of(context).pop();
+            }
           );
         }
       }
@@ -307,11 +307,13 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                           children: [
 
                             SizedBox(height: 40.0),
-                            Text("Welcome to Alturush",style: GoogleFonts.openSans(
+                            Text("Welcome to Alturush",
+                              style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
                                 color: Colors.white,
-                                fontSize: 18.0),
+                                fontSize: 18.0,
+                              ),
                             ),
                           ],
                         ),
@@ -322,11 +324,13 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                           children: [
 
                             SizedBox(height: 40.0),
-                            Text("Choose a restaurant",style: GoogleFonts.openSans(
+                            Text("Choose a restaurant",
+                              style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
                                 color: Colors.white,
-                                fontSize: 18.0),
+                                fontSize: 18.0,
+                              ),
                             ),
                           ],
                         ),
@@ -337,11 +341,13 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                           children: [
 
                             SizedBox(height: 40.0),
-                            Text("Order online",style: GoogleFonts.openSans(
+                            Text("Order online",
+                              style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
                                 color: Colors.white,
-                                fontSize: 18.0),
+                                fontSize: 18.0,
+                              ),
                             ),
                           ],
                         ),
@@ -352,11 +358,13 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                           children: [
 
                             SizedBox(height: 40.0),
-                            Text("Multi store for fixed delivery fee",style: GoogleFonts.openSans(
+                            Text("Multi store for fixed delivery fee",
+                              style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
                                 color: Colors.white,
-                                fontSize: 18.0),
+                                fontSize: 18.0,
+                              ),
                             ),
                           ],
                         ),
@@ -367,11 +375,13 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                           children: [
 
                             SizedBox(height: 40.0),
-                            Text("Fast delivery",style: GoogleFonts.openSans(
+                            Text("Fast delivery",
+                              style: GoogleFonts.openSans(
                                 fontWeight: FontWeight.bold,
                                 fontStyle: FontStyle.normal,
                                 color: Colors.white,
-                                fontSize: 18.0),
+                                fontSize: 18.0,
+                              ),
                             ),
                           ],
                         ),
@@ -383,7 +393,7 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                       indicatorBgPadding: 5.0,
                       dotBgColor: Colors.white,
                       borderRadius: true,
-                    )
+                    ),
                   ),
                 ],
               ),
@@ -404,7 +414,8 @@ class _Splash extends State<Splash> with SingleTickerProviderStateMixin{
                       side: MaterialStateProperty.all(BorderSide(
                         color: Colors.deepOrange,
                         width: 1.0,
-                        style: BorderStyle.solid,)),
+                        style: BorderStyle.solid),
+                      ),
                     ),
                     onPressed: () async {
                        // selectType(context ,width, height);

@@ -36,8 +36,7 @@ class _EnterNewPassword extends State<EnterNewPassword> {
   }
 
   bool validateStructure(String value) {
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     RegExp regExp = new RegExp(pattern);
     return regExp.hasMatch(value);
   }
@@ -97,7 +96,12 @@ class _EnterNewPassword extends State<EnterNewPassword> {
           icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Reset password",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),), systemOverlayStyle: SystemUiOverlayStyle.dark,
+        title: Text("Reset password",
+          style: GoogleFonts.openSans(
+            color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0,
+          ),
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
 
       ///display main page or body of the app
@@ -113,8 +117,7 @@ class _EnterNewPassword extends State<EnterNewPassword> {
                   children: [
 
                     Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: new Text(
-                        "Enter new password",
+                      child: new Text("Enter new password",
                         style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 15.0, fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
@@ -162,8 +165,9 @@ class _EnterNewPassword extends State<EnterNewPassword> {
                           errorStyle: TextStyle(fontSize: 10),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Colors.deepOrange.withOpacity(0.8),
-                                width: 2.0),
+                              color: Colors.deepOrange.withOpacity(0.8),
+                              width: 2.0,
+                            ),
                           ),
                           errorText: checkPassword == true ? passwordError : null,
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(3.0)),
@@ -193,8 +197,7 @@ class _EnterNewPassword extends State<EnterNewPassword> {
                 context: context,
               ),
               child: Center(
-                child: Text(
-                  "RESET PASSWORD",
+                child: Text("RESET PASSWORD",
                   style: TextStyle(
                     fontStyle: FontStyle.normal,
                     fontSize: 16.0,

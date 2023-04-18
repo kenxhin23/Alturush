@@ -204,7 +204,11 @@ class _GcCategory extends State<GcCategory>{
                 loadProfile();
                 getGcCounter();
               },
-              child: Text("Login",style: GoogleFonts.openSans(color:Colors.white, fontWeight: FontWeight.bold,fontSize: 16.0),),
+              child: Text("Login",
+                style: GoogleFonts.openSans(
+                  color:Colors.white, fontWeight: FontWeight.bold,fontSize: 16.0,
+                ),
+              ),
             ):
             Padding(
               padding: EdgeInsets.all(0),
@@ -309,7 +313,7 @@ class _GcCategory extends State<GcCategory>{
                         getGcCounter();
                       }
                     }
-                  )
+                  ),
                 ),
               )
             )
@@ -352,7 +356,9 @@ class _GcCategory extends State<GcCategory>{
                                 image: new NetworkImage(widget.logo),
                                 fit: BoxFit.cover,
                               ),
-                              borderRadius: new BorderRadius.all(new Radius.circular(50.0)),
+                              borderRadius: new BorderRadius.all(
+                                new Radius.circular(50.0),
+                              ),
                               border: new Border.all(
                                 color: Colors.green[400],
                                 width: 1,
@@ -365,7 +371,7 @@ class _GcCategory extends State<GcCategory>{
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.normal,
                               fontSize: 20.0
-                            )
+                            ),
                           ),
                           // subtitle: Text('Select from our participating businesses',
                           //   style: GoogleFonts.openSans(
@@ -425,12 +431,12 @@ class _GcCategory extends State<GcCategory>{
                             await Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
                           } else {
                             await Navigator.of(context).push(_loadGC(
-                                widget.logo,
-                                categoryData[index]['category_name'],
-                                categoryData[index]['category_no'],
-                                widget.businessUnit,
-                                widget.bUnitCode,
-                                widget.groupCode
+                              widget.logo,
+                              categoryData[index]['category_name'],
+                              categoryData[index]['category_no'],
+                              widget.businessUnit,
+                              widget.bUnitCode,
+                              widget.groupCode,
                             )).then((val)=>{onRefresh()});
                           }
                         },
@@ -463,7 +469,7 @@ class _GcCategory extends State<GcCategory>{
                                     style: GoogleFonts.openSans(color: Colors.black54, fontWeight:FontWeight.bold, fontSize: 18.0),
                                   ),
                                 ),
-                              ]
+                              ],
                             ),
                           ),
                         ),

@@ -78,7 +78,9 @@ class _Chat extends State<Chat> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text("${widget.firstName} ${widget.lastName}",
-          style: GoogleFonts.openSans(color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0),
+          style: GoogleFonts.openSans(
+            color:Colors.white,fontWeight: FontWeight.bold,fontSize: 16.0,
+          ),
         ),
       ),
       body: isLoading

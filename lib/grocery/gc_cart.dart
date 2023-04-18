@@ -258,9 +258,9 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     if (!mounted) return;
     setState(() {
       loadSubtotal = res['user_details'];
-      if(loadSubtotal[0]['d_subtotal']==null){
+      if (loadSubtotal[0]['d_subtotal']==null) {
         subTotal = 0.00;
-      }else{
+      } else {
         // subTotal = oCcy.parse(loadSubtotal[0]['d_subtotal']);
       }
       // isLoading  = false;
@@ -272,9 +272,9 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
     if (!mounted) return;
     setState(() {
       loadSubtotal = res['user_details'];
-      if(loadSubtotal[0]['d_subtotal']==null){
+      if (loadSubtotal[0]['d_subtotal']==null) {
         subTotal = 0.00;
-      }else{
+      } else {
         subTotal = oCcy.parse(loadSubtotal[0]['d_subtotal']);
       }
       grandTotal = subTotal;
@@ -478,9 +478,13 @@ class _GcLoadCart extends State<GcLoadCart> with TickerProviderStateMixin {
                           children: [
                             Padding(
                               padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 20.0),
-                              child: Image.asset("assets/png/delivery-man.png",),
+                              child: Image.asset("assets/png/delivery-man.png"),
                             ),
-                            Text("Pick-up",style: TextStyle(fontSize: 18.0,fontWeight: FontWeight.bold),),
+                            Text("Pick-up",
+                              style: TextStyle(
+                                fontSize: 18.0,fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),

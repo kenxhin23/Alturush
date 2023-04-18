@@ -106,7 +106,11 @@ class _AccountLock extends State<AccountLock> {
           icon: Icon(CupertinoIcons.left_chevron, color: Colors.black54,size: 20,),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text("Account Recovery",style: GoogleFonts.openSans(color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0),),
+        title: Text("Account Recovery",
+          style: GoogleFonts.openSans(
+            color:Colors.deepOrangeAccent,fontWeight: FontWeight.bold,fontSize: 16.0,
+          ),
+        ),
       ),
 
       ///display the main page or body of the app
@@ -122,23 +126,19 @@ class _AccountLock extends State<AccountLock> {
                   children: [
 
                     Padding(padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
-                      child: new Text(
-                        "OTP has been sent to your mobile number:",
+                      child: new Text("OTP has been sent to your mobile number:",
                         style: TextStyle(
-                            fontStyle: FontStyle.normal, fontSize: 15.0),
+                          fontStyle: FontStyle.normal, fontSize: 15.0),
                         textAlign: TextAlign.center,
                       ),
                     ),
                     Padding(padding: EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      child: new Text(
-                        "$mobileNumber, please enter it below",
+                      child: new Text("$mobileNumber, please enter it below",
                         style: TextStyle(
-                            fontStyle: FontStyle.normal, fontSize: 15.0),
+                          fontStyle: FontStyle.normal, fontSize: 15.0),
                         textAlign: TextAlign.center,
                       ),
                     ),
-
-
 
                     Padding(
                       padding: EdgeInsets.only(right: 15.0, left: 15.0, top: 45),
@@ -155,11 +155,13 @@ class _AccountLock extends State<AccountLock> {
                         decoration: InputDecoration(contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 10.0, 25.0),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                color: Colors.deepOrange.withOpacity(0.8),
-                                width: 2.0),
+                              color: Colors.deepOrange.withOpacity(0.8),
+                              width: 2.0,
+                            ),
                           ),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(3.0)),
+                            borderRadius: BorderRadius.circular(3.0),
+                          ),
                         ),
                       ),
                     ),
@@ -169,17 +171,21 @@ class _AccountLock extends State<AccountLock> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Didn't receive code? tap", style: TextStyle(fontSize: 15, color: Colors.black)),
+                          Text("Didn't receive code? tap",
+                            style: TextStyle(
+                              fontSize: 15, color: Colors.black,
+                            ),
+                          ),
                           SizedBox(width: 35,
                             child: TextButton(
-                              style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(EdgeInsets.all(0)),
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20.0),
-                                          side: BorderSide(color: Colors.transparent)
-                                      )
-                                  )
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(EdgeInsets.all(0)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    side: BorderSide(color: Colors.transparent),
+                                  ),
+                                ),
                               ),
                               child: Text('here',
                                 style: TextStyle(fontSize: 15,
@@ -190,7 +196,7 @@ class _AccountLock extends State<AccountLock> {
                                 sendOtp();
                               },
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -263,7 +269,7 @@ class _AccountLock extends State<AccountLock> {
                   style: TextStyle(fontStyle: FontStyle.normal, fontSize: 16.0, fontWeight: FontWeight.bold),
                 ),
               ),
-            )
+            ),
           ),
         ],
       ),

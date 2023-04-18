@@ -299,10 +299,11 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                     child: Center(
                       child: CircularProgressIndicator(
                         valueColor: new AlwaysStoppedAnimation<Color>(
-                            Colors.deepOrange),
+                          Colors.deepOrange,
+                        ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -394,14 +395,21 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
 
                       OutlinedButton(
                         style: ButtonStyle(
-                          padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
-                          shape: MaterialStateProperty.all(RoundedRectangleBorder( borderRadius: BorderRadius.circular(10))),
+                          padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(horizontal: 5),
+                          ),
+                          shape: MaterialStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
                           backgroundColor: MaterialStateProperty.all(Colors.white),
                           overlayColor: MaterialStateProperty.all(Colors.black12),
-                          side: MaterialStateProperty.all(BorderSide(
+                          side: MaterialStateProperty.all(
+                            BorderSide(
                               color: Colors.green[400],
                               width: 1.0,
-                              style: BorderStyle.solid),
+                              style: BorderStyle.solid,
+                            ),
                           ),
                         ),
                         onPressed:(){
@@ -409,7 +417,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                           Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new AddNewAddress())).then((val)=>{onRefresh()});
                         },
                         child:Text("+ Add new",
-                          style: GoogleFonts.openSans(color:Colors.green[400], fontWeight: FontWeight.bold, fontSize: 14.0),
+                          style: GoogleFonts.openSans(
+                            color:Colors.green[400], fontWeight: FontWeight.bold, fontSize: 14.0,
+                          ),
                         ),
                       ),
                     ],
@@ -466,7 +476,10 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
 
                                   Padding(
                                     padding: EdgeInsets.only(right: 10),
-                                    child: Text('${getItemsData[index]['d_contact']}',style: TextStyle(fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black),
+                                    child: Text('${getItemsData[index]['d_contact']}',
+                                      style: TextStyle(
+                                        fontSize: 13.0,fontWeight: FontWeight.normal, color: Colors.black,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -475,7 +488,6 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                               groupValue: shipping,
                               onChanged: (newValue) {
                                 state((){
-
 
                                   gcDeliveryFee(getItemsData[index]['d_townId']);
                                   print('mao ni ag town id: ${getItemsData[index]['town_id']}');
@@ -570,7 +582,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text("Summary (Delivery)",
-            style: GoogleFonts.openSans(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0),
+            style: GoogleFonts.openSans(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16.0,
+            ),
           ),
         ),
         body: isLoading ?
@@ -604,7 +618,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                               Padding(
                                 padding: EdgeInsets.only(left: 10),
                                 child: new Text("DELIVERY ADDRESS",
-                                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14.0),
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold, color: Colors.white, fontSize: 14.0,
+                                  ),
                                 ),
                               ),
 
@@ -618,28 +634,39 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                                       FocusScope.of(context).requestFocus(FocusNode());
                                       SharedPreferences prefs = await SharedPreferences.getInstance();
                                       String username = prefs.getString('s_customerId');
-                                      if(username == null){
+                                      if (username == null) {
                                         // Navigator.of(context).push(new MaterialPageRoute(builder: (_) => new CreateAccountSignIn())).then((val)=>{onRefresh()});
                                         Navigator.of(context).push(_signIn()).then((val)=>{onRefresh()});
-                                      }else{
+                                      } else {
                                         getPlaceOrderData();
                                         displayAddresses(context).then((val) => {onRefresh()});
                                       }
                                     },
-                                    label: Text('MANAGE ADDRESS',  style: TextStyle(fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.green)),
+                                    label: Text('MANAGE ADDRESS',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,fontStyle: FontStyle.normal,fontSize: 12.0, color: Colors.green,
+                                      ),
+                                    ),
                                     style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(EdgeInsets.symmetric(horizontal: 5)),
+                                      padding: MaterialStateProperty.all(
+                                        EdgeInsets.symmetric(horizontal: 5),
+                                      ),
                                       backgroundColor: MaterialStateProperty.all(Colors.white),
                                       overlayColor: MaterialStateProperty.all(Colors.black12),
-                                      side: MaterialStateProperty.all(BorderSide(
+                                      side: MaterialStateProperty.all(
+                                        BorderSide(
                                           color: Colors.green,
                                           width: 1.0,
-                                          style: BorderStyle.solid),
+                                          style: BorderStyle.solid,
+                                        ),
                                       ),
                                     ),
                                     icon: Wrap(
                                       children: [
-                                        Icon(Icons.settings_outlined, color: Colors.green, size: 18,)
+                                        Icon(
+                                          Icons.settings_outlined,
+                                          color: Colors.green, size: 18,
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -656,7 +683,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                           child: Row(
                             children: [
                               Text("Recipient: ",
-                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black54,
+                                ),
                               ),
                               Text("${userName.toString()}",
                                 style: TextStyle(fontSize: 14.0),
@@ -670,7 +699,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                           child: Row(
                             children: [
                               Text("Contact Number: ",
-                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54,
+                                ),
                               ),
                               Text("${placeContactNo.toString()}",
                                 style: TextStyle(fontSize: 14.0),
@@ -684,7 +715,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                           child: Row(
                             children: [
                               Text("Address: ",
-                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54,
+                                ),
                               ),
                               Text("$street, $placeOrderBrg, $placeOrderTown, $province",
                                 style: TextStyle(fontSize: 14.0),
@@ -698,7 +731,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                           child: Row(
                             children: [
                               Text("Landmark: ",
-                                style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54,
+                                ),
                               ),
                               Flexible(
                                 child: Text("$placeRemarks",
@@ -719,7 +754,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                               Padding(
                                 padding: EdgeInsets.zero,
                                 child: Text("TOTAL SUMMARY",
-                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                  ),
                                 ),
                               ),
                             ],
@@ -732,9 +769,12 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("No. of Store(s)",
-                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                ),
                               ),
-                              Text('${widget.stores}',style: TextStyle(fontSize: 14.0),
+                              Text('${widget.stores}',
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           ),
@@ -746,9 +786,12 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("No. of Item(s)",
-                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                ),
                               ),
-                              Text("${widget.items}", style: TextStyle(fontSize: 14.0),
+                              Text("${widget.items}",
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           ),
@@ -760,9 +803,12 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Total Amount',
-                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                ),
                               ),
-                              Text('₱ ${oCcy.format(widget.subTotal)}',style: TextStyle(fontSize: 14.0),
+                              Text('₱ ${oCcy.format(widget.subTotal)}',
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           ),
@@ -774,9 +820,12 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text('Convenience Fee',
-                                style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                style: GoogleFonts.openSans(
+                                  fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                ),
                               ),
-                              Text('₱ ${oCcy.format(conFee)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal),
+                              Text('₱ ${oCcy.format(conFee)}',
+                                style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.normal),
                               ),
                             ],
                           ),
@@ -790,7 +839,8 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                               Text('Delivery Fee',
                                 style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
                               ),
-                              Text('₱ ${oCcy.format(deliveryFee)}',style: TextStyle(fontSize: 14.0),
+                              Text('₱ ${oCcy.format(deliveryFee)}',
+                                style: TextStyle(fontSize: 14.0),
                               ),
                             ],
                           ),
@@ -807,7 +857,9 @@ class _GcDeliveryFinal extends State<GcDeliveryFinal> with TickerProviderStateMi
                                 Text('TOTAL AMOUNT TO PAY',
                                   style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.green[400]),
                                 ),
-                                Text('₱ ${oCcy.format(grandTotal)}',style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold)),
+                                Text('₱ ${oCcy.format(grandTotal)}',
+                                  style: TextStyle(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold),
+                                ),
                               ],
                             ),
                           ),

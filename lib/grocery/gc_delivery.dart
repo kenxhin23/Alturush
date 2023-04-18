@@ -273,7 +273,6 @@ class _GcDelivery extends State<GcDelivery> {
                     ),
                   ),
                 ),
-
               ],
             ),
           ),
@@ -370,7 +369,11 @@ class _GcDelivery extends State<GcDelivery> {
                                   children: [
                                     Padding(
                                       padding: EdgeInsets.only(left: 10.0),
-                                      child: Text(getBuName[index]['buName'], style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white)),
+                                      child: Text(getBuName[index]['buName'],
+                                        style: GoogleFonts.openSans(
+                                          fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -385,10 +388,14 @@ class _GcDelivery extends State<GcDelivery> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text('Product Details',
-                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        style: GoogleFonts.openSans(
+                                          fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                        ),
                                       ),
                                       Text('Total Price',
-                                        style: GoogleFonts.openSans(fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                        style: GoogleFonts.openSans(
+                                          fontStyle: FontStyle.normal, fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -481,7 +488,7 @@ class _GcDelivery extends State<GcDelivery> {
                                                             child: Text("₱ ${loadCartData[index0]['total_price']}",
                                                               style: TextStyle(fontSize: 13, color: Colors.black87),
                                                             ),
-                                                          )
+                                                          ),
                                                         ],
                                                       ),
 
@@ -491,7 +498,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                           Padding(
                                                             padding: EdgeInsets.fromLTRB(5, 5, 15, 5),
                                                             child: Text('Quantity: ${loadCartData[index0]['cart_qty']}',
-                                                            style: GoogleFonts.openSans(fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                              style: GoogleFonts.openSans(
+                                                                fontSize: 13.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                                              ),
                                                             ),
                                                           ),
 
@@ -514,7 +523,10 @@ class _GcDelivery extends State<GcDelivery> {
                                                                 ),
                                                                 borderRadius: BorderRadius.circular(5),
                                                                 isExpanded: false,
-                                                                hint: Text('Cancel Item', style: GoogleFonts.openSans(fontSize: 12.0, color: Colors.black54),
+                                                                hint: Text('Cancel Item',
+                                                                  style: GoogleFonts.openSans(
+                                                                    fontSize: 12.0, color: Colors.black54,
+                                                                  ),
                                                                 ),
                                                                 icon: const Icon(
                                                                   Icons.arrow_drop_down,
@@ -548,8 +560,8 @@ class _GcDelivery extends State<GcDelivery> {
                                                                   });
                                                                 },
                                                               ),
-                                                            )
-                                                          )
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ],
@@ -577,13 +589,17 @@ class _GcDelivery extends State<GcDelivery> {
                                     Padding(
                                       padding: EdgeInsets.only(left: 10),
                                       child: Text('Total Amount',
-                                        style: GoogleFonts.openSans(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54),
+                                        style: GoogleFonts.openSans(
+                                          fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black54,
+                                        ),
                                       ),
                                     ),
                                     Padding(
                                       padding: EdgeInsets.only(right: 20),
                                       child: Text('₱ ${getBuName[index]['total']}',
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black87),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold, fontSize: 14.0, color: Colors.black87,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -595,14 +611,18 @@ class _GcDelivery extends State<GcDelivery> {
                               Padding(
                                 padding: EdgeInsets.fromLTRB(10, 0, 5, 5),
                                 child: new Text("Setup Date & Time for Delivery",
-                                  style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                  ),
                                 ),
                               ),
 
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 0, 5, 5),
                                 child: new Text("Delivery date*",
-                                  style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black),
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 13.0, color: Colors.black,
+                                  ),
                                 ),
                               ),
 
@@ -641,7 +661,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                 child: Padding(
                                                   padding: EdgeInsets.only(left: 15, top: 10),
                                                   child: Text("Set date for this delivery",
-                                                    style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                    style: GoogleFonts.openSans(
+                                                      fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -722,7 +744,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                                     Padding(
                                                                       padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                                                                       child: Text('${formatted2.toString()}',
-                                                                        style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                        style: GoogleFonts.openSans(
+                                                                          fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                                                        ),
                                                                       ),
                                                                     ),
                                                                   ],
@@ -752,7 +776,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                       ),
                                                     ),
                                                     child: Text('Clear',
-                                                      style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                                                      style: GoogleFonts.openSans(
+                                                        fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white,
+                                                      ),
                                                     ),
                                                     onPressed: () {
                                                       _deliveryDate.clear();
@@ -802,7 +828,9 @@ class _GcDelivery extends State<GcDelivery> {
                               Padding(
                                 padding: EdgeInsets.fromLTRB(20, 10, 5, 5),
                                 child: new Text("Delivery time*",
-                                  style: GoogleFonts.openSans(fontSize: 13.0, color: Colors.black),
+                                  style: GoogleFonts.openSans(
+                                    fontSize: 13.0, color: Colors.black,
+                                  ),
                                 ),
                               ),
 
@@ -835,7 +863,8 @@ class _GcDelivery extends State<GcDelivery> {
                                               child: AlertDialog(
                                                 contentPadding: EdgeInsets.all(0),
                                                 shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.all(Radius.circular(20.0))
+                                                  borderRadius: BorderRadius.all(Radius.circular(20.0),
+                                                  ),
                                                 ),
                                                 titlePadding: const EdgeInsets.all(0),
                                                 title: Container(
@@ -849,7 +878,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                   child: Padding(
                                                     padding: EdgeInsets.only(left: 15, top: 10),
                                                     child: Text("Set time for this delivery",
-                                                      style: GoogleFonts.openSans(fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold),
+                                                      style: GoogleFonts.openSans(
+                                                        fontSize: 18.0, color: Colors.white, fontWeight: FontWeight.bold,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),
@@ -896,7 +927,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                                       Padding(
                                                                         padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
                                                                         child: Text('${from.toString()}',
-                                                                          style: GoogleFonts.openSans(fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                                                          style: GoogleFonts.openSans(
+                                                                            fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ],
@@ -925,7 +958,9 @@ class _GcDelivery extends State<GcDelivery> {
                                                         ),
                                                       ),
                                                       child: Text('Clear',
-                                                        style: GoogleFonts.openSans(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
+                                                        style: GoogleFonts.openSans(
+                                                          fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white,
+                                                        ),
                                                       ),
                                                       onPressed: () {
                                                         _deliveryTime.clear();
@@ -976,7 +1011,9 @@ class _GcDelivery extends State<GcDelivery> {
                               Padding(
                                 padding: EdgeInsets.only(left: 10),
                                 child: new Text("Special Instruction",
-                                  style: GoogleFonts.openSans(fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54),
+                                  style: GoogleFonts.openSans(
+                                    fontStyle: FontStyle.normal,fontSize: 14.0, fontWeight: FontWeight.bold, color: Colors.black54,
+                                  ),
                                 ),
                               ),
 
