@@ -1,6 +1,6 @@
 # arush
 
-A food delivery application in bohol made by paul jearic niones
+A food delivery application in bohol developed by Argie Abarquez
 
 ## Getting Started
 
